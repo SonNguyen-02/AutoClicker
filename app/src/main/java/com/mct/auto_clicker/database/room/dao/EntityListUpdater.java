@@ -21,8 +21,8 @@ import java.util.stream.Collectors;
  * primaryKeySupplier provides the item primary key.
  */
 public class EntityListUpdater<E, K> {
-    private K defaultPrimaryKey;
-    private Function<E, K> primaryKeyFunc;
+    private final K defaultPrimaryKey;
+    private final Function<E, K> primaryKeyFunc;
 
     public EntityListUpdater(K defaultPrimaryKey, Function<E, K> primaryKeyFunc) {
         this.defaultPrimaryKey = defaultPrimaryKey;

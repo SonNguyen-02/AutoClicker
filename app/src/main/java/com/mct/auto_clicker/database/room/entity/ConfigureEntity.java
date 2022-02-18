@@ -9,13 +9,15 @@ import androidx.room.Relation;
 import com.mct.auto_clicker.database.domain.Action;
 import com.mct.auto_clicker.database.domain.Configure;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity(tableName = "configure_table")
 public class ConfigureEntity {
     @PrimaryKey(autoGenerate = true)
-    public Long id;
+    @ColumnInfo(name = "id")
+    public long id;
     @ColumnInfo(name = "name")
     public String name;
     @ColumnInfo(name = "amountExec")
@@ -24,6 +26,9 @@ public class ConfigureEntity {
     public Long timeStop;
     @ColumnInfo(name = "runByTimeStop")
     public boolean runByTimeStop;
+
+    public ConfigureEntity() {
+    }
 
     public ConfigureEntity(Long id, String name, Integer amountExec, Long timeStop, boolean runByTimeStop) {
         this.id = id;

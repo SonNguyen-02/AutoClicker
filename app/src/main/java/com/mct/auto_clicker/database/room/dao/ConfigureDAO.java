@@ -17,11 +17,11 @@ public interface ConfigureDAO {
 
     @Transaction
     @Query("SELECT * FROM configure_table ORDER BY name")
-    List<ConfigureEntity.ConfigureAndAction> getConfiguresAndAction();
+    List<ConfigureEntity.ConfigureAndAction> getConfigureAndAction();
 
     @Transaction
     @Query("SELECT * FROM configure_table WHERE id=:configureId")
-    ConfigureEntity.ConfigureAndAction getConfigure(Long configureId);
+    ConfigureEntity.ConfigureAndAction getConfigureAndAction(Long configureId);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     Long add(ConfigureEntity configureEntity);
@@ -31,4 +31,7 @@ public interface ConfigureDAO {
 
     @Delete
     void delete(ConfigureEntity configureEntity);
+
+    @Delete
+    void deletes(List<ConfigureEntity> configureEntities);
 }

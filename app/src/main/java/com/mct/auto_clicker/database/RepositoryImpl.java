@@ -28,12 +28,22 @@ public class RepositoryImpl extends Repository {
     }
 
     @Override
+    public List<Configure> getAllConfigures() {
+        return configureDAO.getConfigureAndAction().stream().map(ConfigureEntity.ConfigureAndAction::toConfigure).collect(Collectors.toList());
+    }
+
+    @Override
+    public Configure getConfigure(Long configureId) {
+        return configureDAO.getConfigureAndAction(configureId).toConfigure();
+    }
+
+    @Override
     public Long addConfigure(@NonNull Configure configure) {
         Long id = configureDAO.add(configure.toEntity());
         if (id == -1) return id;
         List<ActionEntity> mList = configure.toConfigureAndAction().actions;
         mList.forEach(it -> it.configureId = id);
-        actionDAO.addActions(mList);
+        actionDAO.adds(mList);
         return id;
     }
 
@@ -41,29 +51,38 @@ public class RepositoryImpl extends Repository {
     public void updateConfigure(@NonNull Configure configure) {
         configureDAO.update(configure.toEntity());
 
-        List<ActionEntity> oldActions = actionDAO.getActions(configure.getId());
+        List<ActionEntity> oldActions = actionDAO.getActionsByConfigure(configure.getId());
         actionsUpdater.refreshUpdateValues(oldActions, configure.toConfigureAndAction().actions);
         actionsUpdater.getToBeAdded().forEach(it -> it.configureId = configure.getId());
 
-        actionDAO.addActions(actionsUpdater.getToBeAdded());
-        actionDAO.updateActions(actionsUpdater.getToBeUpdated());
-        actionDAO.deleteActions(actionsUpdater.getToBeRemoved());
+        actionDAO.adds(actionsUpdater.getToBeAdded());
+        actionDAO.updates(actionsUpdater.getToBeUpdated());
+        actionDAO.deletes(actionsUpdater.getToBeRemoved());
     }
 
     @Override
     public void deleteConfigure(@NonNull Configure configure) {
-        actionDAO.deleteActions(configure.toConfigureAndAction().actions);
         configureDAO.delete(configure.toEntity());
     }
 
     @Override
-    public Configure getConfigure(Long configureId) {
-        return configureDAO.getConfigure(configureId).toConfigure();
+    public void deleteConfigures(@NonNull List<Configure> configures) {
+        configureDAO.deletes(configures.stream().map(Configure::toEntity).collect(Collectors.toList()));
     }
 
     @Override
-    public List<Configure> getConfigures() {
-        return configureDAO.getConfiguresAndAction().stream().map(ConfigureEntity.ConfigureAndAction::toConfigure).collect(Collectors.toList());
+    public List<Action> getAllActions() {
+        return actionDAO.getAllActions().stream().map(ActionEntity::toAction).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Action> getActionsByConfigure(Long configureId) {
+        return actionDAO.getActionsByConfigure(configureId).stream().map(ActionEntity::toAction).collect(Collectors.toList());
+    }
+
+    @Override
+    public Action getAction(Long actionId) {
+        return actionDAO.getAction(actionId).toAction();
     }
 
     @Override
@@ -82,12 +101,7 @@ public class RepositoryImpl extends Repository {
     }
 
     @Override
-    public Action getAction(Long actionId) {
-        return actionDAO.getAction(actionId).toAction();
-    }
-
-    @Override
-    public List<Action> getActions(Long configureId) {
-        return actionDAO.getActions(configureId).stream().map(ActionEntity::toAction).collect(Collectors.toList());
+    public void deleteActions(@NonNull List<Action> actions) {
+        actionDAO.deletes(actions.stream().map(Action::toEntity).collect(Collectors.toList()));
     }
 }

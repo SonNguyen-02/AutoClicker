@@ -12,7 +12,6 @@ import com.mct.auto_clicker.database.room.dao.ConfigureDAO;
 import com.mct.auto_clicker.database.room.entity.ActionEntity;
 import com.mct.auto_clicker.database.room.entity.ConfigureEntity;
 
-
 @Database(entities = {ActionEntity.class, ConfigureEntity.class}, version = 1)
 @TypeConverters(ActionEntity.ActionTypeStringConverter.class)
 public abstract class AutoClickDatabase extends RoomDatabase {

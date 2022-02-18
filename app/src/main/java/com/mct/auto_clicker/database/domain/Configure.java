@@ -1,7 +1,11 @@
 package com.mct.auto_clicker.database.domain;
 
+import androidx.annotation.NonNull;
+
+import com.mct.auto_clicker.database.room.entity.ActionEntity;
 import com.mct.auto_clicker.database.room.entity.ConfigureEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -108,5 +112,18 @@ public class Configure {
     public Configure deepCopy() {
         List<Action> actionsCopy = actions.stream().map(Action::deepCopy).collect(Collectors.toList());
         return new Configure(id, name, actionsCopy, amountExec, timeStop, runByTimeStop);
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "Configure{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", actions=" + actions +
+                ", amountExec=" + amountExec +
+                ", timeStop=" + timeStop +
+                ", runByTimeStop=" + runByTimeStop +
+                '}';
     }
 }

@@ -15,16 +15,17 @@ import com.mct.auto_clicker.database.domain.Action;
 
 @Entity(
         tableName = "action_table",
-        indices = @Index("configureId"),
         foreignKeys = @ForeignKey(entity = ConfigureEntity.class,
                 parentColumns = "id",
                 childColumns = "configureId",
-                onDelete = CASCADE)
+                onDelete = CASCADE),
+        indices = {@Index("configureId")}
 )
 public class ActionEntity {
 
     @PrimaryKey(autoGenerate = true)
-    public Long id;
+    @ColumnInfo(name = "id")
+    public long id;
     @ColumnInfo(name = "configureId")
     public Long configureId;
     @ColumnInfo(name = "name")
@@ -51,6 +52,9 @@ public class ActionEntity {
     public Integer x2 = null;
     @ColumnInfo(name = "y2")
     public Integer y2 = null;
+
+    public ActionEntity() {
+    }
 
     private ActionEntity(Long id, Long configureId, String name, Long timeDelay, Long actionDuration, ActionType type) {
         this.id = id;
@@ -118,7 +122,7 @@ public class ActionEntity {
         }
 
         @TypeConverter
-        String toString(@NonNull ActionType type) {
+        public String toString(@NonNull ActionType type) {
             return type.toString();
         }
     }

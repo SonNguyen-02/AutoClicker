@@ -19,15 +19,23 @@ public abstract class Repository {
         return INSTANCE;
     }
 
+    public abstract List<Configure> getAllConfigures();
+
+    public abstract Configure getConfigure(Long configureId);
+
     public abstract Long addConfigure(Configure configure);
 
     public abstract void updateConfigure(Configure configure);
 
     public abstract void deleteConfigure(Configure configure);
 
-    public abstract Configure getConfigure(Long configureId);
+    public abstract void deleteConfigures(List<Configure> configures);
 
-    public abstract List<Configure> getConfigures();
+    public abstract List<Action> getAllActions();
+
+    public abstract List<Action> getActionsByConfigure(Long configureId);
+
+    public abstract Action getAction(Long actionId);
 
     public abstract Long addAction(Action action);
 
@@ -35,8 +43,7 @@ public abstract class Repository {
 
     public abstract void deleteAction(Action action);
 
-    public abstract Action getAction(Long actionId);
+    public abstract void deleteActions(List<Action> actions);
 
-    public abstract List<Action> getActions(Long configureId);
 
 }
