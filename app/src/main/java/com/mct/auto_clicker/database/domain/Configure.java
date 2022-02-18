@@ -2,22 +2,21 @@ package com.mct.auto_clicker.database.domain;
 
 import androidx.annotation.NonNull;
 
-import com.mct.auto_clicker.database.room.entity.ActionEntity;
 import com.mct.auto_clicker.database.room.entity.ConfigureEntity;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Configure {
+public class Configure implements Serializable {
     private Long id;
     private String name;
     private List<Action> actions;
     private Integer amountExec;
     private Long timeStop;
-    private boolean runByTimeStop;
+    private Boolean runByTimeStop;
 
-    private Configure(Long id, String name, List<Action> actions) {
+    public Configure(Long id, String name, List<Action> actions) {
         this.id = id;
         this.name = name;
         this.actions = actions;
@@ -35,7 +34,7 @@ public class Configure {
         this.runByTimeStop = true;
     }
 
-    public Configure(Long id, String name, List<Action> actions, Integer amountExec, Long timeStop, boolean runByTimeStop) {
+    public Configure(Long id, String name, List<Action> actions, Integer amountExec, Long timeStop, Boolean runByTimeStop) {
         this(id, name, actions);
         this.amountExec = amountExec;
         this.timeStop = timeStop;
@@ -82,7 +81,7 @@ public class Configure {
         this.timeStop = timeStop;
     }
 
-    public boolean isRunByTimeStop() {
+    public Boolean isRunByTimeStop() {
         return runByTimeStop;
     }
 

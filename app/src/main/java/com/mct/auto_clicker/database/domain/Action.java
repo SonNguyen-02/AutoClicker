@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 
 import com.mct.auto_clicker.database.room.entity.ActionEntity;
 
-public abstract class Action {
+import java.io.Serializable;
+
+public abstract class Action implements Serializable {
 
     private Long id;
     private Long configureId;
@@ -18,7 +20,7 @@ public abstract class Action {
      * @param id             the unique identifier for the action. Use 0 for creating a new action. Default value is 0.
      * @param configureId    the identifier of the event for this action.
      * @param name           the name of the action.
-     * @param timeDelay      the time delay before run action in milliseconds
+     * @param timeDelay      the time delay apter run action in milliseconds
      * @param actionDuration the duration run action in milliseconds.
      */
 
@@ -69,6 +71,13 @@ public abstract class Action {
 
     public void setActionDuration(Long actionDuration) {
         this.actionDuration = actionDuration;
+    }
+
+    /**
+     * getTotalDuration is time to next action
+     */
+    public Long getTotalDuration() {
+        return timeDelay + actionDuration;
     }
 
     /**
@@ -293,6 +302,19 @@ public abstract class Action {
 
         public void setY2(Integer y2) {
             this.y2 = y2;
+        }
+
+        /**
+         * getMidPoint
+         * return a array has two element
+         * arr[0] -> x
+         * arr[1] -> y
+         */
+        public float[] getMidPoint() {
+            float[] arr = new float[2];
+            arr[0] = (x1 + x2) / 2f;
+            arr[1] = (y1 + y2) / 2f;
+            return arr;
         }
 
         @Override

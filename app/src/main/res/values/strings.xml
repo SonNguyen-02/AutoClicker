@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Auto Clicker</string>
+
+    <string name="accessibility_service_label">AutoClick Service</string>
+    <string name="accessibility_service_description">This application needs this service to inject the clicks you have
+        created into the other applications once the conditions have been detected.\n\nNo data will be collected from
+        this application. Feel free to visit our github, the code is open source !</string>
+
 </resources>

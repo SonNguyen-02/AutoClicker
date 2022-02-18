@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="overlay_menu_btn_size">40dp</dimen>
+
+    <dimen name="margin_horizontal_large">24dp</dimen>
+    <dimen name="margin_horizontal_default">16dp</dimen>
+    <dimen name="margin_horizontal_small">8dp</dimen>
+    <dimen name="margin_horizontal_mini">4dp</dimen>
+    <dimen name="margin_vertical_large">12dp</dimen>
+    <dimen name="margin_vertical_default">8dp</dimen>
+    <dimen name="margin_vertical_small">4dp</dimen>
+    <dimen name="margin_vertical_mini">2dp</dimen>
+
+</resources>

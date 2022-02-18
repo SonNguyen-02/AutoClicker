@@ -25,12 +25,12 @@ public class ConfigureEntity {
     @ColumnInfo(name = "timeStop")
     public Long timeStop;
     @ColumnInfo(name = "runByTimeStop")
-    public boolean runByTimeStop;
+    public Boolean runByTimeStop;
 
     public ConfigureEntity() {
     }
 
-    public ConfigureEntity(Long id, String name, Integer amountExec, Long timeStop, boolean runByTimeStop) {
+    public ConfigureEntity(Long id, String name, Integer amountExec, Long timeStop, Boolean runByTimeStop) {
         this.id = id;
         this.name = name;
         this.amountExec = amountExec;
