@@ -5,9 +5,11 @@ import android.graphics.Path;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mct.auto_clicker.database.domain.Action;
 
@@ -79,7 +81,7 @@ public class ActionExecutor {
         Path path = new Path();
         path.moveTo(click.getX(), click.getY());
         GestureDescription gesture = createGestureDescription(new GestureDescription.StrokeDescription(path, 0, click.getActionDuration()));
-        mainThreadHandler.post(() -> mGestureExecutionListener.onExecution(gesture));
+        execGesture(gesture);
     }
 
     @WorkerThread
@@ -88,7 +90,7 @@ public class ActionExecutor {
         path.moveTo(swipe.getFromX(), swipe.getFromY());
         path.lineTo(swipe.getToX(), swipe.getToY());
         GestureDescription gesture = createGestureDescription(new GestureDescription.StrokeDescription(path, 0, swipe.getActionDuration()));
-        mainThreadHandler.post(() -> mGestureExecutionListener.onExecution(gesture));
+        execGesture(gesture);
     }
 
     @WorkerThread
@@ -113,7 +115,15 @@ public class ActionExecutor {
                 new GestureDescription.StrokeDescription(path1, 0, zoom.getActionDuration()),
                 new GestureDescription.StrokeDescription(path2, 0, zoom.getActionDuration())
         );
-        mainThreadHandler.post(() -> mGestureExecutionListener.onExecution(gesture));
+        execGesture(gesture);
+    }
+
+    private void execGesture(GestureDescription gestureDescription) {
+        mainThreadHandler.post(() -> {
+            if (mGestureExecutionListener != null) {
+                mGestureExecutionListener.onExecution(gestureDescription);
+            }
+        });
     }
 
     private GestureDescription createGestureDescription(@NonNull GestureDescription.StrokeDescription... strokes) {

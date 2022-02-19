@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
@@ -24,10 +23,8 @@ import com.mct.auto_clicker.R;
 import com.mct.auto_clicker.database.Repository;
 import com.mct.auto_clicker.database.domain.Configure;
 
-import java.util.function.Consumer;
 
-
-public class FloatingView extends Service implements View.OnClickListener {
+public class FloatingMenu extends Service implements View.OnClickListener {
     private WindowManager mWindowManager;
     private View myFloatingView;
     private AutoClickerService.LocalService mLocalService;
@@ -39,18 +36,12 @@ public class FloatingView extends Service implements View.OnClickListener {
         return null;
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Intent intent = new Intent(getApplicationContext(), AutoClickerService.class);
-        startService(intent);
-    }
-
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         mLocalService = AutoClickerService.getLocalService();
         //getting the widget layout from xml using layout inflater
-        myFloatingView = LayoutInflater.from(this).inflate(R.layout.floating_view, null);
+        myFloatingView = LayoutInflater.from(this).inflate(R.layout.floating_menu, null);
 
         int layout_params;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -104,7 +95,36 @@ public class FloatingView extends Service implements View.OnClickListener {
         });
 
         btnStartStop = myFloatingView.findViewById(R.id.btn_start_stop);
-        btnStartStop.setOnClickListener(this);
+
+        // dùng onclick sẽ không stop được khi click quá nhanh
+        btnStartStop.setOnTouchListener(new View.OnTouchListener() {
+
+            boolean checkAction = false;
+
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (mLocalService.isStart()) {
+                        checkAction = true;
+                        mLocalService.stop();
+                        btnStartStop.setImageResource(R.drawable.ic_start);
+                    } else {
+                        checkAction = false;
+                    }
+                    return true;
+                }
+
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (!checkAction && !mLocalService.isStart()) {
+                        Configure configure = Repository.getInstance(getApplicationContext()).getConfigure(1L);
+                        mLocalService.init(configure, isStarted -> btnStartStop.setImageResource(R.drawable.ic_start));
+                        btnStartStop.setImageResource(R.drawable.ic_pause);
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
 
         ImageButton btnExists = myFloatingView.findViewById(R.id.btn_exists);
         btnExists.setOnClickListener(this);
@@ -123,14 +143,6 @@ public class FloatingView extends Service implements View.OnClickListener {
     public void onClick(@NonNull View v) {
         switch (v.getId()) {
             case R.id.btn_start_stop:
-                if (!mLocalService.isStart()) {
-                    Configure configure = Repository.getInstance(getApplicationContext()).getConfigure(1L);
-                    mLocalService.init(configure, isStarted -> btnStartStop.setImageResource(R.drawable.ic_start));
-                    btnStartStop.setImageResource(R.drawable.ic_pause);
-                } else {
-                    mLocalService.stop();
-                    btnStartStop.setImageResource(R.drawable.ic_start);
-                }
                 break;
             case R.id.btn_exists:
                 Intent intent = new Intent(getApplicationContext(), AutoClickerService.class);

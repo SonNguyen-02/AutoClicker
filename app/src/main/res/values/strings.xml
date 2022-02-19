@@ -6,4 +6,14 @@
         created into the other applications once the conditions have been detected.\n\nNo data will be collected from
         this application. Feel free to visit our github, the code is open source !</string>
 
+    <string name="content_desc_play_pause_configure">Play or pause the configure</string>
+    <string name="content_desc_add_touch">Add the touch action to the configure</string>
+    <string name="content_desc_add_swipe">Add the swipe action to the configure</string>
+    <string name="content_desc_add_zoom_out">Add the zoom out action to the configure</string>
+    <string name="content_desc_add_zoom_in">Add the zoom in action to the configure</string>
+    <string name="content_desc_remove_action">Remove the last action in the configure</string>
+    <string name="content_desc_setting_configure">Setting the configure</string>
+    <string name="content_desc_exists_the_configure">Exists the configure</string>
+    <string name="content_desc_move_floating_menu">Move the floating menu</string>
+
 </resources>

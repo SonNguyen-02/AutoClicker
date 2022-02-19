@@ -25,6 +25,7 @@ public class AutoClickerService extends AccessibilityService {
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
+        Log.e("ddd", "onServiceConnected: ");
         mLocalService = new LocalService();
     }
 
