@@ -20,22 +20,25 @@ public class ConfigureEntity {
     public long id;
     @ColumnInfo(name = "name")
     public String name;
+    @ColumnInfo(name = "timeDelay")
+    public long timeDelay;
+    @ColumnInfo(name = "runType")
+    public int runType;
     @ColumnInfo(name = "amountExec")
     public Integer amountExec;
     @ColumnInfo(name = "timeStop")
     public Long timeStop;
-    @ColumnInfo(name = "runByTimeStop")
-    public Boolean runByTimeStop;
 
     public ConfigureEntity() {
     }
 
-    public ConfigureEntity(Long id, String name, Integer amountExec, Long timeStop, Boolean runByTimeStop) {
+    public ConfigureEntity(long id, String name, long timeDelay, int runType, Integer amountExec, Long timeStop) {
         this.id = id;
         this.name = name;
+        this.timeDelay = timeDelay;
+        this.runType = runType;
         this.amountExec = amountExec;
         this.timeStop = timeStop;
-        this.runByTimeStop = runByTimeStop;
     }
 
     public static class ConfigureAndAction {
@@ -54,7 +57,7 @@ public class ConfigureEntity {
 
         public Configure toConfigure() {
             List<Action> actionsList = actions.stream().map(ActionEntity::toAction).collect(Collectors.toList());
-            return new Configure(configure.id, configure.name, actionsList, configure.amountExec, configure.timeStop, configure.runByTimeStop);
+            return new Configure(configure.id, configure.name, actionsList, configure.timeDelay, configure.runType, configure.amountExec, configure.timeStop);
         }
     }
 

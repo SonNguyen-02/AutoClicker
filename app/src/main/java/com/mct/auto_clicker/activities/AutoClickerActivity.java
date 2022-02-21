@@ -1,15 +1,16 @@
 package com.mct.auto_clicker.activities;
 
-import static com.mct.auto_clicker.database.domain.Action.Zoom.ZOOM_IN;
-import static com.mct.auto_clicker.database.domain.Action.Zoom.ZOOM_OUT;
-
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.Menu;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -22,12 +23,16 @@ import com.mct.auto_clicker.overlays.FloatingMenu;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class AutoClickerActivity extends AppCompatActivity {
+
+    DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_auto_clicker);
+
+        initToolBar();
 
         addConfigure();
 
@@ -48,9 +53,30 @@ public class MainActivity extends AppCompatActivity {
                 askPermission();
                 return;
             }
-            startService(new Intent(MainActivity.this, FloatingMenu.class));
+            startService(new Intent(AutoClickerActivity.this, FloatingMenu.class));
         });
     }
+
+    private void initToolBar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_auto_clicker_activity, menu);
+        return true;
+    }
+
+
+
 
     private void askPermission() {
         Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
@@ -68,16 +94,16 @@ public class MainActivity extends AppCompatActivity {
         Repository.getInstance(this).deleteConfigures(Repository.getInstance(this).getAllConfigures());
         List<Action> actionList = new ArrayList<>();
 
-        actionList.add(new Action.Click(0L, 0L, "click1", 0L, 1L, 540, 1000));
-//        actionList.add(new Action.Zoom(0L, 0L, "zoom1", 100L, 600L, ZOOM_IN, 540, 300, 540, 1800));
-//
-//        actionList.add(new Action.Swipe(0L, 0L, "swipe1", 100L, 600L, 1, 500, 950, 500));
-//
-//        actionList.add(new Action.Swipe(0L, 0L, "swipe1", 100L, 600L, 950, 500, 1, 500));
-//
-//        actionList.add(new Action.Zoom(0L, 0L, "zoom1", 100L, 600L, ZOOM_OUT, 540, 300, 540, 1800));
+//        actionList.add(new Action.Click(0L, 0L, "click1", 0L, 1L, 540, 1000));
+        actionList.add(new Action.Zoom(0L, 0L, "zoom1", 100L, 600L, Action.Zoom.ZOOM_IN, 540, 300, 540, 1800));
 
-        Repository.getInstance(this).addConfigure(new Configure(1L, "config 1", actionList, 10000L));
+        actionList.add(new Action.Swipe(0L, 0L, "swipe1", 100L, 600L, 1, 500, 950, 500));
+
+        actionList.add(new Action.Swipe(0L, 0L, "swipe1", 100L, 600L, 950, 500, 1, 500));
+
+        actionList.add(new Action.Zoom(0L, 0L, "zoom1", 100L, 600L, Action.Zoom.ZOOM_OUT, 540, 300, 540, 1800));
+
+        Repository.getInstance(this).addConfigure(new Configure(1L, "config 1", actionList, 1000, 10000L));
 
 //        Repository.getInstance(this).deleteConfigure(Repository.getInstance(this).getConfigure(4L));
 

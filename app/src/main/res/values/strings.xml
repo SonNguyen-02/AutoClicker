@@ -1,10 +1,16 @@
 <resources>
     <string name="app_name">Auto Clicker</string>
+    <string name="ver">Version</string>
+
+    <string name="activity_auto_clicker_title">Auto Clicker</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="accessibility_service_label">AutoClick Service</string>
     <string name="accessibility_service_description">This application needs this service to inject the clicks you have
         created into the other applications once the conditions have been detected.\n\nNo data will be collected from
-        this application. Feel free to visit our github, the code is open source !</string>
+        this application.</string>
 
     <string name="content_desc_play_pause_configure">Play or pause the configure</string>
     <string name="content_desc_add_touch">Add the touch action to the configure</string>
@@ -15,5 +21,53 @@
     <string name="content_desc_setting_configure">Setting the configure</string>
     <string name="content_desc_exists_the_configure">Exists the configure</string>
     <string name="content_desc_move_floating_menu">Move the floating menu</string>
+
+    <string name="setting_title_default_setting_configure">Default settings for configure</string>
+    <string name="setting_title_default_setting_action">Default settings for actions</string>
+    <string name="setting_title_anti_detection">Anti-detection</string>
+    <string name="setting_title_other_settings">Other settings</string>
+
+    <!-- === Default settings for config ===  -->
+    <!-- Thời gian trễ vòng lặp -->
+    <string name="setting_content_stop_the_loop_by">Stop the loop by</string>
+    <!-- Thời gian trễ vòng lặp -->
+    <string name="setting_content_loop_delay_time">Loop delay time</string>
+
+    <!-- === Default settings for actions ===  -->
+    <!-- Thời gian chờ hành động tiếp theo -->
+    <string name="setting_content_time_wait_next_action">Time to wait for next action</string>
+    <!--Thời gian thực hiện hành động bấm-->
+    <string name="setting_content_time_click_action_exec">Click action execution time</string>
+    <!--Thời gian thực hiện hành động vuốt-->
+    <string name="setting_content_time_swipe_action_exec">Swipe action execution time</string>
+    <!--Thời gian thực hiện hành động thu phóng-->
+    <string name="setting_content_time_zoom_action_exec">Zoom action execution time</string>
+
+    <!-- === Anti-detection ===  -->
+    <string name="setting_content_increase_random_wait_time">Increase random wait time</string>
+    <string name="setting_content_random_location">Random location</string>
+
+    <!-- === Other settings ===  -->
+    <string name="setting_content_remove_ads">Remove ads</string>
+    <string name="setting_content_general_settings">General settings</string>
+    <string name="setting_content_solving_trouble">Solving trouble</string>
+
+    <string name="setting_content_desc_n_milliseconds">{0} milliseconds</string>
+    <string name="setting_content_desc_n_time">{0} times</string>
+    <string name="setting_content_desc_infinity">Infinite repeat</string>
+    <string name="setting_content_desc_countdown_timer">Countdown timer: {0}</string>
+    <string name="setting_content_desc_n_px">{0} px</string>
+
+    <string name="setting_content_desc_remove_ads">All ads are removed</string>
+    <string name="setting_content_desc_general_settings">Floating menu size setting</string>
+    <string name="setting_content_desc_solving_trouble">The app doesn\'t work</string>
+
+    <string name="menu_about_us">About Us</string>
+    <string name="menu_rate_app">Rate app</string>
+    <string name="share_app">Share app</string>
+    <string name="menu_feedback">Feedback</string>
+    <string name="menu_license">License</string>
+    <string name="menu_privacy_policy">Privacy policy</string>
+
 
 </resources>

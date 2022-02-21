@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="text_size_item_title">14sp</dimen>
+    <dimen name="text_size_list_item_text">16sp</dimen>
+
+    <dimen name="text_size_setting_title">17sp</dimen>
+    <dimen name="text_size_setting_content_title">16sp</dimen>
+    <dimen name="text_size_setting_content_description">14sp</dimen>
+
+    <dimen name="setting_item_height">56dp</dimen>
+    <dimen name="setting_item_icon_height">36dp</dimen>
+    <dimen name="setting_item_icon_width">36dp</dimen>
+
     <dimen name="overlay_menu_btn_size">40dp</dimen>
 
     <dimen name="margin_horizontal_large">24dp</dimen>

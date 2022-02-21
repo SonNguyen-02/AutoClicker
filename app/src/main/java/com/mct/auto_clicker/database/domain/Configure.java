@@ -9,43 +9,46 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Configure implements Serializable {
-    private Long id;
+
+    public static final int TYPE_INFINITY = 0;
+    public static final int TYPE_AMOUNT = 1;
+    public static final int TYPE_TIME = 2;
+
+    private long id;
     private String name;
     private List<Action> actions;
+    private long timeDelay;
+    private int runType;
     private Integer amountExec;
     private Long timeStop;
-    private Boolean runByTimeStop;
 
-    public Configure(Long id, String name, List<Action> actions) {
+    public Configure(long id, String name, List<Action> actions, long timeDelay) {
+        this(id, name, actions, timeDelay, TYPE_INFINITY, null, null);
+    }
+
+    public Configure(long id, String name, List<Action> actions, long timeDelay, Integer amountExec) {
+        this(id, name, actions, timeDelay, TYPE_AMOUNT, amountExec, null);
+    }
+
+    public Configure(long id, String name, List<Action> actions, long timeDelay, Long timeStop) {
+        this(id, name, actions, timeDelay, TYPE_TIME, null, timeStop);
+    }
+
+    public Configure(long id, String name, List<Action> actions, long timeDelay, int runType, Integer amountExec, Long timeStop) {
         this.id = id;
         this.name = name;
         this.actions = actions;
-    }
-
-    public Configure(Long id, String name, List<Action> actions, Integer amountExec) {
-        this(id, name, actions);
-        this.amountExec = amountExec;
-        this.runByTimeStop = false;
-    }
-
-    public Configure(Long id, String name, List<Action> actions, Long timeStop) {
-        this(id, name, actions);
-        this.timeStop = timeStop;
-        this.runByTimeStop = true;
-    }
-
-    public Configure(Long id, String name, List<Action> actions, Integer amountExec, Long timeStop, Boolean runByTimeStop) {
-        this(id, name, actions);
+        this.timeDelay = timeDelay;
+        this.runType = runType;
         this.amountExec = amountExec;
         this.timeStop = timeStop;
-        this.runByTimeStop = runByTimeStop;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -65,6 +68,22 @@ public class Configure implements Serializable {
         this.actions = actions;
     }
 
+    public long getTimeDelay() {
+        return timeDelay;
+    }
+
+    public void setTimeDelay(long timeDelay) {
+        this.timeDelay = timeDelay;
+    }
+
+    public int getRunType() {
+        return runType;
+    }
+
+    public void setRunType(int runType) {
+        this.runType = runType;
+    }
+
     public Integer getAmountExec() {
         return amountExec;
     }
@@ -81,16 +100,8 @@ public class Configure implements Serializable {
         this.timeStop = timeStop;
     }
 
-    public Boolean isRunByTimeStop() {
-        return runByTimeStop;
-    }
-
-    public void setRunByTimeStop(boolean runByTimeStop) {
-        this.runByTimeStop = runByTimeStop;
-    }
-
     public ConfigureEntity toEntity() {
-        return new ConfigureEntity(id, name, amountExec, timeStop, runByTimeStop);
+        return new ConfigureEntity(id, name, timeDelay, runType, amountExec, timeStop);
     }
 
     public ConfigureEntity.ConfigureAndAction toConfigureAndAction() {
@@ -110,7 +121,7 @@ public class Configure implements Serializable {
      */
     public Configure deepCopy() {
         List<Action> actionsCopy = actions.stream().map(Action::deepCopy).collect(Collectors.toList());
-        return new Configure(id, name, actionsCopy, amountExec, timeStop, runByTimeStop);
+        return new Configure(id, name, actionsCopy, timeDelay, runType, amountExec, timeStop);
     }
 
     @NonNull
@@ -120,9 +131,10 @@ public class Configure implements Serializable {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", actions=" + actions +
+                ", timeDelay=" + timeDelay +
+                ", runType=" + runType +
                 ", amountExec=" + amountExec +
                 ", timeStop=" + timeStop +
-                ", runByTimeStop=" + runByTimeStop +
                 '}';
     }
 }

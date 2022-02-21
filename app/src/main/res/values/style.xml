@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primaryDark</item>
@@ -21,6 +22,82 @@
         <item name="android:textColorHint">@color/textHint</item>
     </style>
 
+    <style name="Separator">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@android:drawable/divider_horizontal_bright</item>
+    </style>
+
+    <style name="Separator2">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">6dp</item>
+        <item name="android:background">@drawable/bg_separator</item>
+    </style>
+
+    <style name="HeaderCardView">
+        <item name="android:layout_marginStart">@dimen/margin_horizontal_default</item>
+        <item name="android:layout_marginEnd">@dimen/margin_horizontal_default</item>
+        <item name="android:layout_marginTop">@dimen/margin_vertical_default</item>
+        <item name="android:layout_marginBottom">@dimen/margin_vertical_default</item>
+    </style>
+
+    <style name="HeaderTitle" parent="@android:style/TextAppearance.Widget.TextView">
+        <item name="android:paddingStart">@dimen/margin_horizontal_small</item>
+        <item name="android:paddingTop">@dimen/margin_vertical_default</item>
+        <item name="android:paddingBottom">@dimen/margin_vertical_default</item>
+        <item name="android:fontFamily">sans-serif-medium"</item>
+        <item name="android:textSize">@dimen/text_size_item_title</item>
+        <item name="android:background">@color/primary</item>
+        <item name="android:textColor">@color/textTitle</item>
+    </style>
+
+    <style name="SettingTitle" parent="@android:style/TextAppearance.Widget.TextView">
+        <item name="android:paddingStart">@dimen/margin_horizontal_default</item>
+        <item name="android:paddingTop">@dimen/margin_vertical_default</item>
+        <item name="android:paddingBottom">@dimen/margin_vertical_small</item>
+        <item name="android:fontFamily">sans-serif-medium"</item>
+        <item name="android:textSize">@dimen/text_size_setting_title</item>
+        <item name="android:textColor">@color/textSettingTitle</item>
+    </style>
+
+    <style name="SettingItem">
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:paddingStart">@dimen/margin_horizontal_small</item>
+        <item name="android:paddingTop">@dimen/margin_vertical_default</item>
+        <item name="android:paddingBottom">@dimen/margin_vertical_default</item>
+        <item name="android:layout_height">@dimen/setting_item_height</item>
+        <item name="android:background">@drawable/ripple_white_stroke_grey_bot</item>
+    </style>
+    <style name="SettingItemIcon">
+        <item name="android:layout_height">@dimen/setting_item_icon_height</item>
+        <item name="android:layout_width">@dimen/setting_item_icon_width</item>
+        <item name="android:scaleType">centerInside</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <style name="SettingItemContent">
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingStart">@dimen/margin_horizontal_small</item>
+    </style>
+
+    <style name="SettingItemContentTitle" parent="@android:style/TextAppearance.Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_setting_content_title</item>
+        <item name="android:textColor">@color/textSettingContentTitle</item>
+    </style>
+
+    <style name="SettingItemContentDescription" parent="@android:style/TextAppearance.Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_setting_content_description</item>
+        <item name="android:textColor">@color/textSettingContentDescription</item>
+    </style>
+
+    <style name="ButtonControlService" parent="TextAppearance.AppCompat.Widget.Button">
+        <item name="textAllCaps">false</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_margin">@dimen/margin_vertical_small</item>
+        <item name="android:background">@drawable/ripple_white_bg_primary</item>
+    </style>
 
     <style name="OverlayCardView">
         <item name="android:layout_width">wrap_content</item>

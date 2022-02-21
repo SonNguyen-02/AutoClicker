@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+
     <color name="primary">#4CAF50</color>
     <color name="primaryDark">#388E3C</color>
     <color name="accent">#448AFF</color>
@@ -9,11 +12,20 @@
     <color name="textHint">#88FFFFFF</color>
     <color name="listBackground">#EAEAEA</color>
 
+    <color name="textSettingTitle">#3A881D</color>
+    <color name="textSettingContentTitle">#000000</color>
+    <color name="textSettingContentDescription">#454545</color>
+
+    <color name="rippleGrey">#4D000000</color>
+    <color name="rippleWhite">#f5f5f5</color>
+
     <color name="overlayMenuBackground">#77000000</color>
     <color name="overlayMenuButtons">#FFFFFF</color>
     <color name="overlayViewPrimary">#FFFFFF</color>
     <color name="overlayViewAccentPrimary">@color/primary</color>
     <color name="overlayViewAccentSecondary">@color/accent</color>
     <color name="overlayClickSelectorBackground">#77000000</color>
+
+
 
 </resources>

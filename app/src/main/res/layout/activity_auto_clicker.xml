@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mct.auto_clicker.activities.AutoClickerActivity"
+    tools:openDrawer="start">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:menu="@menu/menu_auto_clicker_activity"
+            app:theme="@style/ToolbarTheme"
+            app:title="@string/activity_auto_clicker_title"
+            app:titleTextColor="@color/textTitle" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/ll_bottom_container"
+            android:layout_below="@id/toolbar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/SettingTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/setting_title_default_setting_configure" />
+
+                    <RelativeLayout
+                        style="@style/SettingItem"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            style="@style/SettingItemContent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@android:id/icon">
+
+                            <TextView
+                                style="@style/SettingItemContentTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/setting_content_stop_the_loop_by" />
+
+                            <TextView
+                                style="@style/SettingItemContentDescription"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/setting_content_desc_n_time" />
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        style="@style/SettingItem"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            style="@style/SettingItemContent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@android:id/icon">
+
+                            <TextView
+                                style="@style/SettingItemContentTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/setting_content_loop_delay_time" />
+
+                            <TextView
+                                style="@style/SettingItemContentDescription"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/setting_content_desc_n_milliseconds" />
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <include layout="@layout/include_view_separator_2" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/SettingTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/setting_title_default_setting_action" />
+
+                    <RelativeLayout
+                        style="@style/SettingItem"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@android:id/icon"
+                            style="@style/SettingItemIcon"
+                            android:padding="@dimen/margin_vertical_small"
+                            android:src="@drawable/ic_sand_time"
+                            tools:ignore="ContentDescription" />
+
+                        <LinearLayout
+                            style="@style/SettingItemContent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@android:id/icon">
+
+                            <TextView
+                                style="@style/SettingItemContentTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/setting_content_time_wait_next_action" />
+
+                            <TextView
+                                style="@style/SettingItemContentDescription"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/setting_content_desc_n_milliseconds" />
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        style="@style/SettingItem"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@android:id/icon"
+                            style="@style/SettingItemIcon"
+                            android:src="@drawable/ic_click_duration"
+                            tools:ignore="ContentDescription" />
+
+                        <LinearLayout
+                            style="@style/SettingItemContent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@android:id/icon">
+
+                            <TextView
+                                style="@style/SettingItemContentTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/setting_content_time_click_action_exec" />
+
+                            <TextView
+                                style="@style/SettingItemContentDescription"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/setting_content_desc_n_milliseconds" />
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        style="@style/SettingItem"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@android:id/icon"
+                            style="@style/SettingItemIcon"
+                            android:src="@drawable/ic_swipe_duration"
+                            tools:ignore="ContentDescription" />
+
+                        <LinearLayout
+                            style="@style/SettingItemContent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@android:id/icon">
+
+                            <TextView
+                                style="@style/SettingItemContentTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/setting_content_time_swipe_action_exec" />
+
+                            <TextView
+                                style="@style/SettingItemContentDescription"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/setting_content_desc_n_milliseconds" />
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        style="@style/SettingItem"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@android:id/icon"
+                            style="@style/SettingItemIcon"
+                            android:src="@drawable/ic_arrow_opposite"
+                            tools:ignore="ContentDescription" />
+
+                        <LinearLayout
+                            style="@style/SettingItemContent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@android:id/icon">
+
+                            <TextView
+                                style="@style/SettingItemContentTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/setting_content_time_zoom_action_exec" />
+
+                            <TextView
+                                style="@style/SettingItemContentDescription"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/setting_content_desc_n_milliseconds" />
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <include layout="@layout/include_view_separator_2" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/SettingTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/setting_title_anti_detection" />
+
+                    <RelativeLayout
+                        style="@style/SettingItem"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@android:id/icon"
+                            style="@style/SettingItemIcon"
+                            android:padding="@dimen/margin_vertical_small"
+                            android:src="@drawable/ic_add_time"
+                            tools:ignore="ContentDescription" />
+
+                        <LinearLayout
+                            style="@style/SettingItemContent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@android:id/icon">
+
+                            <TextView
+                                style="@style/SettingItemContentTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/setting_content_increase_random_wait_time" />
+
+                            <TextView
+                                style="@style/SettingItemContentDescription"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/setting_content_desc_n_milliseconds" />
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        style="@style/SettingItem"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@android:id/icon"
+                            style="@style/SettingItemIcon"
+                            android:padding="@dimen/margin_vertical_small"
+                            android:src="@drawable/ic_random_location"
+                            tools:ignore="ContentDescription" />
+
+                        <LinearLayout
+                            style="@style/SettingItemContent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@android:id/icon">
+
+                            <TextView
+                                style="@style/SettingItemContentTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/setting_content_random_location" />
+
+                            <TextView
+                                style="@style/SettingItemContentDescription"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/setting_content_desc_n_px" />
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <include layout="@layout/include_view_separator_2" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/SettingTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/setting_title_other_settings" />
+
+                    <RelativeLayout
+                        style="@style/SettingItem"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@android:id/icon"
+                            style="@style/SettingItemIcon"
+                            android:padding="@dimen/margin_vertical_mini"
+                            android:src="@drawable/ic_ad_block"
+                            tools:ignore="ContentDescription" />
+
+                        <LinearLayout
+                            style="@style/SettingItemContent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@android:id/icon">
+
+                            <TextView
+                                style="@style/SettingItemContentTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/setting_content_remove_ads" />
+
+                            <TextView
+                                style="@style/SettingItemContentDescription"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/setting_content_desc_remove_ads" />
+
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        style="@style/SettingItem"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@android:id/icon"
+                            style="@style/SettingItemIcon"
+                            android:padding="@dimen/margin_vertical_mini"
+                            android:src="@drawable/ic_setting"
+                            app:tint="#FC6C6C6C"
+                            tools:ignore="ContentDescription" />
+
+                        <LinearLayout
+                            style="@style/SettingItemContent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@android:id/icon">
+
+                            <TextView
+                                style="@style/SettingItemContentTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/setting_content_general_settings" />
+
+                            <TextView
+                                style="@style/SettingItemContentDescription"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/setting_content_desc_general_settings" />
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        style="@style/SettingItem"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@android:id/icon"
+                            style="@style/SettingItemIcon"
+                            android:padding="@dimen/margin_vertical_mini"
+                            android:src="@drawable/ic_solving_trouble"
+                            app:tint="#FC6C6C6C"
+                            tools:ignore="ContentDescription" />
+
+                        <LinearLayout
+                            style="@style/SettingItemContent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@android:id/icon">
+
+                            <TextView
+                                style="@style/SettingItemContentTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/setting_content_solving_trouble" />
+
+                            <TextView
+                                style="@style/SettingItemContentDescription"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/setting_content_desc_solving_trouble" />
+
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_allow_system_alert_window"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="allow SYSTEM_ALERT_WINDOW"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/btn_allow_accessibility_service"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="allow accessibility_service"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/btn_start_demo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="start demo"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </LinearLayout>
+
+        </ScrollView>
+
+
+        <!--    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"-->
+        <!--        android:id="@+id/adView"-->
+        <!--        android:layout_width="match_parent"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:layout_alignParentBottom="true"-->
+        <!--        android:padding="2dp"-->
+        <!--        ads:adSize="BANNER"-->
+        <!--        ads:adUnitId="ca-app-pub-3940256099942544/6300978111" />-->
+
+        <LinearLayout
+            android:id="@+id/ll_bottom_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
+
+            <Button
+                style="@style/ButtonControlService"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Start" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:gravity="center"
+                android:text="Ads"
+                android:textSize="18sp" />
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/layout_header_navigation"
+        app:menu="@menu/menu_left_navigation" />
+
+
+</androidx.drawerlayout.widget.DrawerLayout>

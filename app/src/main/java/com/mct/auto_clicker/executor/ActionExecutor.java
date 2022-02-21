@@ -55,7 +55,9 @@ public class ActionExecutor {
             return;
         }
         if (actions.isEmpty()) {
-            mOnExecutionComplete.onComplete();
+            if(mOnExecutionComplete != null){
+                mainThreadHandler.post(mOnExecutionComplete::onComplete);
+            }
             return;
         }
         Action action = actions.get(0);

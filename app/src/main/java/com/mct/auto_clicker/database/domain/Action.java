@@ -8,11 +8,11 @@ import java.io.Serializable;
 
 public abstract class Action implements Serializable {
 
-    private Long id;
-    private Long configureId;
+    private long id;
+    private long configureId;
     private String name;
-    private Long timeDelay;
-    private Long actionDuration;
+    private long timeDelay;
+    private long actionDuration;
 
     /**
      * <b>Action</b>.
@@ -24,7 +24,7 @@ public abstract class Action implements Serializable {
      * @param actionDuration the duration run action in milliseconds.
      */
 
-    public Action(Long id, Long configureId, String name, Long timeDelay, Long actionDuration) {
+    public Action(long id, long configureId, String name, long timeDelay, long actionDuration) {
         this.id = id;
         this.configureId = configureId;
         this.name = name;
@@ -32,19 +32,19 @@ public abstract class Action implements Serializable {
         this.actionDuration = actionDuration;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public Long getConfigureId() {
+    public long getConfigureId() {
         return configureId;
     }
 
-    public void setConfigureId(Long configureId) {
+    public void setConfigureId(long configureId) {
         this.configureId = configureId;
     }
 
@@ -57,26 +57,26 @@ public abstract class Action implements Serializable {
         this.name = name;
     }
 
-    public Long getTimeDelay() {
+    public long getTimeDelay() {
         return timeDelay;
     }
 
-    public void setTimeDelay(Long timeDelay) {
+    public void setTimeDelay(long timeDelay) {
         this.timeDelay = timeDelay;
     }
 
-    public Long getActionDuration() {
+    public long getActionDuration() {
         return actionDuration;
     }
 
-    public void setActionDuration(Long actionDuration) {
+    public void setActionDuration(long actionDuration) {
         this.actionDuration = actionDuration;
     }
 
     /**
      * getTotalDuration is time to next action
      */
-    public Long getTotalDuration() {
+    public long getTotalDuration() {
         return timeDelay + actionDuration;
     }
 
@@ -106,8 +106,8 @@ public abstract class Action implements Serializable {
 
     public static class Click extends Action {
 
-        private Integer x;
-        private Integer y;
+        private int x;
+        private int y;
 
         /**
          * <b>Click action</b>.
@@ -120,25 +120,25 @@ public abstract class Action implements Serializable {
          * @param x             the x position of the click.
          * @param y             the y position of the click.
          */
-        public Click(Long id, Long configureId, String name, Long timeDelay, Long clickDuration, Integer x, Integer y) {
+        public Click(long id, long configureId, String name, long timeDelay, long clickDuration, int x, int y) {
             super(id, configureId, name, timeDelay, clickDuration);
             this.x = x;
             this.y = y;
         }
 
-        public Integer getX() {
+        public int getX() {
             return x;
         }
 
-        public void setX(Integer x) {
+        public void setX(int x) {
             this.x = x;
         }
 
-        public Integer getY() {
+        public int getY() {
             return y;
         }
 
-        public void setY(Integer y) {
+        public void setY(int y) {
             this.y = y;
         }
 
@@ -161,7 +161,7 @@ public abstract class Action implements Serializable {
 
     public static class Swipe extends Action {
 
-        private Integer fromX, fromY, toX, toY;
+        private int fromX, fromY, toX, toY;
 
         /**
          * Swipe action.
@@ -177,7 +177,7 @@ public abstract class Action implements Serializable {
          * @param toY           the y position of the swipe end.
          */
 
-        public Swipe(Long id, Long configureId, String name, Long timeDelay, Long swipeDuration, Integer fromX, Integer fromY, Integer toX, Integer toY) {
+        public Swipe(long id, long configureId, String name, long timeDelay, long swipeDuration, int fromX, int fromY, int toX, int toY) {
             super(id, configureId, name, timeDelay, swipeDuration);
             this.fromX = fromX;
             this.fromY = fromY;
@@ -185,35 +185,35 @@ public abstract class Action implements Serializable {
             this.toY = toY;
         }
 
-        public Integer getFromX() {
+        public int getFromX() {
             return fromX;
         }
 
-        public void setFromX(Integer fromX) {
+        public void setFromX(int fromX) {
             this.fromX = fromX;
         }
 
-        public Integer getFromY() {
+        public int getFromY() {
             return fromY;
         }
 
-        public void setFromY(Integer fromY) {
+        public void setFromY(int fromY) {
             this.fromY = fromY;
         }
 
-        public Integer getToX() {
+        public int getToX() {
             return toX;
         }
 
-        public void setToX(Integer toX) {
+        public void setToX(int toX) {
             this.toX = toX;
         }
 
-        public Integer getToY() {
+        public int getToY() {
             return toY;
         }
 
-        public void setToY(Integer toY) {
+        public void setToY(int toY) {
             this.toY = toY;
         }
 
@@ -239,7 +239,7 @@ public abstract class Action implements Serializable {
         public static final int ZOOM_IN = 0;
         public static final int ZOOM_OUT = 1;
 
-        private Integer zoomType, x1, y1, x2, y2;
+        private int zoomType, x1, y1, x2, y2;
 
         /**
          * Swipe action.
@@ -255,7 +255,7 @@ public abstract class Action implements Serializable {
          * @param x2           the x2 position of the zoom point 2.
          * @param y2           the y2 position of the zoom point 2.
          */
-        public Zoom(Long id, Long configureId, String name, Long timeDelay, Long zoomDuration, Integer zoomType, Integer x1, Integer y1, Integer x2, Integer y2) {
+        public Zoom(long id, long configureId, String name, long timeDelay, long zoomDuration, int zoomType, int x1, int y1, int x2, int y2) {
             super(id, configureId, name, timeDelay, zoomDuration);
             this.zoomType = zoomType;
             this.x1 = x1;
@@ -264,43 +264,43 @@ public abstract class Action implements Serializable {
             this.y2 = y2;
         }
 
-        public Integer getZoomType() {
+        public int getZoomType() {
             return zoomType;
         }
 
-        public void setZoomType(Integer zoomType) {
+        public void setZoomType(int zoomType) {
             this.zoomType = zoomType;
         }
 
-        public Integer getX1() {
+        public int getX1() {
             return x1;
         }
 
-        public void setX1(Integer x1) {
+        public void setX1(int x1) {
             this.x1 = x1;
         }
 
-        public Integer getY1() {
+        public int getY1() {
             return y1;
         }
 
-        public void setY1(Integer y1) {
+        public void setY1(int y1) {
             this.y1 = y1;
         }
 
-        public Integer getX2() {
+        public int getX2() {
             return x2;
         }
 
-        public void setX2(Integer x2) {
+        public void setX2(int x2) {
             this.x2 = x2;
         }
 
-        public Integer getY2() {
+        public int getY2() {
             return y2;
         }
 
-        public void setY2(Integer y2) {
+        public void setY2(int y2) {
             this.y2 = y2;
         }
 

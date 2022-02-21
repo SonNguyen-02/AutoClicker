@@ -1,8 +1,5 @@
 package com.mct.auto_clicker.overlays;
 
-import static com.mct.auto_clicker.AutoClickerService.ACTION_EXISTS;
-import static com.mct.auto_clicker.AutoClickerService.KEY_ACTION;
-
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
@@ -22,7 +19,6 @@ import com.mct.auto_clicker.AutoClickerService;
 import com.mct.auto_clicker.R;
 import com.mct.auto_clicker.database.Repository;
 import com.mct.auto_clicker.database.domain.Configure;
-
 
 public class FloatingMenu extends Service implements View.OnClickListener {
     private WindowManager mWindowManager;
@@ -117,7 +113,7 @@ public class FloatingMenu extends Service implements View.OnClickListener {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     if (!checkAction && !mLocalService.isStart()) {
                         Configure configure = Repository.getInstance(getApplicationContext()).getConfigure(1L);
-                        mLocalService.init(configure, isStarted -> btnStartStop.setImageResource(R.drawable.ic_start));
+                        mLocalService.init(configure, () -> btnStartStop.setImageResource(R.drawable.ic_start));
                         btnStartStop.setImageResource(R.drawable.ic_pause);
                     }
                     return true;
@@ -145,9 +141,9 @@ public class FloatingMenu extends Service implements View.OnClickListener {
             case R.id.btn_start_stop:
                 break;
             case R.id.btn_exists:
-                Intent intent = new Intent(getApplicationContext(), AutoClickerService.class);
-                intent.putExtra(KEY_ACTION, ACTION_EXISTS);
-                startService(intent);
+                if (mLocalService != null) {
+                    mLocalService.stop();
+                }
                 stopSelf();
         }
     }

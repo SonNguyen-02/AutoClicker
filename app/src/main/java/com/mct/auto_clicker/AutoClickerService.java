@@ -1,7 +1,13 @@
 package com.mct.auto_clicker;
 
+import static com.mct.auto_clicker.database.domain.Configure.TYPE_AMOUNT;
+import static com.mct.auto_clicker.database.domain.Configure.TYPE_INFINITY;
+import static com.mct.auto_clicker.database.domain.Configure.TYPE_TIME;
+
 import android.accessibilityservice.AccessibilityService;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 
@@ -14,13 +20,14 @@ import java.util.function.Consumer;
 
 public class AutoClickerService extends AccessibilityService {
 
-    public static final int ACTION_EXISTS = 101;
-    public static final String KEY_ACTION = "key_action";
-
     private Boolean isStarted = false;
 
     private static LocalService mLocalService;
     private ActionExecutor executor;
+
+    public interface OnConfigureStopListener {
+        void onStop();
+    }
 
     @Override
     protected void onServiceConnected() {
@@ -33,72 +40,61 @@ public class AutoClickerService extends AccessibilityService {
         return mLocalService;
     }
 
-    @Override
-    public int onStartCommand(@NonNull Intent intent, int flags, int startId) {
-        int action = intent.getIntExtra(KEY_ACTION, 0);
-        if (action == ACTION_EXISTS) {
-            mLocalService.stop();
-            stopSelf();
-        }
-        return super.onStartCommand(intent, flags, startId);
-    }
-
     public class LocalService {
 
         private Configure mConfigure;
         private long timeStart;
         private int countExec;
 
-        public void init(@NonNull Configure configure, Consumer<Boolean> consumer) {
+        public void init(@NonNull Configure configure, OnConfigureStopListener mOnConfigureStopListener) {
             this.mConfigure = configure;
-            countExec = 1;
-            // run infinity configure
-            if (mConfigure.isRunByTimeStop() == null) {
-                executor = new ActionExecutor(gesture -> dispatchGesture(gesture, null, null), () -> {
-                    isStarted = false;
-                    start(mConfigure);
-                });
-                start(mConfigure);
-                return;
-            }
-            // configure will stop apter stop time
-            if (mConfigure.isRunByTimeStop()) {
-                timeStart = System.currentTimeMillis();
-                executor = new ActionExecutor(gesture -> {
-                    if (System.currentTimeMillis() - timeStart <= mConfigure.getTimeStop()) {
-                        dispatchGesture(gesture, null, null);
-                    } else {
-                        stop();
-                        consumer.accept(isStarted);
-                    }
-                }, () -> {
-                    if (System.currentTimeMillis() - timeStart <= mConfigure.getTimeStop()) {
-                        isStarted = false;
-                        start(mConfigure);
-                    } else {
-                        stop();
-                        consumer.accept(isStarted);
-                    }
-                });
-            }
-            // configure will stop apter count time
-            else {
-                executor = new ActionExecutor(gesture -> dispatchGesture(gesture, null, null), () -> {
-                    if (countExec < mConfigure.getAmountExec()) {
-                        countExec++;
-                        isStarted = false;
-                        start(mConfigure);
-                    } else {
-                        stop();
-                        consumer.accept(isStarted);
-                    }
-                });
+            switch (mConfigure.getRunType()) {
+                case TYPE_INFINITY:
+                    executor = new ActionExecutor(gesture -> dispatchGesture(gesture, null, null), this::startConfigureLoop);
+                    break;
+                case TYPE_TIME:
+                    timeStart = System.currentTimeMillis();
+                    executor = new ActionExecutor(gesture -> {
+                        if (System.currentTimeMillis() - timeStart <= mConfigure.getTimeStop()) {
+                            dispatchGesture(gesture, null, null);
+                        } else {
+                            stopWithListener(mOnConfigureStopListener);
+                        }
+                    }, () -> {
+                        if (System.currentTimeMillis() - timeStart <= mConfigure.getTimeStop()) {
+                            startConfigureLoop();
+                        } else {
+                            stopWithListener(mOnConfigureStopListener);
+                        }
+                    });
+                    break;
+                case TYPE_AMOUNT:
+                    countExec = 1;
+                    executor = new ActionExecutor(gesture -> dispatchGesture(gesture, null, null), () -> {
+                        if (countExec < mConfigure.getAmountExec()) {
+                            countExec++;
+                            startConfigureLoop();
+                        } else {
+                            stopWithListener(mOnConfigureStopListener);
+                        }
+                    });
+                    break;
             }
             start(mConfigure);
         }
 
         public boolean isStart() {
             return isStarted;
+        }
+
+        private void startConfigureLoop() {
+            isStarted = false;
+            new Handler(Looper.getMainLooper()).postDelayed(() -> start(mConfigure), mConfigure.getTimeDelay());
+        }
+
+        private void stopWithListener(@NonNull OnConfigureStopListener mOnConfigureStopListener) {
+            mOnConfigureStopListener.onStop();
+            stop();
         }
 
         public void start(Configure configure) {
