@@ -53,6 +53,9 @@
     <string name="setting_content_solving_trouble">Solving trouble</string>
 
     <string name="setting_content_desc_n_milliseconds">{0} milliseconds</string>
+    <string name="setting_content_desc_n_hour">{0} hour</string>
+    <string name="setting_content_desc_n_minus">{0} minus</string>
+    <string name="setting_content_desc_n_second">{0} second</string>
     <string name="setting_content_desc_n_time">{0} times</string>
     <string name="setting_content_desc_infinity">Infinite repeat</string>
     <string name="setting_content_desc_countdown_timer">Countdown timer: {0}</string>

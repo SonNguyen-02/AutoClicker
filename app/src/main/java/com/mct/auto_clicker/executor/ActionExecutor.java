@@ -1,19 +1,22 @@
 package com.mct.auto_clicker.executor;
 
 import android.accessibilityservice.GestureDescription;
+import android.content.Context;
 import android.graphics.Path;
+import android.graphics.Point;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.mct.auto_clicker.database.domain.Action;
+import com.mct.auto_clicker.presenter.MySharedPreference;
+import com.mct.auto_clicker.utils.ScreenUtils;
 
 import java.util.List;
+import java.util.Random;
 
 public class ActionExecutor {
 
@@ -50,20 +53,25 @@ public class ActionExecutor {
     }
 
     @WorkerThread
-    public void executeActions(@NonNull List<Action> actions) {
+    public void executeActions(@NonNull List<Action> actions, Context mContext) {
         if (mGestureExecutionListener == null) {
             return;
         }
         if (actions.isEmpty()) {
-            if(mOnExecutionComplete != null){
-                mainThreadHandler.post(mOnExecutionComplete::onComplete);
-            }
+            onComplete();
             return;
         }
         Action action = actions.get(0);
-
+        int randWaitTime = 0;
         if (action instanceof Action.Click) {
-            executeClick((Action.Click) action);
+            if (((Action.Click) action).isAntiDetection()) {
+                if (MySharedPreference.getInstance(mContext).getIncreaseRandomWaitTime() > 0) {
+                    Random random = new Random(System.currentTimeMillis());
+                    randWaitTime = random.nextInt(MySharedPreference.getInstance(mContext).getIncreaseRandomWaitTime());
+                    Log.e("ddd", "executeActions: " + randWaitTime);
+                }
+            }
+            executeClick((Action.Click) action, mContext);
         }
         if (action instanceof Action.Swipe) {
             executeSwipe((Action.Swipe) action);
@@ -74,14 +82,29 @@ public class ActionExecutor {
 
         List<Action> actionsLeft = actions.subList(1, actions.size());
 
-        workerThreadHandler.postDelayed(() -> executeActions(actionsLeft), action.getTotalDuration());
+        workerThreadHandler.postDelayed(() -> executeActions(actionsLeft, mContext), action.getTotalDuration() + randWaitTime);
 
     }
 
     @WorkerThread
-    private void executeClick(@NonNull Action.Click click) {
+    private void executeClick(@NonNull Action.Click click, Context mContext) {
         Path path = new Path();
-        path.moveTo(click.getX(), click.getY());
+        if (click.isAntiDetection() && MySharedPreference.getInstance(mContext).getRandomLocation() > 0) {
+            int randLocation = MySharedPreference.getInstance(mContext).getRandomLocation();
+            int x = click.getX() + (int) (Math.random() * (randLocation + 1)) - (randLocation / 2);
+            int y = click.getY() + (int) (Math.random() * (randLocation + 1)) - (randLocation / 2);
+            Point screenSize = ScreenUtils.getScreenSize(mContext);
+            if (x < 0 || x > screenSize.x) {
+                x = click.getX();
+            }
+            if (y < 0 || y > screenSize.y) {
+                y = click.getY();
+            }
+            path.moveTo(x, y);
+            Log.e("ddd", "executeClick: " + x + "|" + y);
+        } else {
+            path.moveTo(click.getX(), click.getY());
+        }
         GestureDescription gesture = createGestureDescription(new GestureDescription.StrokeDescription(path, 0, click.getActionDuration()));
         execGesture(gesture);
     }
@@ -118,6 +141,14 @@ public class ActionExecutor {
                 new GestureDescription.StrokeDescription(path2, 0, zoom.getActionDuration())
         );
         execGesture(gesture);
+    }
+
+    private void onComplete() {
+        mainThreadHandler.post(() -> {
+            if (mOnExecutionComplete != null) {
+                mOnExecutionComplete.onComplete();
+            }
+        });
     }
 
     private void execGesture(GestureDescription gestureDescription) {

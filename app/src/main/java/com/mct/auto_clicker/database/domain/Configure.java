@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
 
 public class Configure implements Serializable {
 
-    public static final int TYPE_INFINITY = 0;
-    public static final int TYPE_AMOUNT = 1;
-    public static final int TYPE_TIME = 2;
+    public static final int RUN_TYPE_INFINITY = 0;
+    public static final int RUN_TYPE_AMOUNT = 1;
+    public static final int RUN_TYPE_TIME = 2;
 
     private long id;
     private String name;
@@ -23,15 +23,15 @@ public class Configure implements Serializable {
     private Long timeStop;
 
     public Configure(long id, String name, List<Action> actions, long timeDelay) {
-        this(id, name, actions, timeDelay, TYPE_INFINITY, null, null);
+        this(id, name, actions, timeDelay, RUN_TYPE_INFINITY, null, null);
     }
 
     public Configure(long id, String name, List<Action> actions, long timeDelay, Integer amountExec) {
-        this(id, name, actions, timeDelay, TYPE_AMOUNT, amountExec, null);
+        this(id, name, actions, timeDelay, RUN_TYPE_AMOUNT, amountExec, null);
     }
 
     public Configure(long id, String name, List<Action> actions, long timeDelay, Long timeStop) {
-        this(id, name, actions, timeDelay, TYPE_TIME, null, timeStop);
+        this(id, name, actions, timeDelay, RUN_TYPE_TIME, null, timeStop);
     }
 
     public Configure(long id, String name, List<Action> actions, long timeDelay, int runType, Integer amountExec, Long timeStop) {

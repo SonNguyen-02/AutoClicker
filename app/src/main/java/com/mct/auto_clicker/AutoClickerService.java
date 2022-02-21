@@ -1,11 +1,10 @@
 package com.mct.auto_clicker;
 
-import static com.mct.auto_clicker.database.domain.Configure.TYPE_AMOUNT;
-import static com.mct.auto_clicker.database.domain.Configure.TYPE_INFINITY;
-import static com.mct.auto_clicker.database.domain.Configure.TYPE_TIME;
+import static com.mct.auto_clicker.database.domain.Configure.RUN_TYPE_AMOUNT;
+import static com.mct.auto_clicker.database.domain.Configure.RUN_TYPE_INFINITY;
+import static com.mct.auto_clicker.database.domain.Configure.RUN_TYPE_TIME;
 
 import android.accessibilityservice.AccessibilityService;
-import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -15,8 +14,6 @@ import androidx.annotation.NonNull;
 
 import com.mct.auto_clicker.database.domain.Configure;
 import com.mct.auto_clicker.executor.ActionExecutor;
-
-import java.util.function.Consumer;
 
 public class AutoClickerService extends AccessibilityService {
 
@@ -49,10 +46,10 @@ public class AutoClickerService extends AccessibilityService {
         public void init(@NonNull Configure configure, OnConfigureStopListener mOnConfigureStopListener) {
             this.mConfigure = configure;
             switch (mConfigure.getRunType()) {
-                case TYPE_INFINITY:
+                case RUN_TYPE_INFINITY:
                     executor = new ActionExecutor(gesture -> dispatchGesture(gesture, null, null), this::startConfigureLoop);
                     break;
-                case TYPE_TIME:
+                case RUN_TYPE_TIME:
                     timeStart = System.currentTimeMillis();
                     executor = new ActionExecutor(gesture -> {
                         if (System.currentTimeMillis() - timeStart <= mConfigure.getTimeStop()) {
@@ -68,7 +65,7 @@ public class AutoClickerService extends AccessibilityService {
                         }
                     });
                     break;
-                case TYPE_AMOUNT:
+                case RUN_TYPE_AMOUNT:
                     countExec = 1;
                     executor = new ActionExecutor(gesture -> dispatchGesture(gesture, null, null), () -> {
                         if (countExec < mConfigure.getAmountExec()) {
@@ -102,7 +99,7 @@ public class AutoClickerService extends AccessibilityService {
                 return;
             }
             isStarted = true;
-            executor.executeActions(configure.getActions());
+            executor.executeActions(configure.getActions(), getApplicationContext());
         }
 
         public void stop() {

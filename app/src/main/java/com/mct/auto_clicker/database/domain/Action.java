@@ -1,10 +1,14 @@
 package com.mct.auto_clicker.database.domain;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 
 import com.mct.auto_clicker.database.room.entity.ActionEntity;
+import com.mct.auto_clicker.presenter.MySharedPreference;
 
 import java.io.Serializable;
+import java.util.Random;
 
 public abstract class Action implements Serializable {
 
@@ -108,22 +112,25 @@ public abstract class Action implements Serializable {
 
         private int x;
         private int y;
+        private boolean isAntiDetection;
 
         /**
          * <b>Click action</b>.
          *
-         * @param id            the unique identifier for the action. Use 0 for creating a new action. Default value is 0.
-         * @param configureId   the identifier of the event for this action.
-         * @param name          the name of the action.
-         * @param timeDelay     the time delay before run action in milliseconds
-         * @param clickDuration the duration between the click down and up in milliseconds.
-         * @param x             the x position of the click.
-         * @param y             the y position of the click.
+         * @param id              the unique identifier for the action. Use 0 for creating a new action. Default value is 0.
+         * @param configureId     the identifier of the event for this action.
+         * @param name            the name of the action.
+         * @param timeDelay       the time delay before run action in milliseconds
+         * @param clickDuration   the duration between the click down and up in milliseconds.
+         * @param x               the x position of the click.
+         * @param y               the y position of the click.
+         * @param isAntiDetection the y position of the click.
          */
-        public Click(long id, long configureId, String name, long timeDelay, long clickDuration, int x, int y) {
+        public Click(long id, long configureId, String name, long timeDelay, long clickDuration, int x, int y, boolean isAntiDetection) {
             super(id, configureId, name, timeDelay, clickDuration);
             this.x = x;
             this.y = y;
+            this.isAntiDetection = isAntiDetection;
         }
 
         public int getX() {
@@ -142,14 +149,22 @@ public abstract class Action implements Serializable {
             this.y = y;
         }
 
+        public boolean isAntiDetection() {
+            return isAntiDetection;
+        }
+
+        public void setAntiDetection(boolean antiDetection) {
+            isAntiDetection = antiDetection;
+        }
+
         @Override
         public ActionEntity toEntity() {
-            return new ActionEntity(getId(), getConfigureId(), getName(), getTimeDelay(), getActionDuration(), ActionEntity.ActionType.CLICK, x, y);
+            return new ActionEntity(getId(), getConfigureId(), getName(), getTimeDelay(), getActionDuration(), ActionEntity.ActionType.CLICK, x, y, isAntiDetection);
         }
 
         @Override
         public Action deepCopy() {
-            return new Click(getId(), getConfigureId(), getName(), getTimeDelay(), getActionDuration(), x, y);
+            return new Click(getId(), getConfigureId(), getName(), getTimeDelay(), getActionDuration(), x, y, isAntiDetection);
         }
 
         @NonNull

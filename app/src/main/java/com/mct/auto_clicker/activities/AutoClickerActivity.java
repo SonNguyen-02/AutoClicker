@@ -19,6 +19,7 @@ import com.mct.auto_clicker.database.Repository;
 import com.mct.auto_clicker.database.domain.Action;
 import com.mct.auto_clicker.database.domain.Configure;
 import com.mct.auto_clicker.overlays.FloatingMenu;
+import com.mct.auto_clicker.presenter.MySharedPreference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,8 +77,6 @@ public class AutoClickerActivity extends AppCompatActivity {
     }
 
 
-
-
     private void askPermission() {
         Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
@@ -93,17 +92,20 @@ public class AutoClickerActivity extends AppCompatActivity {
     void addConfigure() {
         Repository.getInstance(this).deleteConfigures(Repository.getInstance(this).getAllConfigures());
         List<Action> actionList = new ArrayList<>();
+        MySharedPreference.getInstance(this)
+                .setRandomLocation(5)
+                .setIncreaseRandomWaitTime(20)
+                .commit();
+        actionList.add(new Action.Click(0L, 0L, "click1", 50L, 50L, 540, 1000, true));
+//        actionList.add(new Action.Zoom(0L, 0L, "zoom1", 100L, 600L, Action.Zoom.ZOOM_IN, 540, 300, 540, 1800));
+//
+//        actionList.add(new Action.Swipe(0L, 0L, "swipe1", 100L, 600L, 1, 500, 950, 500));
+//
+//        actionList.add(new Action.Swipe(0L, 0L, "swipe1", 100L, 600L, 950, 500, 1, 500));
+//
+//        actionList.add(new Action.Zoom(0L, 0L, "zoom1", 100L, 600L, Action.Zoom.ZOOM_OUT, 540, 300, 540, 1800));
 
-//        actionList.add(new Action.Click(0L, 0L, "click1", 0L, 1L, 540, 1000));
-        actionList.add(new Action.Zoom(0L, 0L, "zoom1", 100L, 600L, Action.Zoom.ZOOM_IN, 540, 300, 540, 1800));
-
-        actionList.add(new Action.Swipe(0L, 0L, "swipe1", 100L, 600L, 1, 500, 950, 500));
-
-        actionList.add(new Action.Swipe(0L, 0L, "swipe1", 100L, 600L, 950, 500, 1, 500));
-
-        actionList.add(new Action.Zoom(0L, 0L, "zoom1", 100L, 600L, Action.Zoom.ZOOM_OUT, 540, 300, 540, 1800));
-
-        Repository.getInstance(this).addConfigure(new Configure(1L, "config 1", actionList, 1000, 10000L));
+        Repository.getInstance(this).addConfigure(new Configure(1L, "config 1", actionList, 0, 10000L));
 
 //        Repository.getInstance(this).deleteConfigure(Repository.getInstance(this).getConfigure(4L));
 

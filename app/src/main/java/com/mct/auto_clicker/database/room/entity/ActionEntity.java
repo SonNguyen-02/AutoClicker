@@ -42,6 +42,8 @@ public class ActionEntity {
     public Integer x = null;
     @ColumnInfo(name = "y")
     public Integer y = null;
+    @ColumnInfo(name = "isAntiDetection")
+    public Boolean isAntiDetection = null;
 
     // ActionType.SWIPE | ActionType.ZOOM_IN | ActionType.ZOOM_OUT
     @ColumnInfo(name = "x1")
@@ -65,10 +67,11 @@ public class ActionEntity {
         this.type = type;
     }
 
-    public ActionEntity(Long id, Long configureId, String name, Long timeDelay, Long actionDuration, ActionType type, Integer x, Integer y) {
+    public ActionEntity(Long id, Long configureId, String name, Long timeDelay, Long actionDuration, ActionType type, Integer x, Integer y, Boolean isAntiDetection) {
         this(id, configureId, name, timeDelay, actionDuration, type);
         this.x = x;
         this.y = y;
+        this.isAntiDetection = isAntiDetection;
     }
 
     public ActionEntity(Long id, Long configureId, String name, Long timeDelay, Long actionDuration, ActionType type, Integer x1, Integer y1, Integer x2, Integer y2) {
@@ -82,7 +85,7 @@ public class ActionEntity {
     public Action toAction() {
         switch (type) {
             case CLICK:
-                return new Action.Click(id, configureId, name, timeDelay, actionDuration, x, y);
+                return new Action.Click(id, configureId, name, timeDelay, actionDuration, x, y, isAntiDetection);
             case SWIPE:
                 return new Action.Swipe(id, configureId, name, timeDelay, actionDuration, x1, y1, x2, y2);
             case ZOOM_IN:
