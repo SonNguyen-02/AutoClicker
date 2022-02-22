@@ -21,6 +21,7 @@
     <string name="content_desc_setting_configure">Setting the configure</string>
     <string name="content_desc_exists_the_configure">Exists the configure</string>
     <string name="content_desc_move_floating_menu">Move the floating menu</string>
+    <string name="content_desc_dialog_title_icon">The dialog title icon.</string>
 
     <string name="setting_title_default_setting_configure">Default settings for configure</string>
     <string name="setting_title_default_setting_action">Default settings for actions</string>
@@ -67,10 +68,15 @@
 
     <string name="menu_about_us">About Us</string>
     <string name="menu_rate_app">Rate app</string>
-    <string name="share_app">Share app</string>
+    <string name="menu_share_app">Share app</string>
     <string name="menu_feedback">Feedback</string>
     <string name="menu_license">License</string>
     <string name="menu_privacy_policy">Privacy policy</string>
 
+    <string name="dialog_title_select_loop_stop_condition">Select loop stop condition</string>
+
+    <string name="dl_infinity_loop">Infinity loop</string>
+    <string name="dl_number_of_loops">Number of loops:</string>
+    <string name="dl_countdown_timer">Countdown timer</string>
 
 </resources>

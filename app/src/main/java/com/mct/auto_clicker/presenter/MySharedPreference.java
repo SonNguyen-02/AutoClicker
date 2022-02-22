@@ -14,8 +14,10 @@ public class MySharedPreference {
     // default setting for configure
     private static final String K_TYPE_STOP_THE_LOOP = "k_type_stop_the_loop";
     private static final int DEFAULT_TYPE_STOP_THE_LOOP = Configure.RUN_TYPE_INFINITY;
+
+    private static final String K_STOP_LOOP_BY_AMOUNT = "k_stop_loop_by_amount";
     // save a long number
-    private static final String VALUE_STOP_THE_LOOP = "value_stop_the_loop";
+    private static final String K_STOP_LOOP_BY_TIME = "k_stop_loop_by_time";
 
     private static final String K_LOOP_DELAY_TIME = "k_loop_delay_time";
     private static final int DEFAULT_LOOP_DELAY_TIME = 0;
@@ -65,12 +67,21 @@ public class MySharedPreference {
         return this;
     }
 
-    public long getValueStopTheLoop() {
-        return mSharedPreferences.getLong(VALUE_STOP_THE_LOOP, 0);
+    public int getStopLoopByAmount() {
+        return mSharedPreferences.getInt(K_STOP_LOOP_BY_AMOUNT, 1);
     }
 
-    public MySharedPreference setValueStopTheLoop(long value) {
-        mEditor.putLong(VALUE_STOP_THE_LOOP, value);
+    public MySharedPreference setStopLoopByAmount(int value) {
+        mEditor.putInt(K_STOP_LOOP_BY_AMOUNT, value);
+        return this;
+    }
+
+    public long getStopLoopByTime() {
+        return mSharedPreferences.getLong(K_STOP_LOOP_BY_TIME, 0);
+    }
+
+    public MySharedPreference setStopLoopByTime(long value) {
+        mEditor.putLong(K_STOP_LOOP_BY_TIME, value);
         return this;
     }
 

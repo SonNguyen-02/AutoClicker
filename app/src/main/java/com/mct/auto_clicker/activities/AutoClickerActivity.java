@@ -1,6 +1,7 @@
 package com.mct.auto_clicker.activities;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -18,6 +19,7 @@ import com.mct.auto_clicker.R;
 import com.mct.auto_clicker.database.Repository;
 import com.mct.auto_clicker.database.domain.Action;
 import com.mct.auto_clicker.database.domain.Configure;
+import com.mct.auto_clicker.dialog.SettingStopLoopDialog;
 import com.mct.auto_clicker.overlays.FloatingMenu;
 import com.mct.auto_clicker.presenter.MySharedPreference;
 
@@ -32,6 +34,10 @@ public class AutoClickerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auto_clicker);
+
+        SettingStopLoopDialog dialog = new SettingStopLoopDialog(this);
+        dialog.create(null);
+
 
         initToolBar();
 

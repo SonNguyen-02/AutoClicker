@@ -127,4 +127,24 @@
         <item name="android:scaleType">fitCenter</item>
     </style>
 
+
+    <style name="DialogTitle" parent="@android:style/TextAppearance.Widget.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/item_height</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/textTitle</item>
+        <item name="android:textSize">@dimen/text_size_dialog_title</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="DialogTitleIcon">
+        <item name="android:layout_width">@dimen/item_height</item>
+        <item name="android:layout_height">@dimen/item_height</item>
+        <item name="android:paddingTop">@dimen/margin_vertical_large</item>
+        <item name="android:paddingBottom">@dimen/margin_vertical_large</item>
+        <item name="android:paddingStart">@dimen/margin_horizontal_small</item>
+        <item name="android:tint">@color/textTitle</item>
+    </style>
+
 </resources>
