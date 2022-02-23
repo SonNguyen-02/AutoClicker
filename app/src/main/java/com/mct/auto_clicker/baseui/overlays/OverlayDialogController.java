@@ -1,6 +1,7 @@
 package com.mct.auto_clicker.baseui.overlays;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.view.KeyEvent;
 import android.view.View;
@@ -35,6 +36,15 @@ public abstract class OverlayDialogController extends OverlayController {
     private AlertDialog dialog = null;
 
     /**
+     * The AlertDialog in this method have higher priority {@link #onCreateDialog()}
+     *
+     * @return != null => {@link #dialog} = {@link #onInitDialog()}
+     */
+    protected AlertDialog onInitDialog() {
+        return null;
+    }
+
+    /**
      * Creates the dialog shown by this controller.
      * Note that the cancelable value and the dismiss listener will be overridden with internal values once, so any
      * values for them defined here will not be kept.
@@ -51,30 +61,44 @@ public abstract class OverlayDialogController extends OverlayController {
      */
     protected abstract void onDialogCreated(AlertDialog dialog);
 
+    /**
+     * isOverlay
+     *
+     * @return true if the dialog is overlay, false isn't
+     */
+    protected abstract boolean isOverlay();
+
     @Override
     protected void onCreate() {
-        dialog = onCreateDialog()
-                .setOnDismissListener(dialogInterface -> {
-                    dismiss();
-                    onDialogDismissed();
-                })
-                .setCancelable(false)
-                .setOnKeyListener((dialogInterface, i, keyEvent) -> {
-                    if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_BACK && keyEvent.getAction() == KeyEvent.ACTION_UP) {
-                        dismiss();
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }).create();
-        int type;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        // u can init a alert dialog or builder
+        if (onInitDialog() != null) {
+            dialog = onInitDialog();
         } else {
-            type = WindowManager.LayoutParams.TYPE_PHONE;
+            dialog = onCreateDialog().create();
         }
+        dialog.setCancelable(!isOverlay());
+        dialog.setOnDismissListener(dialogInterface -> {
+            dismiss();
+            onDialogDismissed();
+        });
+        dialog.setOnKeyListener((dialogInterface, i, keyEvent) -> {
+            if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_BACK && keyEvent.getAction() == KeyEvent.ACTION_UP) {
+                dismiss();
+                return true;
+            } else {
+                return false;
+            }
+        });
         Window window = dialog.getWindow();
-        window.setType(type);
+        if (isOverlay()) {
+            int type;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+            } else {
+                type = WindowManager.LayoutParams.TYPE_PHONE;
+            }
+            window.setType(type);
+        }
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         window.getDecorView().setOnTouchListener((view, motionEvent) -> {
             hideSoftInput();
@@ -87,11 +111,23 @@ public abstract class OverlayDialogController extends OverlayController {
         onDialogCreated(dialog);
     }
 
+    /**
+     * Called when the visibility of the dialog has changed due to a call to [start] or [stop].
+     * <p>
+     * Once the sub element is dismissed, this method will be called again, notifying for the new visibility of the
+     * dialog.
+     *
+     * @param visible the dialog visibility value. True for visible, false for hidden.
+     */
+    protected void onVisibilityChanged(boolean visible) {
+    }
+
     @Override
     public final void start() {
         if (!isShowing) {
             isShowing = true;
             if (dialog != null) dialog.show();
+            onVisibilityChanged(true);
         }
         super.start();
     }
@@ -102,6 +138,7 @@ public abstract class OverlayDialogController extends OverlayController {
             hideSoftInput();
             if (dialog != null) dialog.hide();
             isShowing = false;
+            onVisibilityChanged(false);
         }
         super.stop(hideUi);
     }
@@ -167,4 +204,5 @@ public abstract class OverlayDialogController extends OverlayController {
             inputMethodManager.hideSoftInputFromWindow(dialog.getWindow().getDecorView().getWindowToken(), 0);
         }
     }
+
 }

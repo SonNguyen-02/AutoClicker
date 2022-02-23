@@ -1,7 +1,6 @@
 package com.mct.auto_clicker.activities;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -19,9 +18,11 @@ import com.mct.auto_clicker.R;
 import com.mct.auto_clicker.database.Repository;
 import com.mct.auto_clicker.database.domain.Action;
 import com.mct.auto_clicker.database.domain.Configure;
+import com.mct.auto_clicker.dialog.SettingEditDialog;
 import com.mct.auto_clicker.dialog.SettingStopLoopDialog;
+import com.mct.auto_clicker.dialog.TimePickerDialog;
 import com.mct.auto_clicker.overlays.FloatingMenu;
-import com.mct.auto_clicker.presenter.MySharedPreference;
+import com.mct.auto_clicker.presenter.SettingSharedPreference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +36,12 @@ public class AutoClickerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auto_clicker);
 
+//        SettingStopLoopDialog dialog = new SettingStopLoopDialog(this);
+//        dialog.create(null);
         SettingStopLoopDialog dialog = new SettingStopLoopDialog(this);
         dialog.create(null);
-
+//        dialog.showSubOverlay(new SettingEditDialog(this, SettingEditDialog.EditType.ADT_RAND_LOCATION), false);
+//        dialog.showSubOverlay(new TimePickerDialog(this, null), true);
 
         initToolBar();
 
@@ -98,7 +102,7 @@ public class AutoClickerActivity extends AppCompatActivity {
     void addConfigure() {
         Repository.getInstance(this).deleteConfigures(Repository.getInstance(this).getAllConfigures());
         List<Action> actionList = new ArrayList<>();
-        MySharedPreference.getInstance(this)
+        SettingSharedPreference.getInstance(this)
                 .setRandomLocation(5)
                 .setIncreaseRandomWaitTime(20)
                 .commit();

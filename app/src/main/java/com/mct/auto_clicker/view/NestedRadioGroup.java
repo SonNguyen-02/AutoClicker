@@ -45,6 +45,10 @@ public class NestedRadioGroup extends LinearLayout {
         });
     }
 
+    public void setActiveChild(RadioButton activeChild) {
+        this.activeChild = activeChild;
+    }
+
     public void setOnSelectedListener(OnSelectedListener mOnSelectedListener) {
         this.mOnSelectedListener = mOnSelectedListener;
     }

@@ -1,14 +1,10 @@
 package com.mct.auto_clicker.database.domain;
 
-import android.content.Context;
-
 import androidx.annotation.NonNull;
 
 import com.mct.auto_clicker.database.room.entity.ActionEntity;
-import com.mct.auto_clicker.presenter.MySharedPreference;
 
 import java.io.Serializable;
-import java.util.Random;
 
 public abstract class Action implements Serializable {
 

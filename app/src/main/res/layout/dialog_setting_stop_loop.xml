@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <com.mct.auto_clicker.view.NestedRadioGroup
@@ -36,6 +37,7 @@
                 android:text="@string/dl_number_of_loops" />
 
             <EditText
+                android:id="@+id/edt_number_of_loop"
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:hint="1"
@@ -59,8 +61,10 @@
                 android:text="@string/dl_countdown_timer" />
 
             <TextView
+                android:id="@+id/tv_countdown_timer"
                 android:layout_width="85dp"
                 android:layout_height="match_parent"
+                android:background="@drawable/ripple_white"
                 android:gravity="center"
                 android:text="00:00:00"
                 android:textAlignment="center"

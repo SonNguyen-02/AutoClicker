@@ -74,9 +74,32 @@
     <string name="menu_privacy_policy">Privacy policy</string>
 
     <string name="dialog_title_select_loop_stop_condition">Select loop stop condition</string>
+    <string name="dialog_title_loop_delay_time">Loop delay time</string>
+    <string name="dialog_title_time_wait_next_action">Time to wait for next action</string>
+    <string name="dialog_title_time_click_action_exec">Click action execution time</string>
+    <string name="dialog_title_time_swipe_action_exec">Swipe action execution time</string>
+    <string name="dialog_title_time_zoom_action_exec">Zoom action execution time</string>
+    <string name="dialog_title_increase_random_wait_time">Increase random wait time</string>
+    <string name="dialog_title_random_location">Random location</string>
+    <string name="dialog_title_time_setting">Time setting</string>
+
+    <string name="dialog_desc_loop_delay_time">Time delay before executing next loop</string>
+    <string name="dialog_desc_time_wait_next_action">Time delay before taking the next action</string>
+    <string name="dialog_desc_how_long_will_the_action_take">How long will the action take?</string>
+    <string name="dialog_desc_increase_random_wait_time">Set random delay between actions</string>
+    <string name="dialog_desc_random_location">Set radius of random click</string>
 
     <string name="dl_infinity_loop">Infinity loop</string>
     <string name="dl_number_of_loops">Number of loops:</string>
     <string name="dl_countdown_timer">Countdown timer</string>
+
+    <string name="dl_minimum">Minimum: {0}</string>
+    <string name="dl_maximum">Maximum: {0}</string>
+
+    <string name="milliseconds">milliseconds</string>
+    <string name="pixel">px</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+
 
 </resources>

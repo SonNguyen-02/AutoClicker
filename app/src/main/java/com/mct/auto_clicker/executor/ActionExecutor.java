@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 
 import com.mct.auto_clicker.database.domain.Action;
-import com.mct.auto_clicker.presenter.MySharedPreference;
+import com.mct.auto_clicker.presenter.SettingSharedPreference;
 import com.mct.auto_clicker.utils.ScreenUtils;
 
 import java.util.List;
@@ -65,9 +65,9 @@ public class ActionExecutor {
         int randWaitTime = 0;
         if (action instanceof Action.Click) {
             if (((Action.Click) action).isAntiDetection()) {
-                if (MySharedPreference.getInstance(mContext).getIncreaseRandomWaitTime() > 0) {
+                if (SettingSharedPreference.getInstance(mContext).getIncreaseRandomWaitTime() > 0) {
                     Random random = new Random(System.currentTimeMillis());
-                    randWaitTime = random.nextInt(MySharedPreference.getInstance(mContext).getIncreaseRandomWaitTime());
+                    randWaitTime = random.nextInt(SettingSharedPreference.getInstance(mContext).getIncreaseRandomWaitTime());
                     Log.e("ddd", "executeActions: " + randWaitTime);
                 }
             }
@@ -89,8 +89,8 @@ public class ActionExecutor {
     @WorkerThread
     private void executeClick(@NonNull Action.Click click, Context mContext) {
         Path path = new Path();
-        if (click.isAntiDetection() && MySharedPreference.getInstance(mContext).getRandomLocation() > 0) {
-            int randLocation = MySharedPreference.getInstance(mContext).getRandomLocation();
+        if (click.isAntiDetection() && SettingSharedPreference.getInstance(mContext).getRandomLocation() > 0) {
+            int randLocation = SettingSharedPreference.getInstance(mContext).getRandomLocation();
             int x = click.getX() + (int) (Math.random() * (randLocation + 1)) - (randLocation / 2);
             int y = click.getY() + (int) (Math.random() * (randLocation + 1)) - (randLocation / 2);
             Point screenSize = ScreenUtils.getScreenSize(mContext);

@@ -7,17 +7,19 @@ import androidx.annotation.NonNull;
 
 import com.mct.auto_clicker.database.domain.Configure;
 
-public class MySharedPreference {
+public class SettingSharedPreference {
 
-    private static final String SHARED_NAME = "AUTO_CLICKER.SHARED";
+    private static final String SHARED_NAME = "AUTO_CLICKER.SHARED.SETTING";
 
     // default setting for configure
     private static final String K_TYPE_STOP_THE_LOOP = "k_type_stop_the_loop";
     private static final int DEFAULT_TYPE_STOP_THE_LOOP = Configure.RUN_TYPE_INFINITY;
 
     private static final String K_STOP_LOOP_BY_AMOUNT = "k_stop_loop_by_amount";
+    private static final int DEFAULT_STOP_LOOP_BY_AMOUNT = 1;
     // save a long number
     private static final String K_STOP_LOOP_BY_TIME = "k_stop_loop_by_time";
+    private static final int DEFAULT_STOP_LOOP_BY_TIME = 0;
 
     private static final String K_LOOP_DELAY_TIME = "k_loop_delay_time";
     private static final int DEFAULT_LOOP_DELAY_TIME = 0;
@@ -44,16 +46,16 @@ public class MySharedPreference {
 
     private final SharedPreferences mSharedPreferences;
     private final SharedPreferences.Editor mEditor;
-    private static MySharedPreference instance;
+    private static SettingSharedPreference instance;
 
-    private MySharedPreference(@NonNull Context mContext) {
+    private SettingSharedPreference(@NonNull Context mContext) {
         mSharedPreferences = mContext.getSharedPreferences(SHARED_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
     }
 
-    public synchronized static MySharedPreference getInstance(Context mContext) {
+    public synchronized static SettingSharedPreference getInstance(Context mContext) {
         if (instance == null) {
-            instance = new MySharedPreference(mContext);
+            instance = new SettingSharedPreference(mContext);
         }
         return instance;
     }
@@ -62,25 +64,25 @@ public class MySharedPreference {
         return mSharedPreferences.getInt(K_TYPE_STOP_THE_LOOP, DEFAULT_TYPE_STOP_THE_LOOP);
     }
 
-    public MySharedPreference setTypeStopTheLoop(int value) {
+    public SettingSharedPreference setTypeStopTheLoop(int value) {
         mEditor.putInt(K_TYPE_STOP_THE_LOOP, value);
         return this;
     }
 
     public int getStopLoopByAmount() {
-        return mSharedPreferences.getInt(K_STOP_LOOP_BY_AMOUNT, 1);
+        return mSharedPreferences.getInt(K_STOP_LOOP_BY_AMOUNT, DEFAULT_STOP_LOOP_BY_AMOUNT);
     }
 
-    public MySharedPreference setStopLoopByAmount(int value) {
+    public SettingSharedPreference setStopLoopByAmount(int value) {
         mEditor.putInt(K_STOP_LOOP_BY_AMOUNT, value);
         return this;
     }
 
     public long getStopLoopByTime() {
-        return mSharedPreferences.getLong(K_STOP_LOOP_BY_TIME, 0);
+        return mSharedPreferences.getLong(K_STOP_LOOP_BY_TIME, DEFAULT_STOP_LOOP_BY_TIME);
     }
 
-    public MySharedPreference setStopLoopByTime(long value) {
+    public SettingSharedPreference setStopLoopByTime(long value) {
         mEditor.putLong(K_STOP_LOOP_BY_TIME, value);
         return this;
     }
@@ -89,7 +91,7 @@ public class MySharedPreference {
         return mSharedPreferences.getInt(K_LOOP_DELAY_TIME, DEFAULT_LOOP_DELAY_TIME);
     }
 
-    public MySharedPreference setLoopDelayTime(int value) {
+    public SettingSharedPreference setLoopDelayTime(int value) {
         mEditor.putInt(K_LOOP_DELAY_TIME, value);
         return this;
     }
@@ -98,7 +100,7 @@ public class MySharedPreference {
         return mSharedPreferences.getInt(K_TIME_WAIT_NEXT_ACTION, DEFAULT_TIME_WAIT_NEXT_ACTION);
     }
 
-    public MySharedPreference setTimeWaitNextAction(int value) {
+    public SettingSharedPreference setTimeWaitNextAction(int value) {
         mEditor.putInt(K_TIME_WAIT_NEXT_ACTION, value);
         return this;
     }
@@ -107,7 +109,7 @@ public class MySharedPreference {
         return mSharedPreferences.getInt(K_CLICK_EXEC_TIME, DEFAULT_CLICK_EXEC_TIME);
     }
 
-    public MySharedPreference setClickExecTime(int value) {
+    public SettingSharedPreference setClickExecTime(int value) {
         mEditor.putInt(K_CLICK_EXEC_TIME, value);
         return this;
     }
@@ -116,7 +118,7 @@ public class MySharedPreference {
         return mSharedPreferences.getInt(K_SWIPE_EXEC_TIME, DEFAULT_SWIPE_EXEC_TIME);
     }
 
-    public MySharedPreference setSwipeExecTime(int value) {
+    public SettingSharedPreference setSwipeExecTime(int value) {
         mEditor.putInt(K_SWIPE_EXEC_TIME, value);
         return this;
     }
@@ -125,7 +127,7 @@ public class MySharedPreference {
         return mSharedPreferences.getInt(K_ZOOM_EXEC_TIME, DEFAULT_ZOOM_EXEC_TIME);
     }
 
-    public MySharedPreference setZoomExecTime(int value) {
+    public SettingSharedPreference setZoomExecTime(int value) {
         mEditor.putInt(K_ZOOM_EXEC_TIME, value);
         return this;
     }
@@ -134,7 +136,7 @@ public class MySharedPreference {
         return mSharedPreferences.getInt(K_INCREASE_RANDOM_WAIT_TIME, DEFAULT_INCREASE_RANDOM_WAIT_TIME);
     }
 
-    public MySharedPreference setIncreaseRandomWaitTime(int value) {
+    public SettingSharedPreference setIncreaseRandomWaitTime(int value) {
         mEditor.putInt(K_INCREASE_RANDOM_WAIT_TIME, value);
         return this;
     }
@@ -143,7 +145,7 @@ public class MySharedPreference {
         return mSharedPreferences.getInt(K_RANDOM_LOCATION, DEFAULT_RANDOM_LOCATION);
     }
 
-    public MySharedPreference setRandomLocation(int value) {
+    public SettingSharedPreference setRandomLocation(int value) {
         mEditor.putInt(K_RANDOM_LOCATION, value);
         return this;
     }
