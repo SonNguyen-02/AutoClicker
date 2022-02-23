@@ -3,6 +3,7 @@ package com.mct.auto_clicker.dialog;
 import static com.mct.auto_clicker.database.domain.Configure.RUN_TYPE_AMOUNT;
 import static com.mct.auto_clicker.database.domain.Configure.RUN_TYPE_INFINITY;
 import static com.mct.auto_clicker.database.domain.Configure.RUN_TYPE_TIME;
+import static com.mct.auto_clicker.dialog.DialogHelper.getFormatTime;
 import static com.mct.auto_clicker.dialog.DialogHelper.millisecondToTime;
 import static com.mct.auto_clicker.dialog.DialogHelper.timeToMillisecond;
 
@@ -101,14 +102,6 @@ public class SettingStopLoopDialog extends OverlayDialogController implements Di
         }
     }
 
-    @NonNull
-    @SuppressLint("DefaultLocale")
-    private String getFormatTime(int hour, int minute, int second) {
-        return String.format("%02d", hour) +
-                ":" + String.format("%02d", minute) +
-                ":" + String.format("%02d", second);
-    }
-
     @Override
     protected void onDialogCreated(AlertDialog dialog) {
     }
@@ -126,7 +119,7 @@ public class SettingStopLoopDialog extends OverlayDialogController implements Di
             this.seconds = seconds;
             tvCountdownTimer.setText(getFormatTime(hourOfDay, minute, seconds));
         }, hour, minute, seconds);
-        showSubOverlay(timePickerDialog, true);
+        showSubOverlay(timePickerDialog, false);
     }
 
     @Override

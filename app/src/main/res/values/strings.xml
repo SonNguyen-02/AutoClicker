@@ -35,8 +35,8 @@
     <string name="setting_content_loop_delay_time">Loop delay time</string>
 
     <!-- === Default settings for actions ===  -->
-    <!-- Thời gian chờ hành động tiếp theo -->
-    <string name="setting_content_time_wait_next_action">Time to wait for next action</string>
+    <!-- Thời gian trễ hành động -->
+    <string name="setting_content_action_delay_time">Action delay time</string>
     <!--Thời gian thực hiện hành động bấm-->
     <string name="setting_content_time_click_action_exec">Click action execution time</string>
     <!--Thời gian thực hiện hành động vuốt-->
@@ -45,7 +45,7 @@
     <string name="setting_content_time_zoom_action_exec">Zoom action execution time</string>
 
     <!-- === Anti-detection ===  -->
-    <string name="setting_content_increase_random_wait_time">Increase random wait time</string>
+    <string name="setting_content_increase_random_action_delay_time">Increase random action delay time</string>
     <string name="setting_content_random_location">Random location</string>
 
     <!-- === Other settings ===  -->
@@ -54,11 +54,8 @@
     <string name="setting_content_solving_trouble">Solving trouble</string>
 
     <string name="setting_content_desc_n_milliseconds">{0} milliseconds</string>
-    <string name="setting_content_desc_n_hour">{0} hour</string>
-    <string name="setting_content_desc_n_minus">{0} minus</string>
-    <string name="setting_content_desc_n_second">{0} second</string>
     <string name="setting_content_desc_n_time">{0} times</string>
-    <string name="setting_content_desc_infinity">Infinite repeat</string>
+    <string name="setting_content_desc_infinite">Infinite repeat</string>
     <string name="setting_content_desc_countdown_timer">Countdown timer: {0}</string>
     <string name="setting_content_desc_n_px">{0} px</string>
 
@@ -89,7 +86,7 @@
     <string name="dialog_desc_increase_random_wait_time">Set random delay between actions</string>
     <string name="dialog_desc_random_location">Set radius of random click</string>
 
-    <string name="dl_infinity_loop">Infinity loop</string>
+    <string name="dl_infinite_loop">Infinite loop</string>
     <string name="dl_number_of_loops">Number of loops:</string>
     <string name="dl_countdown_timer">Countdown timer</string>
 

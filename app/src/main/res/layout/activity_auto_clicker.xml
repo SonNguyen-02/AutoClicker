@@ -5,8 +5,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mct.auto_clicker.activities.AutoClickerActivity"
-    tools:openDrawer="start">
+    tools:context="com.mct.auto_clicker.activities.AutoClickerActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -45,6 +44,7 @@
                         android:text="@string/setting_title_default_setting_configure" />
 
                     <RelativeLayout
+                        android:id="@+id/rl_stop_loop"
                         style="@style/SettingItem"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -62,6 +62,7 @@
                                 android:text="@string/setting_content_stop_the_loop_by" />
 
                             <TextView
+                                android:id="@+id/tv_stop_loop"
                                 style="@style/SettingItemContentDescription"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -72,6 +73,7 @@
                     </RelativeLayout>
 
                     <RelativeLayout
+                        android:id="@+id/rl_loop_delay"
                         style="@style/SettingItem"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -89,6 +91,7 @@
                                 android:text="@string/setting_content_loop_delay_time" />
 
                             <TextView
+                                android:id="@+id/tv_loop_delay"
                                 style="@style/SettingItemContentDescription"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -114,6 +117,7 @@
                         android:text="@string/setting_title_default_setting_action" />
 
                     <RelativeLayout
+                        android:id="@+id/rl_action_delay"
                         style="@style/SettingItem"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -135,9 +139,10 @@
                                 style="@style/SettingItemContentTitle"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@string/setting_content_time_wait_next_action" />
+                                android:text="@string/setting_content_action_delay_time" />
 
                             <TextView
+                                android:id="@+id/tv_action_delay"
                                 style="@style/SettingItemContentDescription"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -148,6 +153,7 @@
                     </RelativeLayout>
 
                     <RelativeLayout
+                        android:id="@+id/rl_click_duration"
                         style="@style/SettingItem"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -171,6 +177,7 @@
                                 android:text="@string/setting_content_time_click_action_exec" />
 
                             <TextView
+                                android:id="@+id/tv_click_duration"
                                 style="@style/SettingItemContentDescription"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -181,6 +188,7 @@
                     </RelativeLayout>
 
                     <RelativeLayout
+                        android:id="@+id/rl_swipe_duration"
                         style="@style/SettingItem"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -204,6 +212,7 @@
                                 android:text="@string/setting_content_time_swipe_action_exec" />
 
                             <TextView
+                                android:id="@+id/tv_swipe_duration"
                                 style="@style/SettingItemContentDescription"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -214,6 +223,7 @@
                     </RelativeLayout>
 
                     <RelativeLayout
+                        android:id="@+id/rl_zoom_duration"
                         style="@style/SettingItem"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -237,6 +247,7 @@
                                 android:text="@string/setting_content_time_zoom_action_exec" />
 
                             <TextView
+                                android:id="@+id/tv_zoom_duration"
                                 style="@style/SettingItemContentDescription"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -262,6 +273,7 @@
                         android:text="@string/setting_title_anti_detection" />
 
                     <RelativeLayout
+                        android:id="@+id/rl_increase_random_action_delay_time"
                         style="@style/SettingItem"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -283,9 +295,10 @@
                                 style="@style/SettingItemContentTitle"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@string/setting_content_increase_random_wait_time" />
+                                android:text="@string/setting_content_increase_random_action_delay_time" />
 
                             <TextView
+                                android:id="@+id/tv_random_time_wait"
                                 style="@style/SettingItemContentDescription"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -296,6 +309,7 @@
                     </RelativeLayout>
 
                     <RelativeLayout
+                        android:id="@+id/rl_random_location"
                         style="@style/SettingItem"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -320,6 +334,7 @@
                                 android:text="@string/setting_content_random_location" />
 
                             <TextView
+                                android:id="@+id/tv_random_location"
                                 style="@style/SettingItemContentDescription"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -345,6 +360,7 @@
                         android:text="@string/setting_title_other_settings" />
 
                     <RelativeLayout
+                        android:id="@+id/rl_remove_ads"
                         style="@style/SettingItem"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -378,6 +394,7 @@
                     </RelativeLayout>
 
                     <RelativeLayout
+                        android:id="@+id/rl_general_setting"
                         style="@style/SettingItem"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -413,6 +430,7 @@
                     </RelativeLayout>
 
                     <RelativeLayout
+                        android:id="@+id/rl_solving_trouble"
                         style="@style/SettingItem"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">

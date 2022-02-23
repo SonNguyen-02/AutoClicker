@@ -65,9 +65,9 @@ public class ActionExecutor {
         int randWaitTime = 0;
         if (action instanceof Action.Click) {
             if (((Action.Click) action).isAntiDetection()) {
-                if (SettingSharedPreference.getInstance(mContext).getIncreaseRandomWaitTime() > 0) {
+                if (SettingSharedPreference.getInstance(mContext).getIncreaseRandomActionDelayTime() > 0) {
                     Random random = new Random(System.currentTimeMillis());
-                    randWaitTime = random.nextInt(SettingSharedPreference.getInstance(mContext).getIncreaseRandomWaitTime());
+                    randWaitTime = random.nextInt(SettingSharedPreference.getInstance(mContext).getIncreaseRandomActionDelayTime());
                     Log.e("ddd", "executeActions: " + randWaitTime);
                 }
             }

@@ -4,14 +4,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.mct.auto_clicker.R;
 import com.mct.auto_clicker.baseui.overlays.OverlayDialogController;
@@ -59,7 +57,7 @@ public class SettingEditDialog extends OverlayDialogController implements Dialog
             tvMaximum.setVisibility(View.GONE);
         } else {
             tvMaximum.setVisibility(View.VISIBLE);
-            tvMaximum.setText(MessageFormat.format(context.getString(R.string.dl_maximum), mEditType.maximum));
+            tvMaximum.setText(MessageFormat.format(context.getString(R.string.dl_maximum), String.valueOf(mEditType.maximum)));
         }
     }
 
@@ -67,10 +65,10 @@ public class SettingEditDialog extends OverlayDialogController implements Dialog
         SettingSharedPreference sharedPreference = SettingSharedPreference.getInstance(context);
         switch (mEditType) {
             case CF_DELAY_LOOP:
-                edtEdit.setText(String.valueOf(sharedPreference.getLoopDelayTime()));
+                edtEdit.setText(String.valueOf(sharedPreference.getLoopDelay()));
                 break;
             case ACT_DELAY_ACTION:
-                edtEdit.setText(String.valueOf(sharedPreference.getTimeWaitNextAction()));
+                edtEdit.setText(String.valueOf(sharedPreference.getActionDelay()));
                 break;
             case ACT_CLICK_DURATION:
                 edtEdit.setText(String.valueOf(sharedPreference.getClickExecTime()));
@@ -81,8 +79,8 @@ public class SettingEditDialog extends OverlayDialogController implements Dialog
             case ACT_ZOOM_DURATION:
                 edtEdit.setText(String.valueOf(sharedPreference.getZoomExecTime()));
                 break;
-            case ADT_RAND_DELAY_TIME:
-                edtEdit.setText(String.valueOf(sharedPreference.getIncreaseRandomWaitTime()));
+            case ADT_INCREASE_RAND_ACTION_DELAY_TIME:
+                edtEdit.setText(String.valueOf(sharedPreference.getIncreaseRandomActionDelayTime()));
                 break;
             case ADT_RAND_LOCATION:
                 edtEdit.setText(String.valueOf(sharedPreference.getRandomLocation()));
@@ -111,10 +109,10 @@ public class SettingEditDialog extends OverlayDialogController implements Dialog
         }
         switch (mEditType) {
             case CF_DELAY_LOOP:
-                sharedPreference.setLoopDelayTime(value);
+                sharedPreference.setLoopDelay(value);
                 break;
             case ACT_DELAY_ACTION:
-                sharedPreference.setTimeWaitNextAction(value);
+                sharedPreference.setActionDelay(value);
                 break;
             case ACT_CLICK_DURATION:
                 sharedPreference.setClickExecTime(value);
@@ -125,8 +123,8 @@ public class SettingEditDialog extends OverlayDialogController implements Dialog
             case ACT_ZOOM_DURATION:
                 sharedPreference.setZoomExecTime(value);
                 break;
-            case ADT_RAND_DELAY_TIME:
-                sharedPreference.setIncreaseRandomWaitTime(value);
+            case ADT_INCREASE_RAND_ACTION_DELAY_TIME:
+                sharedPreference.setIncreaseRandomActionDelayTime(value);
                 break;
             case ADT_RAND_LOCATION:
                 sharedPreference.setRandomLocation(value);
@@ -156,7 +154,7 @@ public class SettingEditDialog extends OverlayDialogController implements Dialog
                 R.string.dialog_title_time_zoom_action_exec,
                 R.string.dialog_desc_how_long_will_the_action_take,
                 200, 60000),
-        ADT_RAND_DELAY_TIME(R.drawable.ic_add_time,
+        ADT_INCREASE_RAND_ACTION_DELAY_TIME(R.drawable.ic_add_time,
                 R.string.dialog_title_increase_random_wait_time,
                 R.string.dialog_desc_increase_random_wait_time,
                 0, 60000),

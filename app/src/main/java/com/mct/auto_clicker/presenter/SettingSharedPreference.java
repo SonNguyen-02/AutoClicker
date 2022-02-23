@@ -21,12 +21,12 @@ public class SettingSharedPreference {
     private static final String K_STOP_LOOP_BY_TIME = "k_stop_loop_by_time";
     private static final int DEFAULT_STOP_LOOP_BY_TIME = 0;
 
-    private static final String K_LOOP_DELAY_TIME = "k_loop_delay_time";
-    private static final int DEFAULT_LOOP_DELAY_TIME = 0;
+    private static final String K_LOOP_DELAY = "k_loop_delay_time";
+    private static final int DEFAULT_LOOP_DELAY = 0;
 
     // default setting for action
-    private static final String K_TIME_WAIT_NEXT_ACTION = "k_time_wait_next_action";
-    private static final int DEFAULT_TIME_WAIT_NEXT_ACTION = 50;
+    private static final String K_ACTION_DELAY = "k_time_wait_next_action";
+    private static final int DEFAULT_ACTION_DELAY = 50;
 
     private static final String K_CLICK_EXEC_TIME = "k_click_exec_time";
     private static final int DEFAULT_CLICK_EXEC_TIME = 75;
@@ -38,8 +38,8 @@ public class SettingSharedPreference {
     private static final int DEFAULT_ZOOM_EXEC_TIME = 2000;
 
     // Anti-detection
-    private static final String K_INCREASE_RANDOM_WAIT_TIME = "k_increase_random_wait_time";
-    private static final int DEFAULT_INCREASE_RANDOM_WAIT_TIME = 0;
+    private static final String K_INCREASE_RANDOM_ACTION_DELAY_TIME = "k_increase_random_wait_time";
+    private static final int DEFAULT_INCREASE_RANDOM_ACTION_DELAY_TIME = 0;
 
     private static final String K_RANDOM_LOCATION = "k_random_location";
     private static final int DEFAULT_RANDOM_LOCATION = 0; //PX
@@ -87,21 +87,21 @@ public class SettingSharedPreference {
         return this;
     }
 
-    public int getLoopDelayTime() {
-        return mSharedPreferences.getInt(K_LOOP_DELAY_TIME, DEFAULT_LOOP_DELAY_TIME);
+    public int getLoopDelay() {
+        return mSharedPreferences.getInt(K_LOOP_DELAY, DEFAULT_LOOP_DELAY);
     }
 
-    public SettingSharedPreference setLoopDelayTime(int value) {
-        mEditor.putInt(K_LOOP_DELAY_TIME, value);
+    public SettingSharedPreference setLoopDelay(int value) {
+        mEditor.putInt(K_LOOP_DELAY, value);
         return this;
     }
 
-    public int getTimeWaitNextAction() {
-        return mSharedPreferences.getInt(K_TIME_WAIT_NEXT_ACTION, DEFAULT_TIME_WAIT_NEXT_ACTION);
+    public int getActionDelay() {
+        return mSharedPreferences.getInt(K_ACTION_DELAY, DEFAULT_ACTION_DELAY);
     }
 
-    public SettingSharedPreference setTimeWaitNextAction(int value) {
-        mEditor.putInt(K_TIME_WAIT_NEXT_ACTION, value);
+    public SettingSharedPreference setActionDelay(int value) {
+        mEditor.putInt(K_ACTION_DELAY, value);
         return this;
     }
 
@@ -132,12 +132,12 @@ public class SettingSharedPreference {
         return this;
     }
 
-    public int getIncreaseRandomWaitTime() {
-        return mSharedPreferences.getInt(K_INCREASE_RANDOM_WAIT_TIME, DEFAULT_INCREASE_RANDOM_WAIT_TIME);
+    public int getIncreaseRandomActionDelayTime() {
+        return mSharedPreferences.getInt(K_INCREASE_RANDOM_ACTION_DELAY_TIME, DEFAULT_INCREASE_RANDOM_ACTION_DELAY_TIME);
     }
 
-    public SettingSharedPreference setIncreaseRandomWaitTime(int value) {
-        mEditor.putInt(K_INCREASE_RANDOM_WAIT_TIME, value);
+    public SettingSharedPreference setIncreaseRandomActionDelayTime(int value) {
+        mEditor.putInt(K_INCREASE_RANDOM_ACTION_DELAY_TIME, value);
         return this;
     }
 
