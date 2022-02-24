@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme">
 
         <service
-            android:name=".overlays.FloatingMenu"
+            android:name=".overlays.mainmenu.FloatingMenu"
             android:enabled="true"
             android:exported="false" />
 

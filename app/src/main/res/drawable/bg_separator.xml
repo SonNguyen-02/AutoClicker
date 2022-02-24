@@ -4,5 +4,5 @@
         android:angle="270"
         android:centerColor="#FFFFFF"
         android:endColor="#E4E4E4"
-        android:startColor="#AEAEAE" />
+        android:startColor="@color/separator_divider" />
 </shape>

@@ -14,27 +14,46 @@ import androidx.annotation.NonNull;
 
 import com.mct.auto_clicker.database.domain.Configure;
 import com.mct.auto_clicker.executor.ActionExecutor;
+import com.mct.auto_clicker.presenter.ConfigurePermissionPresenter;
 
 public class AutoClickerService extends AccessibilityService {
 
     private Boolean isStarted = false;
 
-    private static LocalService mLocalService;
+    private static LocalService LOCAL_SERVICE_INSTANCE;
+    private static RegisterServiceConnectionListener LOCAL_SERVICE_LISTENER;
+
     private ActionExecutor executor;
 
     public interface OnConfigureStopListener {
         void onStop();
     }
 
+    public interface RegisterServiceConnectionListener {
+        void callBack(LocalService localService);
+    }
+
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
         Log.e("ddd", "onServiceConnected: ");
-        mLocalService = new LocalService();
+        LOCAL_SERVICE_INSTANCE = new LocalService();
+        invokeListener();
     }
 
-    public static LocalService getLocalService() {
-        return mLocalService;
+    public static void getLocalService(RegisterServiceConnectionListener serviceConnectionListener) {
+        if (LOCAL_SERVICE_LISTENER != null) {
+            LOCAL_SERVICE_LISTENER.callBack(null);
+            LOCAL_SERVICE_LISTENER = null;
+        }
+        LOCAL_SERVICE_LISTENER = serviceConnectionListener;
+        invokeListener();
+    }
+
+    private static void invokeListener() {
+        if (LOCAL_SERVICE_LISTENER != null) {
+            LOCAL_SERVICE_LISTENER.callBack(LOCAL_SERVICE_INSTANCE);
+        }
     }
 
     public class LocalService {
@@ -89,8 +108,10 @@ public class AutoClickerService extends AccessibilityService {
             new Handler(Looper.getMainLooper()).postDelayed(() -> start(mConfigure), mConfigure.getTimeDelay());
         }
 
-        private void stopWithListener(@NonNull OnConfigureStopListener mOnConfigureStopListener) {
-            mOnConfigureStopListener.onStop();
+        private void stopWithListener(OnConfigureStopListener mOnConfigureStopListener) {
+            if (mOnConfigureStopListener != null) {
+                mOnConfigureStopListener.onStop();
+            }
             stop();
         }
 
@@ -118,7 +139,12 @@ public class AutoClickerService extends AccessibilityService {
     @Override
     public void onDestroy() {
         Log.e("ddd", "onDestroy: ");
-        mLocalService = null;
+        if (LOCAL_SERVICE_INSTANCE != null) {
+            LOCAL_SERVICE_INSTANCE.stop();
+            LOCAL_SERVICE_INSTANCE = null;
+            invokeListener();
+            LOCAL_SERVICE_LISTENER = null;
+        }
         super.onDestroy();
     }
 

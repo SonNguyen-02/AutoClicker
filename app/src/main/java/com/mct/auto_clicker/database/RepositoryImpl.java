@@ -41,9 +41,11 @@ public class RepositoryImpl extends Repository {
     public Long addConfigure(@NonNull Configure configure) {
         Long id = configureDAO.add(configure.toEntity());
         if (id == -1) return id;
-        List<ActionEntity> mList = configure.toConfigureAndAction().actions;
-        mList.forEach(it -> it.configureId = id);
-        actionDAO.adds(mList);
+        if (configure.getActions() != null) {
+            List<ActionEntity> mList = configure.toConfigureAndAction().actions;
+            mList.forEach(it -> it.configureId = id);
+            actionDAO.adds(mList);
+        }
         return id;
     }
 

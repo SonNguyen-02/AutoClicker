@@ -1,4 +1,4 @@
-package com.mct.auto_clicker.dialog;
+package com.mct.auto_clicker.overlays.dialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,8 +14,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.mct.auto_clicker.R;
 import com.mct.auto_clicker.baseui.overlays.OverlayDialogController;
 import com.mct.auto_clicker.presenter.SettingSharedPreference;
-
-import java.text.MessageFormat;
 
 public class SettingEditDialog extends OverlayDialogController implements DialogInterface.OnClickListener {
 
@@ -52,12 +50,12 @@ public class SettingEditDialog extends OverlayDialogController implements Dialog
         tvMaximum = view.findViewById(R.id.tv_maximum);
 
         tvDescription.setText(mEditType.descRes);
-        tvMinimum.setText(MessageFormat.format(context.getString(R.string.dl_minimum), mEditType.minimum));
+        tvMinimum.setText(context.getString(R.string.dialog_edit_minimum, mEditType.minimum));
         if (mEditType.maximum == -1) {
             tvMaximum.setVisibility(View.GONE);
         } else {
             tvMaximum.setVisibility(View.VISIBLE);
-            tvMaximum.setText(MessageFormat.format(context.getString(R.string.dl_maximum), String.valueOf(mEditType.maximum)));
+            tvMaximum.setText(context.getString(R.string.dialog_edit_maximum, mEditType.maximum));
         }
     }
 

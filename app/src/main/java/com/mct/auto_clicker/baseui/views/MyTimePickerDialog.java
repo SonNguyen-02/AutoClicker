@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mct.auto_clicker.view;
+package com.mct.auto_clicker.baseui.views;
 
 
 import android.annotation.SuppressLint;
@@ -86,7 +86,7 @@ public class MyTimePickerDialog extends AlertDialog implements DialogInterface.O
         setButton(BUTTON_NEGATIVE, context.getText(R.string.cancel), (OnClickListener) null);
         //setIcon(android.R.drawable.ic_dialog_time);
 
-        View view = LayoutInflater.from(context).inflate(R.layout.time_picker_dialog, null);
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_time_picker, null);
         setView(view);
         mTimePicker = view.findViewById(R.id.timePicker);
 

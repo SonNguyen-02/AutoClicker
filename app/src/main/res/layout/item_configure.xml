@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.chauthai.swipereveallayout.SwipeRevealLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swr_layout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/item_height_big"
+    app:dragEdge="right"
+    app:mode="same_level">
+
+    <RelativeLayout
+        android:layout_width="@dimen/item_height_big"
+        android:layout_height="@dimen/item_height_big"
+        android:background="@drawable/bg_white_stroke_grey_bot">
+
+        <ImageButton
+            android:id="@+id/btn_delete"
+            android:layout_width="@dimen/icon_height"
+            android:layout_height="@dimen/icon_height"
+            android:layout_centerInParent="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/content_desc_delete_configure"
+            android:scaleType="center"
+            android:src="@drawable/ic_trash"
+            app:tint="@color/md_red_A200" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/item"
+        style="@style/ItemView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/margin_horizontal_mini"
+            android:layout_toStartOf="@id/btn_rename"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_vertical_small"
+                android:layout_marginBottom="@dimen/margin_vertical_mini"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:textSize="@dimen/text_size_title"
+                android:textStyle="bold"
+                tools:text="Default configure" />
+
+            <TextView
+                android:id="@+id/tv_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_vertical_small"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/text_size_item_description"
+                android:textStyle="italic"
+                tools:text="No clicks" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btn_rename"
+            android:layout_width="@dimen/icon_height"
+            android:layout_height="@dimen/icon_height"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/margin_horizontal_mini"
+            android:layout_marginEnd="@dimen/margin_horizontal_mini"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/content_desc_edit_configure"
+            android:scaleType="center"
+            android:src="@drawable/ic_rename" />
+
+    </RelativeLayout>
+
+
+</com.chauthai.swipereveallayout.SwipeRevealLayout>

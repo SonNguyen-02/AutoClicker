@@ -1,4 +1,4 @@
-package com.mct.auto_clicker.dialog;
+package com.mct.auto_clicker.overlays.dialog;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

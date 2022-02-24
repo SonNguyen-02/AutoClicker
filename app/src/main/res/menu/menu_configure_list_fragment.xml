@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_save_configure_list"
-        android:icon="@drawable/ic_save"
+        android:id="@+id/menu_add_configure"
+        android:icon="@drawable/ic_add"
         android:title=""
         app:showAsAction="always" />
 </menu>

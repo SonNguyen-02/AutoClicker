@@ -1,7 +1,4 @@
-package com.mct.auto_clicker.dialog;
-
-import static com.mct.auto_clicker.dialog.DialogHelper.millisecondToTime;
-import static com.mct.auto_clicker.dialog.DialogHelper.timeToMillisecond;
+package com.mct.auto_clicker.overlays.dialog;
 
 import android.content.Context;
 import android.view.View;
@@ -11,9 +8,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.mct.auto_clicker.R;
 import com.mct.auto_clicker.baseui.overlays.OverlayDialogController;
-import com.mct.auto_clicker.presenter.SettingSharedPreference;
-import com.mct.auto_clicker.view.MyTimePickerDialog;
-import com.mct.auto_clicker.view.TimePicker;
+import com.mct.auto_clicker.baseui.views.MyTimePickerDialog;
 
 public class TimePickerDialog extends OverlayDialogController {
 

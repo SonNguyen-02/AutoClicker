@@ -3,6 +3,7 @@ package com.mct.auto_clicker.database.room.entity;
 import androidx.room.ColumnInfo;
 import androidx.room.Embedded;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.Relation;
 
@@ -32,6 +33,7 @@ public class ConfigureEntity {
     public ConfigureEntity() {
     }
 
+    @Ignore
     public ConfigureEntity(long id, String name, long timeDelay, int runType, Integer amountExec, Long timeStop) {
         this.id = id;
         this.name = name;

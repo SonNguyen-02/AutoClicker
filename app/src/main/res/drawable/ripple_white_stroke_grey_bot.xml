@@ -1,24 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
     android:color="@color/rippleGrey">
-    <item>
-        <layer-list>
-            <item>
-                <shape android:shape="rectangle">
-                    <stroke
-                        android:width="2dp"
-                        android:color="#80AEAEAE" />
-                    <solid android:color="@color/white" />
-                </shape>
-            </item>
-
-            <item android:bottom="1dp">
-                <shape android:shape="rectangle">
-                    <stroke
-                        android:width="2dp"
-                        android:color="@color/white" />
-                </shape>
-            </item>
-        </layer-list>
-    </item>
+    <item android:drawable="@drawable/bg_white_stroke_grey_bot" />
 </ripple>

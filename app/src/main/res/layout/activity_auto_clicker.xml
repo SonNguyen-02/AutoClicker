@@ -8,6 +8,7 @@
     tools:context="com.mct.auto_clicker.activities.AutoClickerActivity">
 
     <RelativeLayout
+        android:id="@+id/rl_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -467,35 +468,6 @@
 
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/btn_allow_system_alert_window"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="allow SYSTEM_ALERT_WINDOW"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <Button
-                    android:id="@+id/btn_allow_accessibility_service"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="allow accessibility_service"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <Button
-                    android:id="@+id/btn_start_demo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="start demo"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
             </LinearLayout>
 
         </ScrollView>
@@ -518,10 +490,11 @@
             android:orientation="vertical">
 
             <Button
+                android:id="@+id/btn_start_stop"
                 style="@style/ButtonControlService"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Start" />
+                android:text="@string/start" />
 
             <TextView
                 android:layout_width="match_parent"

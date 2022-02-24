@@ -1,16 +1,15 @@
-package com.mct.auto_clicker.dialog;
+package com.mct.auto_clicker.overlays.dialog;
 
 import static com.mct.auto_clicker.database.domain.Configure.RUN_TYPE_AMOUNT;
 import static com.mct.auto_clicker.database.domain.Configure.RUN_TYPE_INFINITY;
 import static com.mct.auto_clicker.database.domain.Configure.RUN_TYPE_TIME;
-import static com.mct.auto_clicker.dialog.DialogHelper.getFormatTime;
-import static com.mct.auto_clicker.dialog.DialogHelper.millisecondToTime;
-import static com.mct.auto_clicker.dialog.DialogHelper.timeToMillisecond;
+import static com.mct.auto_clicker.overlays.dialog.DialogHelper.getFormatTime;
+import static com.mct.auto_clicker.overlays.dialog.DialogHelper.millisecondToTime;
+import static com.mct.auto_clicker.overlays.dialog.DialogHelper.timeToMillisecond;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -23,9 +22,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.mct.auto_clicker.R;
 import com.mct.auto_clicker.baseui.overlays.OverlayDialogController;
 import com.mct.auto_clicker.presenter.SettingSharedPreference;
-import com.mct.auto_clicker.view.MyTimePickerDialog;
-import com.mct.auto_clicker.view.NestedRadioGroup;
-import com.mct.auto_clicker.view.TimePicker;
+import com.mct.auto_clicker.baseui.views.NestedRadioGroup;
 
 public class SettingStopLoopDialog extends OverlayDialogController implements DialogInterface.OnClickListener, NestedRadioGroup.OnSelectedListener, View.OnClickListener {
 

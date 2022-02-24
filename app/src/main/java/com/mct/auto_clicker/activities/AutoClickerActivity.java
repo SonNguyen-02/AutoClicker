@@ -3,76 +3,75 @@ package com.mct.auto_clicker.activities;
 import static com.mct.auto_clicker.database.domain.Configure.RUN_TYPE_AMOUNT;
 import static com.mct.auto_clicker.database.domain.Configure.RUN_TYPE_INFINITY;
 import static com.mct.auto_clicker.database.domain.Configure.RUN_TYPE_TIME;
-import static com.mct.auto_clicker.dialog.DialogHelper.getFormatTime;
+import static com.mct.auto_clicker.overlays.dialog.DialogHelper.getFormatTime;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mct.auto_clicker.AutoClickerService;
 import com.mct.auto_clicker.R;
 import com.mct.auto_clicker.baseui.overlays.OverlayDialogController;
 import com.mct.auto_clicker.database.Repository;
 import com.mct.auto_clicker.database.domain.Action;
 import com.mct.auto_clicker.database.domain.Configure;
-import com.mct.auto_clicker.dialog.SettingEditDialog;
-import com.mct.auto_clicker.dialog.SettingStopLoopDialog;
-import com.mct.auto_clicker.overlays.FloatingMenu;
+import com.mct.auto_clicker.overlays.dialog.SettingEditDialog;
+import com.mct.auto_clicker.overlays.dialog.SettingStopLoopDialog;
+import com.mct.auto_clicker.overlays.mainmenu.FloatingMenu;
+import com.mct.auto_clicker.presenter.ConfigurePermissionPresenter;
 import com.mct.auto_clicker.presenter.SettingSharedPreference;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AutoClickerActivity extends AppCompatActivity implements View.OnClickListener {
+public class AutoClickerActivity extends AppCompatActivity implements View.OnClickListener,
+        ConfigureListFragment.OnConfigureClickedListener, PermissionsDialogFragment.PermissionDialogListener {
 
     private SettingSharedPreference sharedPref;
+    private ConfigurePermissionPresenter permissionPresenter;
 
     private DrawerLayout mDrawerLayout;
     private TextView tvStopLoop, tvLoopDelay,
             tvActionDelay, tvClickDuration, tvSwipeDuration, tvZoomDuration,
             tvRandomTimeWait, tvRandomLocation;
+    private int layerCount = 0;
+    private boolean isBackPress;
+
+    private Configure requestedConfigure;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auto_clicker);
         sharedPref = SettingSharedPreference.getInstance(this);
+        permissionPresenter = new ConfigurePermissionPresenter(this);
+
         initUi();
 
         initToolBar();
 
         addConfigure();
 
-        Button btnStartDemo = findViewById(R.id.btn_start_demo);
-        Button btnAllowSAW = findViewById(R.id.btn_allow_system_alert_window);
-        Button btnAllowAS = findViewById(R.id.btn_allow_accessibility_service);
-
-        btnAllowSAW.setOnClickListener(view -> {
-            if (!Settings.canDrawOverlays(this)) {
-                askPermission();
-            } else {
-                Toast.makeText(this, "SYSTEM_ALERT_WINDOW is granted", Toast.LENGTH_SHORT).show();
-            }
-        });
-        btnAllowAS.setOnClickListener(view -> onAccessibilityClicked());
-        btnStartDemo.setOnClickListener(view -> {
-            if (!Settings.canDrawOverlays(this)) {
-                askPermission();
+        findViewById(R.id.btn_start_stop).setOnClickListener(view -> {
+            if (!permissionPresenter.arePermissionsGranted()) {
+                showPermissionRequest(true);
                 return;
             }
             startService(new Intent(AutoClickerActivity.this, FloatingMenu.class));
@@ -104,7 +103,6 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void initData() {
-        tvStopLoop.setText(getTextFormat(R.string.setting_content_desc_n_milliseconds));
         int typeLoop = sharedPref.getTypeStopTheLoop();
         switch (typeLoop) {
             case RUN_TYPE_INFINITY:
@@ -128,7 +126,6 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
         tvRandomLocation.setText(getTextFormat(R.string.setting_content_desc_n_px, sharedPref.getRandomLocation()));
     }
 
-
     private void initToolBar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -147,36 +144,23 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
         return true;
     }
 
-
-    private void askPermission() {
-        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
-        startActivity(intent);
-    }
-
-    public void onAccessibilityClicked() {
-        Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
-        startActivity(intent);
-    }
-
     void addConfigure() {
-        Repository.getInstance(this).deleteConfigures(Repository.getInstance(this).getAllConfigures());
+//        Repository.getInstance(this).deleteConfigures(Repository.getInstance(this).getAllConfigures());
         List<Action> actionList = new ArrayList<>();
         SettingSharedPreference.getInstance(this)
                 .setRandomLocation(5)
                 .setIncreaseRandomActionDelayTime(20)
                 .commit();
-        actionList.add(new Action.Click(0L, 0L, "click1", 50L, 50L, 540, 1000, true));
-//        actionList.add(new Action.Zoom(0L, 0L, "zoom1", 100L, 600L, Action.Zoom.ZOOM_IN, 540, 300, 540, 1800));
-//
-//        actionList.add(new Action.Swipe(0L, 0L, "swipe1", 100L, 600L, 1, 500, 950, 500));
-//
-//        actionList.add(new Action.Swipe(0L, 0L, "swipe1", 100L, 600L, 950, 500, 1, 500));
-//
-//        actionList.add(new Action.Zoom(0L, 0L, "zoom1", 100L, 600L, Action.Zoom.ZOOM_OUT, 540, 300, 540, 1800));
+//        actionList.add(new Action.Click(0L, 0L, "click1", 50L, 50L, 540, 1000, true));
+        actionList.add(new Action.Zoom(0L, 0L, "zoom1", 100L, 600L, Action.Zoom.ZOOM_IN, 540, 300, 540, 1800));
 
-        Repository.getInstance(this).addConfigure(new Configure(1L, "config 1", actionList, 0, 10000L));
+        actionList.add(new Action.Swipe(0L, 0L, "swipe1", 100L, 600L, 1, 500, 950, 500));
+
+        actionList.add(new Action.Swipe(0L, 0L, "swipe1", 100L, 600L, 950, 500, 1, 500));
+
+        actionList.add(new Action.Zoom(0L, 0L, "zoom1", 100L, 600L, Action.Zoom.ZOOM_OUT, 540, 300, 540, 1800));
+
+        Repository.getInstance(this).addConfigure(new Configure(1L, "Config 1", actionList, 0, 10000L));
 
 //        Repository.getInstance(this).deleteConfigure(Repository.getInstance(this).getConfigure(4L));
 
@@ -244,11 +228,94 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
             case R.id.rl_general_setting:
                 break;
             case R.id.rl_solving_trouble:
+                showPermissionRequest(false);
                 break;
         }
     }
 
-    private String getTextFormat(@StringRes int strRes, Object... arguments) {
-        return MessageFormat.format(getString(strRes), arguments);
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.menu_save_configure_list) {
+            ConfigureListFragment fragment = ConfigureListFragment.newInstance();
+            addFragmentToMainFrame(fragment, ConfigureListFragment.class.getName());
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showPermissionRequest(boolean registerListener) {
+        PermissionsDialogFragment fragment;
+        fragment = registerListener ? PermissionsDialogFragment.newInstance(this) : PermissionsDialogFragment.newInstance();
+        fragment.show(getSupportFragmentManager(), PermissionsDialogFragment.class.getName());
+    }
+
+    private String getTextFormat(@StringRes int strRes, @NonNull Object arguments) {
+        return MessageFormat.format(getString(strRes), arguments.toString());
+    }
+
+    private void addFragmentToMainFrame(Fragment fragment, String name) {
+        if (layerCount == 0) {
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        }
+        layerCount++;
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.anim_right_in, R.anim.anim_right_out, R.anim.anim_left_in, R.anim.anim_left_out);
+        transaction.add(R.id.rl_frame, fragment);
+        transaction.addToBackStack(name);
+        transaction.commit();
+    }
+
+    public void removeFragmentFromMainFrame() {
+        layerCount--;
+        getSupportFragmentManager().popBackStack();
+        if (layerCount == 0) {
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            if (layerCount == 0) {
+                if (isBackPress) {
+                    super.onBackPressed();
+                    isBackPress = false;
+                } else {
+                    Toast.makeText(this, "Nhấn back thêm lần nữa để thoát.", Toast.LENGTH_SHORT).show();
+                    isBackPress = true;
+                }
+            } else {
+                removeFragmentFromMainFrame();
+                isBackPress = false;
+            }
+        }
+    }
+
+
+    @Override
+    public void onClicked(Configure configure) {
+
+        requestedConfigure = configure;
+
+        if (!permissionPresenter.arePermissionsGranted()) {
+            showPermissionRequest(true);
+            return;
+        }
+        onPermissionsGranted();
+    }
+
+    @Override
+    public void onPermissionsGranted() {
+        if(requestedConfigure != null){
+            permissionPresenter.loadConfigure(requestedConfigure, null);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AutoClickerService.getLocalService(null);
     }
 }

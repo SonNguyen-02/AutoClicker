@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverter;
@@ -58,6 +59,7 @@ public class ActionEntity {
     public ActionEntity() {
     }
 
+    @Ignore
     private ActionEntity(Long id, Long configureId, String name, Long timeDelay, Long actionDuration, ActionType type) {
         this.id = id;
         this.configureId = configureId;
@@ -67,6 +69,7 @@ public class ActionEntity {
         this.type = type;
     }
 
+    @Ignore
     public ActionEntity(Long id, Long configureId, String name, Long timeDelay, Long actionDuration, ActionType type, Integer x, Integer y, Boolean isAntiDetection) {
         this(id, configureId, name, timeDelay, actionDuration, type);
         this.x = x;
@@ -74,6 +77,7 @@ public class ActionEntity {
         this.isAntiDetection = isAntiDetection;
     }
 
+    @Ignore
     public ActionEntity(Long id, Long configureId, String name, Long timeDelay, Long actionDuration, ActionType type, Integer x1, Integer y1, Integer x2, Integer y2) {
         this(id, configureId, name, timeDelay, actionDuration, type);
         this.x1 = x1;

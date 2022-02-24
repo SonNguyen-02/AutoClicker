@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.mct.auto_clicker.view;
+package com.mct.auto_clicker.baseui.views;
 
 
 import android.annotation.SuppressLint;

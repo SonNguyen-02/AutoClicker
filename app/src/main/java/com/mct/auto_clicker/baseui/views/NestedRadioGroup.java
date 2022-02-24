@@ -1,4 +1,4 @@
-package com.mct.auto_clicker.view;
+package com.mct.auto_clicker.baseui.views;
 
 import android.content.Context;
 import android.util.AttributeSet;

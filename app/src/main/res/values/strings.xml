@@ -3,6 +3,7 @@
     <string name="ver">Version</string>
 
     <string name="activity_auto_clicker_title">Auto Clicker</string>
+    <string name="fragment_config_list_title">Config list</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -22,6 +23,10 @@
     <string name="content_desc_exists_the_configure">Exists the configure</string>
     <string name="content_desc_move_floating_menu">Move the floating menu</string>
     <string name="content_desc_dialog_title_icon">The dialog title icon.</string>
+    <string name="content_desc_overlay_state">Overlay permission state</string>
+    <string name="content_desc_accessibility_state">Accessibility service permission state</string>
+    <string name="content_desc_edit_configure">Edit configure</string>
+    <string name="content_desc_delete_configure">Delete configure</string>
 
     <string name="setting_title_default_setting_configure">Default settings for configure</string>
     <string name="setting_title_default_setting_action">Default settings for actions</string>
@@ -79,24 +84,47 @@
     <string name="dialog_title_increase_random_wait_time">Increase random wait time</string>
     <string name="dialog_title_random_location">Random location</string>
     <string name="dialog_title_time_setting">Time setting</string>
+    <string name="dialog_title_permissions">Permissions required</string>
+    <string name="dialog_title_add_configure">New configure</string>
+    <string name="dialog_title_rename_configure">Rename configure</string>
+    <string name="dialog_title_delete_configure">Delete configure</string>
 
     <string name="dialog_desc_loop_delay_time">Time delay before executing next loop</string>
     <string name="dialog_desc_time_wait_next_action">Time delay before taking the next action</string>
     <string name="dialog_desc_how_long_will_the_action_take">How long will the action take?</string>
     <string name="dialog_desc_increase_random_wait_time">Set random delay between actions</string>
     <string name="dialog_desc_random_location">Set radius of random click</string>
+    <string name="dialog_desc_permissions">The following permissions are required to use AutoClicker.</string>
+    <string name="dialog_desc_delete_configure_message">This will delete %1$s. Are you sure ?</string>
 
-    <string name="dl_infinite_loop">Infinite loop</string>
-    <string name="dl_number_of_loops">Number of loops:</string>
-    <string name="dl_countdown_timer">Countdown timer</string>
+    <string name="dialog_stop_loop_infinite_loop">Infinite loop</string>
+    <string name="dialog_stop_loop_number_of_loops">Number of loops:</string>
+    <string name="dialog_stop_loop_countdown_timer">Countdown timer</string>
 
-    <string name="dl_minimum">Minimum: {0}</string>
-    <string name="dl_maximum">Maximum: {0}</string>
+    <string name="dialog_edit_minimum">Minimum: %d</string>
+    <string name="dialog_edit_maximum">Maximum: %d</string>
 
     <string name="milliseconds">milliseconds</string>
     <string name="pixel">px</string>
     <string name="save">Save</string>
+    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+
+    <string name="dialog_permission_overlay">Overlay</string>
+    <string name="dialog_permission_overlay_desc">The overlay permission allows this application to display a menu
+                                                  over other apps.</string>
+    <string name="dialog_permission_accessibility">Accessibility service</string>
+    <string name="dialog_permission_accessibility_desc">The accessibility service allows this application to click on
+                                                        other apps for you.</string>
+    <string name="dialog_add_configure_name_hint">Name</string>
+
+    <plurals name="item_configure_detail">
+        <item quantity="zero">No action</item>
+        <item quantity="one">%d action</item>
+        <item quantity="other">%d actions</item>
+    </plurals>
 
 
 </resources>

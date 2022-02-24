@@ -22,6 +22,8 @@ public class Configure implements Serializable {
     private Integer amountExec;
     private Long timeStop;
 
+
+
     public Configure(long id, String name, List<Action> actions, long timeDelay) {
         this(id, name, actions, timeDelay, RUN_TYPE_INFINITY, null, null);
     }

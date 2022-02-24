@@ -1,4 +1,4 @@
-package com.mct.auto_clicker.overlays;
+package com.mct.auto_clicker.overlays.mainmenu;
 
 import android.annotation.SuppressLint;
 import android.app.Service;
@@ -35,7 +35,7 @@ public class FloatingMenu extends Service implements View.OnClickListener {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mLocalService = AutoClickerService.getLocalService();
+        AutoClickerService.getLocalService(localService -> mLocalService = localService);
         //getting the widget layout from xml using layout inflater
         myFloatingView = LayoutInflater.from(this).inflate(R.layout.floating_menu, null);
 

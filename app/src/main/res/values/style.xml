@@ -25,7 +25,7 @@
     <style name="Separator">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
-        <item name="android:background">@android:drawable/divider_horizontal_bright</item>
+        <item name="android:background">@color/separator_divider</item>
     </style>
 
     <style name="Separator2">
@@ -56,7 +56,7 @@
         <item name="android:paddingTop">@dimen/margin_vertical_default</item>
         <item name="android:paddingBottom">@dimen/margin_vertical_small</item>
         <item name="android:fontFamily">sans-serif-medium"</item>
-        <item name="android:textSize">@dimen/text_size_setting_title</item>
+        <item name="android:textSize">@dimen/text_size_title</item>
         <item name="android:textColor">@color/textSettingTitle</item>
     </style>
 
@@ -69,6 +69,7 @@
         <item name="android:layout_height">@dimen/setting_item_height</item>
         <item name="android:background">@drawable/ripple_white_stroke_grey_bot</item>
     </style>
+
     <style name="SettingItemIcon">
         <item name="android:layout_height">@dimen/setting_item_icon_height</item>
         <item name="android:layout_width">@dimen/setting_item_icon_width</item>
@@ -146,5 +147,22 @@
         <item name="android:paddingStart">@dimen/margin_horizontal_small</item>
         <item name="android:tint">@color/textTitle</item>
     </style>
+
+    <style name="PermissionItemView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">@dimen/margin_vertical_small</item>
+        <item name="android:paddingBottom">@dimen/margin_vertical_small</item>
+        <item name="android:paddingStart">@dimen/margin_horizontal_default</item>
+        <item name="android:paddingEnd">@dimen/margin_horizontal_default</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+
+    <style name="ItemView">
+        <item name="android:paddingStart">@dimen/margin_horizontal_small</item>
+        <item name="android:paddingEnd">@dimen/margin_horizontal_small</item>
+        <item name="android:background">@drawable/ripple_white_stroke_grey_bot</item>
+    </style>
+
 
 </resources>
