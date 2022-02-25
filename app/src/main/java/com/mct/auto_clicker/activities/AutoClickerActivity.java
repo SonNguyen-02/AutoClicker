@@ -16,7 +16,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -33,7 +32,6 @@ import com.mct.auto_clicker.database.domain.Action;
 import com.mct.auto_clicker.database.domain.Configure;
 import com.mct.auto_clicker.overlays.dialog.SettingEditDialog;
 import com.mct.auto_clicker.overlays.dialog.SettingStopLoopDialog;
-import com.mct.auto_clicker.overlays.mainmenu.FloatingMenu;
 import com.mct.auto_clicker.presenter.ConfigurePermissionPresenter;
 import com.mct.auto_clicker.presenter.SettingSharedPreference;
 
@@ -69,12 +67,13 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
 
         addConfigure();
 
-        findViewById(R.id.btn_start_stop).setOnClickListener(view -> {
+        findViewById(R.id.btn_play).setOnClickListener(view -> {
             if (!permissionPresenter.arePermissionsGranted()) {
                 showPermissionRequest(true);
                 return;
             }
-            startService(new Intent(AutoClickerActivity.this, FloatingMenu.class));
+            Configure configure = Repository.getInstance(getApplicationContext()).getConfigure(1L);
+            permissionPresenter.loadConfigure(configure);
         });
     }
 
@@ -147,10 +146,6 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
     void addConfigure() {
 //        Repository.getInstance(this).deleteConfigures(Repository.getInstance(this).getAllConfigures());
         List<Action> actionList = new ArrayList<>();
-        SettingSharedPreference.getInstance(this)
-                .setRandomLocation(5)
-                .setIncreaseRandomActionDelayTime(20)
-                .commit();
 //        actionList.add(new Action.Click(0L, 0L, "click1", 50L, 50L, 540, 1000, true));
         actionList.add(new Action.Zoom(0L, 0L, "zoom1", 100L, 600L, Action.Zoom.ZOOM_IN, 540, 300, 540, 1800));
 
@@ -309,7 +304,7 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onPermissionsGranted() {
         if(requestedConfigure != null){
-            permissionPresenter.loadConfigure(requestedConfigure, null);
+            permissionPresenter.loadConfigure(requestedConfigure);
         }
     }
 

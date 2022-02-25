@@ -3,7 +3,6 @@ package com.mct.auto_clicker.executor;
 import android.accessibilityservice.GestureDescription;
 import android.content.Context;
 import android.graphics.Path;
-import android.graphics.Point;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -13,13 +12,14 @@ import androidx.annotation.WorkerThread;
 
 import com.mct.auto_clicker.database.domain.Action;
 import com.mct.auto_clicker.presenter.SettingSharedPreference;
-import com.mct.auto_clicker.utils.ScreenUtils;
+import com.mct.auto_clicker.utils.ScreenMetrics;
 
 import java.util.List;
 import java.util.Random;
 
 public class ActionExecutor {
 
+    private final ScreenMetrics screenMetrics;
     /**
      * Handler on the main thread.
      */
@@ -29,9 +29,15 @@ public class ActionExecutor {
      */
     private final Handler workerThreadHandler;
 
+    private final int randomActionDelayTime;
+
+    private final int randomLocation;
+
+    private boolean canExecute;
+
     private GestureExecutionListener mGestureExecutionListener;
 
-    private final OnExecutionComplete mOnExecutionComplete;
+    private OnExecutionComplete mOnExecutionComplete;
 
     public interface GestureExecutionListener {
         void onExecution(GestureDescription gesture);
@@ -41,37 +47,55 @@ public class ActionExecutor {
         void onComplete();
     }
 
-    public ActionExecutor(GestureExecutionListener mGestureExecutionListener, OnExecutionComplete mOnExecutionComplete) {
-        this.mGestureExecutionListener = mGestureExecutionListener;
-        this.mOnExecutionComplete = mOnExecutionComplete;
+    public ActionExecutor(Context mContext) {
+        screenMetrics = new ScreenMetrics(mContext);
         mainThreadHandler = new Handler(Looper.getMainLooper());
         workerThreadHandler = new Handler(Looper.myLooper());
+        randomActionDelayTime = SettingSharedPreference.getInstance(mContext).getIncreaseRandomActionDelayTime();
+        randomLocation = SettingSharedPreference.getInstance(mContext).getRandomLocation();
+    }
+
+    public void setGestureExecutionListener(GestureExecutionListener mGestureExecutionListener) {
+        this.mGestureExecutionListener = mGestureExecutionListener;
+    }
+
+    public void setOnExecutionComplete(OnExecutionComplete mOnExecutionComplete) {
+        this.mOnExecutionComplete = mOnExecutionComplete;
     }
 
     public void removeListener() {
         mGestureExecutionListener = null;
     }
 
+    public synchronized void setCanExecute(boolean canExecute) {
+        Log.e("ddd", "setCanExecute: "+ canExecute);
+        this.canExecute = canExecute;
+    }
+
     @WorkerThread
-    public void executeActions(@NonNull List<Action> actions, Context mContext) {
-        if (mGestureExecutionListener == null) {
+    public void executeActions(@NonNull List<Action> actions) {
+        if (!canExecute) {
+            Log.e("ddd", "executeActions: ");
             return;
         }
         if (actions.isEmpty()) {
-            onComplete();
+            mainThreadHandler.post(() -> {
+                if (mOnExecutionComplete != null) {
+                    mOnExecutionComplete.onComplete();
+                }
+            });
             return;
         }
         Action action = actions.get(0);
         int randWaitTime = 0;
         if (action instanceof Action.Click) {
             if (((Action.Click) action).isAntiDetection()) {
-                if (SettingSharedPreference.getInstance(mContext).getIncreaseRandomActionDelayTime() > 0) {
-                    Random random = new Random(System.currentTimeMillis());
-                    randWaitTime = random.nextInt(SettingSharedPreference.getInstance(mContext).getIncreaseRandomActionDelayTime());
+                if (randomActionDelayTime > 0) {
+                    randWaitTime = new Random().nextInt(randomActionDelayTime);
                     Log.e("ddd", "executeActions: " + randWaitTime);
                 }
             }
-            executeClick((Action.Click) action, mContext);
+            executeClick((Action.Click) action);
         }
         if (action instanceof Action.Swipe) {
             executeSwipe((Action.Swipe) action);
@@ -82,22 +106,20 @@ public class ActionExecutor {
 
         List<Action> actionsLeft = actions.subList(1, actions.size());
 
-        workerThreadHandler.postDelayed(() -> executeActions(actionsLeft, mContext), action.getTotalDuration() + randWaitTime);
+        workerThreadHandler.postDelayed(() -> executeActions(actionsLeft), action.getTotalDuration() + randWaitTime);
 
     }
 
     @WorkerThread
-    private void executeClick(@NonNull Action.Click click, Context mContext) {
+    private void executeClick(@NonNull Action.Click click) {
         Path path = new Path();
-        if (click.isAntiDetection() && SettingSharedPreference.getInstance(mContext).getRandomLocation() > 0) {
-            int randLocation = SettingSharedPreference.getInstance(mContext).getRandomLocation();
-            int x = click.getX() + (int) (Math.random() * (randLocation + 1)) - (randLocation / 2);
-            int y = click.getY() + (int) (Math.random() * (randLocation + 1)) - (randLocation / 2);
-            Point screenSize = ScreenUtils.getScreenSize(mContext);
-            if (x < 0 || x > screenSize.x) {
+        if (click.isAntiDetection() && randomLocation > 0) {
+            int x = click.getX() + (int) (Math.random() * (randomLocation + 1)) - (randomLocation / 2);
+            int y = click.getY() + (int) (Math.random() * (randomLocation + 1)) - (randomLocation / 2);
+            if (x < 0 || x > screenMetrics.getScreenSize().x) {
                 x = click.getX();
             }
-            if (y < 0 || y > screenSize.y) {
+            if (y < 0 || y > screenMetrics.getScreenSize().y) {
                 y = click.getY();
             }
             path.moveTo(x, y);
@@ -141,14 +163,6 @@ public class ActionExecutor {
                 new GestureDescription.StrokeDescription(path2, 0, zoom.getActionDuration())
         );
         execGesture(gesture);
-    }
-
-    private void onComplete() {
-        mainThreadHandler.post(() -> {
-            if (mOnExecutionComplete != null) {
-                mOnExecutionComplete.onComplete();
-            }
-        });
     }
 
     private void execGesture(GestureDescription gestureDescription) {

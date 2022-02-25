@@ -13,11 +13,6 @@
         android:theme="@style/AppTheme">
 
         <service
-            android:name=".overlays.mainmenu.FloatingMenu"
-            android:enabled="true"
-            android:exported="false" />
-
-        <service
             android:name=".AutoClickerService"
             android:exported="true"
             android:label="@string/accessibility_service_label"

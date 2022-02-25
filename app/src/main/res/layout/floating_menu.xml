@@ -9,7 +9,7 @@
         style="@style/OverlayButtonsLayout">
 
         <ImageButton
-            android:id="@+id/btn_start_stop"
+            android:id="@+id/btn_play"
             style="@style/OverlayButton"
             android:contentDescription="@string/content_desc_play_pause_configure"
             android:src="@drawable/ic_start" />
@@ -54,7 +54,9 @@
             android:id="@+id/btn_exists"
             style="@style/OverlayButton"
             android:contentDescription="@string/content_desc_exists_the_configure"
-            android:src="@drawable/ic_close" />
+            android:src="@drawable/ic_close"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <ImageButton
             android:id="@+id/btn_move"
