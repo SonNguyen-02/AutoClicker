@@ -490,7 +490,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/btn_start_stop"
+                android:id="@+id/btn_play"
                 style="@style/ButtonControlService"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

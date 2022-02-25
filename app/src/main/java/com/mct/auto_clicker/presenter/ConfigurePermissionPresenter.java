@@ -6,7 +6,6 @@ import static com.mct.auto_clicker.database.domain.Configure.RUN_TYPE_TIME;
 
 import android.content.Context;
 import android.provider.Settings;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -82,9 +81,9 @@ public class ConfigurePermissionPresenter {
         return mRepository.getConfigure(configureId);
     }
 
-    public void loadConfigure(Configure configure, AutoClickerService.OnConfigureStopListener listener) {
+    public void loadConfigure(Configure configure ) {
         if (CLICKER_SERVICE != null) {
-            CLICKER_SERVICE.init(configure, listener);
+            CLICKER_SERVICE.start(configure);
         }
     }
 

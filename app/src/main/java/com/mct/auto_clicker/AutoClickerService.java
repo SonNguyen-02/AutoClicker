@@ -5,6 +5,7 @@ import static com.mct.auto_clicker.database.domain.Configure.RUN_TYPE_INFINITY;
 import static com.mct.auto_clicker.database.domain.Configure.RUN_TYPE_TIME;
 
 import android.accessibilityservice.AccessibilityService;
+import android.accessibilityservice.GestureDescription;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -12,22 +13,21 @@ import android.view.accessibility.AccessibilityEvent;
 
 import androidx.annotation.NonNull;
 
+import com.mct.auto_clicker.baseui.overlays.OverlayController;
 import com.mct.auto_clicker.database.domain.Configure;
+import com.mct.auto_clicker.executor.ActionDetector;
 import com.mct.auto_clicker.executor.ActionExecutor;
+import com.mct.auto_clicker.overlays.mainmenu.MainMenu;
 import com.mct.auto_clicker.presenter.ConfigurePermissionPresenter;
 
 public class AutoClickerService extends AccessibilityService {
 
-    private Boolean isStarted = false;
-
     private static LocalService LOCAL_SERVICE_INSTANCE;
     private static RegisterServiceConnectionListener LOCAL_SERVICE_LISTENER;
 
-    private ActionExecutor executor;
+    private OverlayController rootOverlayController;
 
-    public interface OnConfigureStopListener {
-        void onStop();
-    }
+    private Boolean isStarted = false;
 
     public interface RegisterServiceConnectionListener {
         void callBack(LocalService localService);
@@ -58,61 +58,8 @@ public class AutoClickerService extends AccessibilityService {
 
     public class LocalService {
 
-        private Configure mConfigure;
-        private long timeStart;
-        private int countExec;
-
-        public void init(@NonNull Configure configure, OnConfigureStopListener mOnConfigureStopListener) {
-            this.mConfigure = configure;
-            switch (mConfigure.getRunType()) {
-                case RUN_TYPE_INFINITY:
-                    executor = new ActionExecutor(gesture -> dispatchGesture(gesture, null, null), this::startConfigureLoop);
-                    break;
-                case RUN_TYPE_TIME:
-                    timeStart = System.currentTimeMillis();
-                    executor = new ActionExecutor(gesture -> {
-                        if (System.currentTimeMillis() - timeStart <= mConfigure.getTimeStop()) {
-                            dispatchGesture(gesture, null, null);
-                        } else {
-                            stopWithListener(mOnConfigureStopListener);
-                        }
-                    }, () -> {
-                        if (System.currentTimeMillis() - timeStart <= mConfigure.getTimeStop()) {
-                            startConfigureLoop();
-                        } else {
-                            stopWithListener(mOnConfigureStopListener);
-                        }
-                    });
-                    break;
-                case RUN_TYPE_AMOUNT:
-                    countExec = 1;
-                    executor = new ActionExecutor(gesture -> dispatchGesture(gesture, null, null), () -> {
-                        if (countExec < mConfigure.getAmountExec()) {
-                            countExec++;
-                            startConfigureLoop();
-                        } else {
-                            stopWithListener(mOnConfigureStopListener);
-                        }
-                    });
-                    break;
-            }
-            start(mConfigure);
-        }
-
         public boolean isStart() {
             return isStarted;
-        }
-
-        private void startConfigureLoop() {
-            isStarted = false;
-            new Handler(Looper.getMainLooper()).postDelayed(() -> start(mConfigure), mConfigure.getTimeDelay());
-        }
-
-        private void stopWithListener(OnConfigureStopListener mOnConfigureStopListener) {
-            if (mOnConfigureStopListener != null) {
-                mOnConfigureStopListener.onStop();
-            }
-            stop();
         }
 
         public void start(Configure configure) {
@@ -120,18 +67,20 @@ public class AutoClickerService extends AccessibilityService {
                 return;
             }
             isStarted = true;
-            executor.executeActions(configure.getActions(), getApplicationContext());
+            ActionDetector actionDetector = new ActionDetector(getApplicationContext(),
+                    gesture -> dispatchGesture(gesture, null, null));
+            rootOverlayController = new MainMenu(getApplicationContext(), configure, actionDetector);
+            rootOverlayController.create(this::stop);
         }
 
         public void stop() {
             if (!isStarted) {
                 return;
             }
-            mConfigure = null;
             isStarted = false;
-            if (executor != null) {
-                executor.removeListener();
-                executor = null;
+            if (rootOverlayController != null) {
+                rootOverlayController.dismiss();
+                rootOverlayController = null;
             }
         }
     }
