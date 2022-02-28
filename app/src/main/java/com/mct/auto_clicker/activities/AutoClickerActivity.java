@@ -10,6 +10,7 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -17,27 +18,23 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mct.auto_clicker.AutoClickerService;
 import com.mct.auto_clicker.R;
 import com.mct.auto_clicker.baseui.overlays.OverlayDialogController;
-import com.mct.auto_clicker.database.Repository;
-import com.mct.auto_clicker.database.domain.Action;
 import com.mct.auto_clicker.database.domain.Configure;
+import com.mct.auto_clicker.overlays.dialog.ChooseConfigureDialog;
 import com.mct.auto_clicker.overlays.dialog.SettingEditDialog;
 import com.mct.auto_clicker.overlays.dialog.SettingStopLoopDialog;
 import com.mct.auto_clicker.presenter.ConfigurePermissionPresenter;
 import com.mct.auto_clicker.presenter.SettingSharedPreference;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 public class AutoClickerActivity extends AppCompatActivity implements View.OnClickListener,
         ConfigureListFragment.OnConfigureClickedListener, PermissionsDialogFragment.PermissionDialogListener {
@@ -49,6 +46,7 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
     private TextView tvStopLoop, tvLoopDelay,
             tvActionDelay, tvClickDuration, tvSwipeDuration, tvZoomDuration,
             tvRandomTimeWait, tvRandomLocation;
+    private Button btnPlay;
     private int layerCount = 0;
     private boolean isBackPress;
 
@@ -65,16 +63,12 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
 
         initToolBar();
 
-        addConfigure();
+    }
 
-        findViewById(R.id.btn_play).setOnClickListener(view -> {
-            if (!permissionPresenter.arePermissionsGranted()) {
-                showPermissionRequest(true);
-                return;
-            }
-            Configure configure = Repository.getInstance(getApplicationContext()).getConfigure(1L);
-            permissionPresenter.loadConfigure(configure);
-        });
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initBtnPlayState();
     }
 
     private void initUi() {
@@ -90,6 +84,8 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
         findViewById(R.id.rl_general_setting).setOnClickListener(this);
         findViewById(R.id.rl_solving_trouble).setOnClickListener(this);
 
+        btnPlay = findViewById(R.id.btn_play);
+        btnPlay.setOnClickListener(this);
         tvStopLoop = findViewById(R.id.tv_stop_loop);
         tvLoopDelay = findViewById(R.id.tv_loop_delay);
         tvActionDelay = findViewById(R.id.tv_action_delay);
@@ -137,33 +133,20 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
         toggle.syncState();
     }
 
+    private void initBtnPlayState() {
+        if (!permissionPresenter.isServiceStart()) {
+            btnPlay.setBackground(ContextCompat.getDrawable(this, R.drawable.ripple_white_bg_primary));
+            btnPlay.setText(R.string.start);
+        } else {
+            btnPlay.setBackground(ContextCompat.getDrawable(this, R.drawable.ripple_white_bg_orange));
+            btnPlay.setText(R.string.stop);
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_auto_clicker_activity, menu);
         return true;
-    }
-
-    void addConfigure() {
-//        Repository.getInstance(this).deleteConfigures(Repository.getInstance(this).getAllConfigures());
-        List<Action> actionList = new ArrayList<>();
-//        actionList.add(new Action.Click(0L, 0L, "click1", 50L, 50L, 540, 1000, true));
-        actionList.add(new Action.Zoom(0L, 0L, "zoom1", 100L, 600L, Action.Zoom.ZOOM_IN, 540, 300, 540, 1800));
-
-        actionList.add(new Action.Swipe(0L, 0L, "swipe1", 100L, 600L, 1, 500, 950, 500));
-
-        actionList.add(new Action.Swipe(0L, 0L, "swipe1", 100L, 600L, 950, 500, 1, 500));
-
-        actionList.add(new Action.Zoom(0L, 0L, "zoom1", 100L, 600L, Action.Zoom.ZOOM_OUT, 540, 300, 540, 1800));
-
-        Repository.getInstance(this).addConfigure(new Configure(1L, "Config 1", actionList, 0, 10000L));
-
-//        Repository.getInstance(this).deleteConfigure(Repository.getInstance(this).getConfigure(4L));
-
-        List<Configure> mList = Repository.getInstance(this).getAllConfigures();
-        Log.e("ddd", "onCreate: " + mList.toString());
-
-//        List<Action> mActions = Repository.getInstance(this).getAllActions();
-//        Log.e("ddd", "onCreate: " + mActions.toString());
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -224,6 +207,9 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
                 break;
             case R.id.rl_solving_trouble:
                 showPermissionRequest(false);
+                break;
+            case R.id.btn_play:
+                onPlayClicked();
                 break;
         }
     }
@@ -288,6 +274,14 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
         }
     }
 
+    private void onPlayClicked() {
+        if (permissionPresenter.isServiceStart()) {
+            permissionPresenter.stopConfigure();
+            requestedConfigure = null;
+        } else {
+            onClicked(null);
+        }
+    }
 
     @Override
     public void onClicked(Configure configure) {
@@ -303,14 +297,14 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onPermissionsGranted() {
-        if(requestedConfigure != null){
-            permissionPresenter.loadConfigure(requestedConfigure);
+        if (requestedConfigure != null) {
+            permissionPresenter.loadConfigure(requestedConfigure, this::initBtnPlayState);
+            initBtnPlayState();
+        } else {
+            ChooseConfigureDialog dialog = new ChooseConfigureDialog(this, this::onClicked);
+            dialog.create(null);
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        AutoClickerService.getLocalService(null);
-    }
+
 }

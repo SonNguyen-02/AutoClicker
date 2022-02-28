@@ -23,14 +23,13 @@ import com.mct.auto_clicker.presenter.ConfigurePermissionPresenter;
 public class AutoClickerService extends AccessibilityService {
 
     private static LocalService LOCAL_SERVICE_INSTANCE;
-    private static RegisterServiceConnectionListener LOCAL_SERVICE_LISTENER;
 
     private OverlayController rootOverlayController;
 
     private Boolean isStarted = false;
 
-    public interface RegisterServiceConnectionListener {
-        void callBack(LocalService localService);
+    public interface OnServiceStopListener {
+        void onStop();
     }
 
     @Override
@@ -38,22 +37,10 @@ public class AutoClickerService extends AccessibilityService {
         super.onServiceConnected();
         Log.e("ddd", "onServiceConnected: ");
         LOCAL_SERVICE_INSTANCE = new LocalService();
-        invokeListener();
     }
 
-    public static void getLocalService(RegisterServiceConnectionListener serviceConnectionListener) {
-        if (LOCAL_SERVICE_LISTENER != null) {
-            LOCAL_SERVICE_LISTENER.callBack(null);
-            LOCAL_SERVICE_LISTENER = null;
-        }
-        LOCAL_SERVICE_LISTENER = serviceConnectionListener;
-        invokeListener();
-    }
-
-    private static void invokeListener() {
-        if (LOCAL_SERVICE_LISTENER != null) {
-            LOCAL_SERVICE_LISTENER.callBack(LOCAL_SERVICE_INSTANCE);
-        }
+    public static LocalService getLocalService() {
+        return LOCAL_SERVICE_INSTANCE;
     }
 
     public class LocalService {
@@ -62,7 +49,7 @@ public class AutoClickerService extends AccessibilityService {
             return isStarted;
         }
 
-        public void start(Configure configure) {
+        public void start(Configure configure, OnServiceStopListener stopListener) {
             if (isStarted) {
                 return;
             }
@@ -70,7 +57,14 @@ public class AutoClickerService extends AccessibilityService {
             ActionDetector actionDetector = new ActionDetector(getApplicationContext(),
                     gesture -> dispatchGesture(gesture, null, null));
             rootOverlayController = new MainMenu(getApplicationContext(), configure, actionDetector);
-            rootOverlayController.create(this::stop);
+            rootOverlayController.create(() -> {
+                stop();
+                stopListener.onStop();
+            });
+        }
+
+        public void loadConfigure(Configure configure) {
+            ((MainMenu) rootOverlayController).loadNewConfigure(configure);
         }
 
         public void stop() {
@@ -88,11 +82,10 @@ public class AutoClickerService extends AccessibilityService {
     @Override
     public void onDestroy() {
         Log.e("ddd", "onDestroy: ");
+        isStarted = false;
         if (LOCAL_SERVICE_INSTANCE != null) {
             LOCAL_SERVICE_INSTANCE.stop();
             LOCAL_SERVICE_INSTANCE = null;
-            invokeListener();
-            LOCAL_SERVICE_LISTENER = null;
         }
         super.onDestroy();
     }

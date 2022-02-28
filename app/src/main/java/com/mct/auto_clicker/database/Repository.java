@@ -19,6 +19,8 @@ public abstract class Repository {
         return INSTANCE;
     }
 
+    public abstract long getCountConfigures();
+
     public abstract List<Configure> getAllConfigures();
 
     public abstract Configure getConfigure(Long configureId);

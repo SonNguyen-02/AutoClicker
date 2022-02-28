@@ -158,11 +158,6 @@
         <item name="android:background">?attr/selectableItemBackground</item>
     </style>
 
-    <style name="ItemView">
-        <item name="android:paddingStart">@dimen/margin_horizontal_small</item>
-        <item name="android:paddingEnd">@dimen/margin_horizontal_small</item>
-        <item name="android:background">@drawable/ripple_white_stroke_grey_bot</item>
-    </style>
 
 
 </resources>

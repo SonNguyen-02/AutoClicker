@@ -16,6 +16,10 @@ import java.util.List;
 public interface ConfigureDAO {
 
     @Transaction
+    @Query("SELECT COUNT(*) FROM configure_table")
+    long getCountConfigure();
+
+    @Transaction
     @Query("SELECT * FROM configure_table ORDER BY id DESC")
     List<ConfigureEntity.ConfigureAndAction> getConfigureAndAction();
 

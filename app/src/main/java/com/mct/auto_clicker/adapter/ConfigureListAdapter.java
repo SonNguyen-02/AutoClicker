@@ -1,9 +1,10 @@
-package com.mct.auto_clicker.activities;
+package com.mct.auto_clicker.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -20,16 +21,15 @@ import java.util.List;
 
 public class ConfigureListAdapter extends RecyclerView.Adapter<ConfigureListAdapter.ConfigureListViewHolder> {
 
-
     private final Context mContext;
     private List<Configure> mListConfigure;
-    private StartConfigureListener startConfigureListener;
-    private RenameConfigureListener renameConfigureListener;
-    private DeleteConfigureListener deleteConfigureListener;
+    private final ItemConfigureListener mItemConfigureListener;
     private final ViewBinderHelper binderHelper = new ViewBinderHelper();
+    private boolean isChoosing;
 
-    public ConfigureListAdapter(Context mContext) {
+    public ConfigureListAdapter(Context mContext, ItemConfigureListener mItemConfigureListener) {
         this.mContext = mContext;
+        this.mItemConfigureListener = mItemConfigureListener;
     }
 
     public void addConfigure(Configure configure) {
@@ -52,16 +52,9 @@ public class ConfigureListAdapter extends RecyclerView.Adapter<ConfigureListAdap
         notifyDataSetChanged();
     }
 
-    public void setStartConfigureListener(StartConfigureListener startConfigureListener) {
-        this.startConfigureListener = startConfigureListener;
-    }
-
-    public void setRenameConfigureListener(RenameConfigureListener renameConfigureListener) {
-        this.renameConfigureListener = renameConfigureListener;
-    }
-
-    public void setDeleteConfigureListener(DeleteConfigureListener deleteConfigureListener) {
-        this.deleteConfigureListener = deleteConfigureListener;
+    public void setChoosing(boolean choosing) {
+        isChoosing = choosing;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -79,23 +72,46 @@ public class ConfigureListAdapter extends RecyclerView.Adapter<ConfigureListAdap
         }
         binderHelper.bind(holder.swrLayout, String.valueOf(configure.getId()));
         holder.tvName.setText(configure.getName());
-        int actionSize = 0;
-        if (configure.getActions() != null) {
-            actionSize = configure.getActions().size();
-        }
+        int actionSize = configure.getActions().size();
         String detail = mContext.getResources().getQuantityString(R.plurals.item_configure_detail, actionSize, actionSize);
         holder.tvDetails.setText(detail);
+
+        if (isChoosing) {
+            holder.layoutCheckBox.setVisibility(View.VISIBLE);
+            holder.layoutButtons.setVisibility(View.GONE);
+            holder.cbChoose.setChecked(configure.isChoose());
+            binderHelper.lockSwipe(String.valueOf(configure.getId()));
+            binderHelper.closeLayout(String.valueOf(configure.getId()));
+        } else {
+            holder.layoutCheckBox.setVisibility(View.GONE);
+            holder.layoutButtons.setVisibility(View.VISIBLE);
+            binderHelper.unlockSwipe(String.valueOf(configure.getId()));
+        }
+
         holder.item.setOnClickListener(view -> {
-            if (startConfigureListener != null)
-                startConfigureListener.onStart(configure, holder.getAdapterPosition());
+            if (isChoosing) {
+                configure.setChoose(!configure.isChoose());
+                holder.cbChoose.setChecked(configure.isChoose());
+                mItemConfigureListener.onClick(configure, holder.getAdapterPosition());
+            }
+        });
+        holder.item.setOnLongClickListener(view -> {
+            if (!isChoosing) {
+                mItemConfigureListener.onItemLongClick(configure, holder.getAdapterPosition());
+            }
+            return isChoosing;
+        });
+        holder.btnPlay.setOnClickListener(view -> {
+            mItemConfigureListener.onStart(configure, holder.getAdapterPosition());
         });
         holder.btnRename.setOnClickListener(view -> {
-            if (renameConfigureListener != null)
-                renameConfigureListener.onRename(configure, holder.getAdapterPosition());
+            mItemConfigureListener.onRename(configure, holder.getAdapterPosition());
+        });
+        holder.btnCopy.setOnClickListener(view -> {
+            mItemConfigureListener.onCopy(configure, holder.getAdapterPosition());
         });
         holder.btnDelete.setOnClickListener(view -> {
-            if (deleteConfigureListener != null)
-                deleteConfigureListener.onDelete(configure, holder.getAdapterPosition());
+            mItemConfigureListener.onDelete(configure, holder.getAdapterPosition());
         });
     }
 
@@ -111,30 +127,39 @@ public class ConfigureListAdapter extends RecyclerView.Adapter<ConfigureListAdap
     static class ConfigureListViewHolder extends RecyclerView.ViewHolder {
 
         SwipeRevealLayout swrLayout;
-        View item;
+        View item, layoutCheckBox, layoutButtons;
         TextView tvName, tvDetails;
-        ImageButton btnRename, btnDelete;
+        CheckBox cbChoose;
+        ImageButton btnPlay, btnRename, btnCopy, btnDelete;
 
         public ConfigureListViewHolder(@NonNull View view) {
             super(view);
             swrLayout = view.findViewById(R.id.swr_layout);
             item = view.findViewById(R.id.item);
+            layoutCheckBox = view.findViewById(R.id.layout_check_box);
+            layoutButtons = view.findViewById(R.id.layout_buttons);
             tvName = view.findViewById(R.id.tv_name);
             tvDetails = view.findViewById(R.id.tv_details);
+            cbChoose = view.findViewById(R.id.cb_choose);
+            btnPlay = view.findViewById(R.id.btn_play);
             btnRename = view.findViewById(R.id.btn_rename);
+            btnCopy = view.findViewById(R.id.btn_copy);
             btnDelete = view.findViewById(R.id.btn_delete);
         }
     }
 
-    public interface StartConfigureListener {
+    public interface ItemConfigureListener {
         void onStart(Configure configure, int position);
-    }
 
-    public interface RenameConfigureListener {
         void onRename(Configure configure, int position);
-    }
 
-    public interface DeleteConfigureListener {
+        void onCopy(Configure configure, int position);
+
         void onDelete(Configure configure, int position);
+
+        void onClick(Configure configure, int position);
+
+        void onItemLongClick(Configure configure, int position);
+
     }
 }

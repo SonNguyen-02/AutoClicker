@@ -4,6 +4,7 @@
 
     <string name="activity_auto_clicker_title">Auto Clicker</string>
     <string name="fragment_config_list_title">Config list</string>
+    <string name="fragment_choose_item_title">{0} item choose</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -25,8 +26,10 @@
     <string name="content_desc_dialog_title_icon">The dialog title icon.</string>
     <string name="content_desc_overlay_state">Overlay permission state</string>
     <string name="content_desc_accessibility_state">Accessibility service permission state</string>
+    <string name="content_desc_play_configure">Play configure</string>
     <string name="content_desc_edit_configure">Edit configure</string>
     <string name="content_desc_delete_configure">Delete configure</string>
+    <string name="content_desc_float_action">Float Action</string>
 
     <string name="setting_title_default_setting_configure">Default settings for configure</string>
     <string name="setting_title_default_setting_action">Default settings for actions</string>
@@ -88,6 +91,7 @@
     <string name="dialog_title_add_configure">New configure</string>
     <string name="dialog_title_rename_configure">Rename configure</string>
     <string name="dialog_title_delete_configure">Delete configure</string>
+    <string name="dialog_title_choose_configure">Choose a configure</string>
 
     <string name="dialog_desc_loop_delay_time">Time delay before executing next loop</string>
     <string name="dialog_desc_time_wait_next_action">Time delay before taking the next action</string>
@@ -96,6 +100,7 @@
     <string name="dialog_desc_random_location">Set radius of random click</string>
     <string name="dialog_desc_permissions">The following permissions are required to use AutoClicker.</string>
     <string name="dialog_desc_delete_configure_message">This will delete %1$s. Are you sure ?</string>
+    <string name="dialog_desc_delete_configures_message">This will delete %d configures forever.</string>
 
     <string name="dialog_stop_loop_infinite_loop">Infinite loop</string>
     <string name="dialog_stop_loop_number_of_loops">Number of loops:</string>
@@ -106,6 +111,7 @@
 
     <string name="milliseconds">milliseconds</string>
     <string name="pixel">px</string>
+    <string name="delete">Delete</string>
     <string name="save">Save</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
@@ -119,6 +125,9 @@
     <string name="dialog_permission_accessibility_desc">The accessibility service allows this application to click on
                                                         other apps for you.</string>
     <string name="dialog_add_configure_name_hint">Name</string>
+
+    <string name="no_have_configure">No have configure</string>
+    <string name="create_new">Create New</string>
 
     <plurals name="item_configure_detail">
         <item quantity="zero">No action</item>

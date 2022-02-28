@@ -27,15 +27,15 @@
             android:src="@drawable/ic_swipe" />
 
         <ImageButton
-            android:id="@+id/btn_add_zoom_out"
-            style="@style/OverlayButton"
-            android:contentDescription="@string/content_desc_add_zoom_out"
-            android:src="@drawable/ic_zoom_out" />
-
-        <ImageButton
             android:id="@+id/btn_add_zoom_in"
             style="@style/OverlayButton"
             android:contentDescription="@string/content_desc_add_zoom_in"
+            android:src="@drawable/ic_zoom_out" />
+
+        <ImageButton
+            android:id="@+id/btn_add_zoom_out"
+            style="@style/OverlayButton"
+            android:contentDescription="@string/content_desc_add_zoom_out"
             android:src="@drawable/ic_zoom_in" />
 
         <ImageButton

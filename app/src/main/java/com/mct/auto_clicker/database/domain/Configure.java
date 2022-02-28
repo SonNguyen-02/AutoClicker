@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.mct.auto_clicker.database.room.entity.ConfigureEntity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +22,7 @@ public class Configure implements Serializable {
     private int runType;
     private Integer amountExec;
     private Long timeStop;
-
+    private boolean isChoose;
 
 
     public Configure(long id, String name, List<Action> actions, long timeDelay) {
@@ -63,6 +64,9 @@ public class Configure implements Serializable {
     }
 
     public List<Action> getActions() {
+        if (actions == null) {
+            actions = new ArrayList<>();
+        }
         return actions;
     }
 
@@ -102,12 +106,20 @@ public class Configure implements Serializable {
         this.timeStop = timeStop;
     }
 
+    public boolean isChoose() {
+        return isChoose;
+    }
+
+    public void setChoose(boolean choose) {
+        isChoose = choose;
+    }
+
     public ConfigureEntity toEntity() {
         return new ConfigureEntity(id, name, timeDelay, runType, amountExec, timeStop);
     }
 
     public ConfigureEntity.ConfigureAndAction toConfigureAndAction() {
-        return new ConfigureEntity.ConfigureAndAction(toEntity(), actions.stream().map(Action::toEntity).collect(Collectors.toList()));
+        return new ConfigureEntity.ConfigureAndAction(toEntity(), getActions().stream().map(Action::toEntity).collect(Collectors.toList()));
     }
 
     /**

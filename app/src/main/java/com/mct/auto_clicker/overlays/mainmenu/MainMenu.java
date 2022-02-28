@@ -6,22 +6,40 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.mct.auto_clicker.R;
 import com.mct.auto_clicker.baseui.overlays.OverlayMenuController;
+import com.mct.auto_clicker.database.Repository;
+import com.mct.auto_clicker.database.domain.Action;
 import com.mct.auto_clicker.database.domain.Configure;
 import com.mct.auto_clicker.executor.ActionDetector;
+import com.mct.auto_clicker.presenter.SettingSharedPreference;
 
-public class MainMenu extends OverlayMenuController {
+import java.util.ArrayList;
+import java.util.List;
 
+public class MainMenu extends OverlayMenuController implements ActionHandle.OnViewChangeListener {
+
+    private static final int DEFAULT_ACTION_SPACE = 200;
+    private Configure configure;
     private ActionDetector actionDetector;
+
+    private final SettingSharedPreference settingSharedPreference;
+
+    private final List<ActionHandle> listActionHandle;
 
     public MainMenu(Context context, Configure configure, @NonNull ActionDetector actionDetector) {
         super(context);
+        this.configure = configure;
         this.actionDetector = actionDetector;
         this.actionDetector.init(configure);
+        listActionHandle = new ArrayList<>();
+        settingSharedPreference = SettingSharedPreference.getInstance(context);
+        ActionHandle.setActionBtnSize(settingSharedPreference.getButtonActionSize());
     }
 
     @NonNull
@@ -31,8 +49,24 @@ public class MainMenu extends OverlayMenuController {
     }
 
     @Override
-    protected void onCreate() {
-        super.onCreate();
+    public void onStart() {
+        super.onStart();
+        initView();
+    }
+
+    public void loadNewConfigure(@NonNull Configure configure) {
+        if (this.configure.getId() == configure.getId()) {
+            return;
+        }
+
+        listActionHandle.forEach(actionHandle -> removeActionView(actionHandle, false));
+        listActionHandle.clear();
+        this.configure = configure;
+        if (actionDetector.isStart()) {
+            onConfigureStateChanged(true);
+        }
+        actionDetector.init(configure);
+        initView();
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -44,23 +78,122 @@ public class MainMenu extends OverlayMenuController {
                 view.setOnTouchListener(this::onPlayTouched);
                 break;
             case R.id.btn_add_touch:
+                addDefaultActionTouch();
                 break;
             case R.id.btn_add_swipe:
+                addDefaultActionSwipe();
                 break;
             case R.id.btn_add_zoom_out:
+                addDefaultActionZoom(Action.Zoom.ZOOM_OUT);
                 break;
             case R.id.btn_add_zoom_in:
+                addDefaultActionZoom(Action.Zoom.ZOOM_IN);
                 break;
             case R.id.btn_remove:
+                removeLastActionView();
                 break;
             case R.id.btn_setting:
+                Repository mRepository = Repository.getInstance(context);
+                if (configure.getId() == 0) {
+                    long id = mRepository.addConfigure(configure);
+                    configure = mRepository.getConfigure(id);
+                } else {
+                    // next day need fix
+                    mRepository.updateConfigure(configure);
+                }
+                Toast.makeText(context, "Add | Upd configure", Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+
+    private void addDefaultActionTouch() {
+        Action action = new Action.Click(0L, configure.getId(),
+                "Click #" + System.currentTimeMillis(),
+                settingSharedPreference.getActionDelay(),
+                settingSharedPreference.getClickExecTime(),
+                getScreenMetrics().getScreenSize().x / 2,
+                getScreenMetrics().getScreenSize().y / 2,
+                true);
+        addActionView(action, true);
+    }
+
+    private void addDefaultActionSwipe() {
+        Action action = new Action.Swipe(0L, configure.getId(),
+                "Swipe" + System.currentTimeMillis(),
+                settingSharedPreference.getActionDelay(),
+                settingSharedPreference.getSwipeExecTime(),
+                getScreenMetrics().getScreenSize().x / 2 - DEFAULT_ACTION_SPACE,
+                getScreenMetrics().getScreenSize().y / 2,
+                getScreenMetrics().getScreenSize().x / 2 + DEFAULT_ACTION_SPACE,
+                getScreenMetrics().getScreenSize().y / 2);
+        addActionView(action, true);
+    }
+
+    private void addDefaultActionZoom(int zoomType) {
+        Action action = new Action.Zoom(0L, configure.getId(),
+                "Zoom #" + System.currentTimeMillis(),
+                settingSharedPreference.getActionDelay(),
+                settingSharedPreference.getZoomExecTime(),
+                zoomType,
+                getScreenMetrics().getScreenSize().x / 2,
+                getScreenMetrics().getScreenSize().y / 2 - DEFAULT_ACTION_SPACE,
+                getScreenMetrics().getScreenSize().x / 2,
+                getScreenMetrics().getScreenSize().y / 2 + DEFAULT_ACTION_SPACE);
+        addActionView(action, true);
+    }
+
+    private void initView() {
+        if (configure == null) return;
+        List<Action> listAction = configure.getActions();
+        if (listAction != null && !listAction.isEmpty()) {
+            listAction.forEach(action -> addActionView(action, false));
+        }
+    }
+
+    private void addActionView(@NonNull Action action, boolean isCreateNew) {
+        if (isCreateNew) configure.getActions().add(action);
+        ActionHandle actionHandle = new ActionHandle(context, action, getNumericalOrderAction(), this);
+        listActionHandle.add(actionHandle);
+        if (!(action instanceof Action.Click)) {
+            getWindowManager().addView(actionHandle.getDivider(), actionHandle.getParamsDivider());
+            getWindowManager().addView(actionHandle.getView1(), actionHandle.getParamsView1());
+            getWindowManager().addView(actionHandle.getView2(), actionHandle.getParamsView2());
+        } else {
+            getWindowManager().addView(actionHandle.getView1(), actionHandle.getParamsView1());
+        }
+    }
+
+    private void removeLastActionView() {
+        if (!listActionHandle.isEmpty()) {
+            removeActionView(listActionHandle.remove(listActionHandle.size() - 1), true);
+        }
+    }
+
+    private void removeActionView(ActionHandle actionHandle, boolean removeRootAction) {
+        if (actionHandle != null) {
+            if (removeRootAction) {
+                configure.getActions().remove(actionHandle.getAction());
+            }
+            if (actionHandle.getView1() != null) {
+                getWindowManager().removeView(actionHandle.getView1());
+            }
+            if (actionHandle.getView2() != null) {
+                getWindowManager().removeView(actionHandle.getView2());
+                getWindowManager().removeView(actionHandle.getDivider());
+            }
+        }
+    }
+
+
+    private int getNumericalOrderAction() {
+        return listActionHandle.size() + 1;
     }
 
     private boolean checkAction = false;
 
     private boolean onPlayTouched(View view, @NonNull MotionEvent event) {
+        if (listActionHandle.isEmpty()) return false;
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             if (actionDetector.isStart()) {
                 checkAction = true;
@@ -81,7 +214,8 @@ public class MainMenu extends OverlayMenuController {
     }
 
     private void onConfigureStateChanged(boolean isStart) {
-        if (actionDetector == null) return;
+        if (listActionHandle.isEmpty()) return;
+        listActionHandle.forEach(actionHandle -> actionHandle.setEnable(isStart));
         if (isStart) {
             actionDetector.stop();
             setMenuItemViewImageResource(R.id.btn_play, R.drawable.ic_start);
@@ -112,6 +246,7 @@ public class MainMenu extends OverlayMenuController {
     protected void onStageMenuChange(boolean stageMenu) {
         super.onStageMenuChange(stageMenu);
         if (stageMenu) {
+            setActionsVisible(View.VISIBLE);
             setMenuItemViewVisible(View.GONE, R.id.btn_exists);
             setMenuItemViewVisible(View.VISIBLE,
                     R.id.btn_add_touch,
@@ -122,6 +257,7 @@ public class MainMenu extends OverlayMenuController {
                     R.id.btn_setting
             );
         } else {
+            setActionsVisible(View.GONE);
             setMenuItemViewVisible(View.VISIBLE, R.id.btn_exists);
             setMenuItemViewVisible(View.GONE,
                     R.id.btn_add_touch,
@@ -134,13 +270,37 @@ public class MainMenu extends OverlayMenuController {
         }
     }
 
+    private void setActionsVisible(int visibility) {
+        listActionHandle.forEach(actionHandle -> {
+            if (actionHandle.getView1() != null)
+                actionHandle.getView1().setVisibility(visibility);
+            if (actionHandle.getView2() != null) {
+                actionHandle.getView2().setVisibility(visibility);
+                actionHandle.getDivider().setVisibility(visibility);
+            }
+        });
+    }
+
     @Override
     public void onDismissed() {
         super.onDismissed();
+        listActionHandle.forEach(actionHandle -> removeActionView(actionHandle, false));
+        configure = null;
         if (actionDetector != null) {
             actionDetector.release();
             actionDetector = null;
         }
+    }
+
+    @Override
+    public void onMove(View view, WindowManager.LayoutParams layoutParams, int x, int y) {
+        setLayoutPosition(view, layoutParams, x, y);
+        onChange(view, layoutParams);
+    }
+
+    @Override
+    public void onChange(View view, WindowManager.LayoutParams layoutParams) {
+        getWindowManager().updateViewLayout(view, layoutParams);
     }
 
     public interface OnStopListener {

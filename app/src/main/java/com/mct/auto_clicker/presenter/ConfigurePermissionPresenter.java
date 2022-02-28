@@ -20,13 +20,11 @@ public class ConfigurePermissionPresenter {
     private final Context mContext;
     private final Repository mRepository;
     private final SettingSharedPreference mSharedPreference;
-    private static AutoClickerService.LocalService CLICKER_SERVICE = null;
 
     public ConfigurePermissionPresenter(Context context) {
         this.mContext = context;
         mRepository = Repository.getInstance(context);
         mSharedPreference = SettingSharedPreference.getInstance(context);
-        AutoClickerService.getLocalService(localService -> CLICKER_SERVICE = localService);
     }
 
     public boolean isOverlayPermissionValid() {
@@ -34,21 +32,37 @@ public class ConfigurePermissionPresenter {
     }
 
     public boolean isAccessibilityPermissionValid() {
-        return CLICKER_SERVICE != null;
+        return AutoClickerService.getLocalService() != null;
     }
 
     public boolean arePermissionsGranted() {
         return isOverlayPermissionValid() && isAccessibilityPermissionValid();
     }
 
+    public long getCountConfigures(){
+        return mRepository.getCountConfigures();
+    }
+
     public List<Configure> getAllConfigure() {
         return mRepository.getAllConfigures();
     }
 
+    public long createConfigure(Configure configure) {
+        return mRepository.addConfigure(configure);
+    }
+
     public long createConfigure(String name) {
-        Configure configure = null;
+        Configure configure = getNewConfigure(name);
+        if (configure != null) {
+            return mRepository.addConfigure(configure);
+        }
+        return -1L;
+    }
+
+    public Configure getNewConfigure(String name) {
         int type = mSharedPreference.getTypeStopTheLoop();
         int timeDelay = mSharedPreference.getLoopDelay();
+        Configure configure = null;
         switch (type) {
             case RUN_TYPE_INFINITY:
                 configure = new Configure(0, name, null, timeDelay);
@@ -62,10 +76,7 @@ public class ConfigurePermissionPresenter {
                 configure = new Configure(0, name, null, timeDelay, timeStop);
                 break;
         }
-        if (configure != null) {
-            return mRepository.addConfigure(configure);
-        }
-        return -1L;
+        return configure;
     }
 
     public void renameConfigure(@NonNull Configure configure, String name) {
@@ -77,19 +88,34 @@ public class ConfigurePermissionPresenter {
         mRepository.deleteConfigure(configure);
     }
 
+    public void deleteConfigures(List<Configure> configures) {
+        mRepository.deleteConfigures(configures);
+    }
+
     public Configure getConfigure(long configureId) {
         return mRepository.getConfigure(configureId);
     }
 
-    public void loadConfigure(Configure configure ) {
-        if (CLICKER_SERVICE != null) {
-            CLICKER_SERVICE.start(configure);
+    public void loadConfigure(Configure configure, AutoClickerService.OnServiceStopListener listener) {
+        if (AutoClickerService.getLocalService() != null) {
+            if (!AutoClickerService.getLocalService().isStart()) {
+                AutoClickerService.getLocalService().start(configure, listener);
+            } else {
+                AutoClickerService.getLocalService().loadConfigure(configure);
+            }
         }
     }
 
+    public boolean isServiceStart() {
+        if (AutoClickerService.getLocalService() != null) {
+            return AutoClickerService.getLocalService().isStart();
+        }
+        return false;
+    }
+
     public void stopConfigure() {
-        if (CLICKER_SERVICE != null) {
-            CLICKER_SERVICE.stop();
+        if (AutoClickerService.getLocalService() != null) {
+            AutoClickerService.getLocalService().stop();
         }
     }
 }

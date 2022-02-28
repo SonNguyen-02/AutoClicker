@@ -28,20 +28,29 @@ public class RepositoryImpl extends Repository {
     }
 
     @Override
+    public long getCountConfigures() {
+        return configureDAO.getCountConfigure();
+    }
+
+    @Override
     public List<Configure> getAllConfigures() {
         return configureDAO.getConfigureAndAction().stream().map(ConfigureEntity.ConfigureAndAction::toConfigure).collect(Collectors.toList());
     }
 
     @Override
     public Configure getConfigure(Long configureId) {
-        return configureDAO.getConfigureAndAction(configureId).toConfigure();
+        ConfigureEntity.ConfigureAndAction c = configureDAO.getConfigureAndAction(configureId);
+        if (c != null) {
+            return c.toConfigure();
+        }
+        return null;
     }
 
     @Override
     public Long addConfigure(@NonNull Configure configure) {
         Long id = configureDAO.add(configure.toEntity());
         if (id == -1) return id;
-        if (configure.getActions() != null) {
+        if (!configure.getActions().isEmpty()) {
             List<ActionEntity> mList = configure.toConfigureAndAction().actions;
             mList.forEach(it -> it.configureId = id);
             actionDAO.adds(mList);

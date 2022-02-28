@@ -7,9 +7,14 @@
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable-v24/ic_confirm.xml" value="0.37037037037037035" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable-v24/ic_rename.xml" value="0.37037037037037035" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/bg_b.xml" value="0.3769230769230769" />
+        <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/bg_circle_stroke_primary_1.xml" value="0.3769230769230769" />
+        <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/bg_circle_white.xml" value="0.3769230769230769" />
+        <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/bg_float_action.xml" value="0.3769230769230769" />
+        <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/bg_light_green_stroke_grey_bot.xml" value="0.3769230769230769" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/bg_separator.xml" value="0.36770833333333336" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/bg_white_stroke_grey_bot.xml" value="0.3675925925925926" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ic_add.xml" value="0.3769230769230769" />
+        <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ic_back.xml" value="0.3769230769230769" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ic_cancel.xml" value="0.37037037037037035" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ic_confirm.xml" value="0.37037037037037035" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ic_pause.xml" value="0.3769230769230769" />
@@ -17,31 +22,38 @@
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ic_save.xml" value="0.3769230769230769" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ic_share.xml" value="0.3769230769230769" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ic_trash.xml" value="0.37037037037037035" />
+        <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ripple_light_green_stroke_grey_bot.xml" value="0.3769230769230769" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ripple_white.xml" value="0.36205128205128206" />
+        <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ripple_white_bg_grey.xml" value="0.3769230769230769" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ripple_white_bg_primary.xml" value="0.3769230769230769" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ripple_white_stroke_black_bot.xml" value="0.37037037037037035" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ripple_white_stroke_gray.xml" value="0.36205128205128206" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ripple_white_stroke_grey_bot.xml" value="0.36205128205128206" />
-        <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/activity_auto_clicker.xml" value="0.3314814814814815" />
+        <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/test.xml" value="0.3769230769230769" />
+        <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/activity_auto_clicker.xml" value="0.33" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/activity_main.xml" value="0.337037037037037" />
+        <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/dialog_choose_configure.xml" value="0.33" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/dialog_edit.xml" value="0.33" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/dialog_permissions.xml" value="0.3277777777777778" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/dialog_setting_edit.xml" value="0.3314814814814815" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/dialog_setting_stop_loop.xml" value="0.3314814814814815" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/dialog_time_picker.xml" value="0.3314814814814815" />
+        <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/floating_action.xml" value="0.67" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/floating_menu.xml" value="0.36102564102564105" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/floating_view.xml" value="0.33" />
-        <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/fragment_configure_list.xml" value="0.3277777777777778" />
+        <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/fragment_configure_list.xml" value="0.33" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/include_view_separator.xml" value="0.75" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/include_view_separator_2.xml" value="0.36102564102564105" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/include_view_separator_3.xml" value="0.36102564102564105" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/item_configure.xml" value="0.33" />
+        <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/item_configure_simple.xml" value="0.3435185185185185" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/layout_header_navigation.xml" value="0.36102564102564105" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/time_picker_dialog.xml" value="0.3314814814814815" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/time_picker_widget.xml" value="0.3314814814814815" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/view_dialog_title.xml" value="0.33" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/menu/menu_activity_auto_clicker.xml" value="0.36102564102564105" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/menu/menu_auto_clicker_activity.xml" value="0.36102564102564105" />
+        <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/menu/menu_choose_item_delete.xml" value="0.3435185185185185" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/menu/menu_configure_list_fragment.xml" value="0.325" />
       </map>
     </option>

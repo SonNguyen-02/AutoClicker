@@ -97,7 +97,6 @@ public class ActionDetector {
         isStart = true;
         countExec = 1;
         timeStart = System.currentTimeMillis();
-        actionExecutor.setCanExecute(true);
         actionExecutor.executeActions(mConfigure.getActions());
     }
 
@@ -106,7 +105,7 @@ public class ActionDetector {
             return;
         }
         isStart = false;
-        actionExecutor.setCanExecute(false);
+        actionExecutor.stopExecute();
     }
 
     public void release() {

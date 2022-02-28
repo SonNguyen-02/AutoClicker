@@ -20,7 +20,7 @@
     <color name="textDialogBtnSave">@color/accent</color>
 
     <color name="rippleGrey">#4D000000</color>
-    <color name="rippleWhite">#f5f5f5</color>
+    <color name="rippleWhite">#E8E8E8</color>
 
     <color name="separator_divider">#AEAEAE</color>
 
@@ -30,6 +30,9 @@
     <color name="overlayViewAccentPrimary">@color/primary</color>
     <color name="overlayViewAccentSecondary">@color/accent</color>
     <color name="overlayClickSelectorBackground">#77000000</color>
+
+    <color name="float_action_border">@color/md_blue_400</color>
+    <color name="float_action_background">#FFFFFF</color>
 
     <!--reds-->
     <color name="md_red_50">#FFEBEE</color>
@@ -202,6 +205,7 @@
     <color name="md_light_green_700">#689F38</color>
     <color name="md_light_green_800">#558B2F</color>
     <color name="md_light_green_900">#33691E</color>
+    <color name="md_light_green_A50">#D9FDAE</color>
     <color name="md_light_green_A100">#CCFF90</color>
     <color name="md_light_green_A200">#B2FF59</color>
     <color name="md_light_green_A400">#76FF03</color>

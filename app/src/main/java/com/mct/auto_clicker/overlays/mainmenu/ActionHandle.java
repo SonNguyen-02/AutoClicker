@@ -1,0 +1,339 @@
+package com.mct.auto_clicker.overlays.mainmenu;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PixelFormat;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.core.util.Pair;
+
+import com.mct.auto_clicker.R;
+import com.mct.auto_clicker.database.domain.Action;
+import com.mct.auto_clicker.utils.ScreenMetrics;
+
+public class ActionHandle implements View.OnTouchListener {
+
+    private final Action action;
+    /**
+     * <pre>
+     * view1 -> never null
+     *      | action is click -> view of click
+     *      | action is swipe -> view of swipe from
+     *      | action is zoom  -> view of zoom 1
+     *
+     * view2 -> null if action is click
+     *      | action is click -> null
+     *      | action is swipe -> view of swipe to
+     *      | action is zoom  -> view of zoom 2
+     *
+     * divider -> null if action is click
+     * </pre>
+     */
+    private View view1, view2;
+
+    private WindowManager.LayoutParams paramsView1, paramsView2, paramsDivider;
+
+    private ActionDivider divider;
+
+    // index in text view
+    private int index;
+
+    private static int ACTION_BTN_SIZE;
+
+    private final OnViewChangeListener onViewChangeListener;
+
+    public ActionHandle(Context context, Action action, int index, OnViewChangeListener onViewChangeListener) {
+        this.action = action;
+        this.index = index;
+        this.onViewChangeListener = onViewChangeListener;
+        init(context);
+    }
+
+    /**
+     * <pre>
+     * k thay đổi khi user config. Chỉ khi tắt menu đi bật lại thì mới đổi.
+     * only init in {@MainMenu}</pre>
+     */
+    public static void setActionBtnSize(int actionBtnSize) {
+        ACTION_BTN_SIZE = actionBtnSize;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+        changeIndex();
+    }
+
+    public Action getAction() {
+        return action;
+    }
+
+    public View getView1() {
+        return view1;
+    }
+
+    public View getView2() {
+        return view2;
+    }
+
+    public ActionDivider getDivider() {
+        return divider;
+    }
+
+    public WindowManager.LayoutParams getParamsView1() {
+        return paramsView1;
+    }
+
+    public WindowManager.LayoutParams getParamsView2() {
+        return paramsView2;
+    }
+
+    public WindowManager.LayoutParams getParamsDivider() {
+        return paramsDivider;
+    }
+
+    public void setEnable(boolean enable) {
+        int flags;
+        if (enable) {
+            flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS |
+                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+        } else {
+            flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS |
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE |
+                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+        }
+        paramsView1.flags = flags;
+        onViewChangeListener.onChange(view1, paramsView1);
+        if (view2 != null) {
+            paramsView2.flags = flags;
+            onViewChangeListener.onChange(view2, paramsView2);
+        }
+    }
+
+    private void init(Context context) {
+        int x1 = 0, x2 = 0, y1 = 0, y2 = 0;
+        if (action instanceof Action.Click) {
+            x1 = ((Action.Click) action).getX();
+            y1 = ((Action.Click) action).getY();
+            view1 = createActionView(context, ViewType.CLICK);
+        }
+        if (action instanceof Action.Swipe) {
+            x1 = ((Action.Swipe) action).getFromX();
+            y1 = ((Action.Swipe) action).getFromY();
+            x2 = ((Action.Swipe) action).getToX();
+            y2 = ((Action.Swipe) action).getToY();
+            divider = new ActionDivider(context);
+            divider.init(x1, y1, x2, y2);
+            view1 = createActionView(context, ViewType.SWIPE_FROM);
+            view2 = createActionView(context, ViewType.SWIPE_TO);
+        }
+        if (action instanceof Action.Zoom) {
+            x1 = ((Action.Zoom) action).getX1();
+            y1 = ((Action.Zoom) action).getY1();
+            x2 = ((Action.Zoom) action).getX2();
+            y2 = ((Action.Zoom) action).getY2();
+            divider = new ActionDivider(context);
+            divider.init(x1, y1, x2, y2);
+            if (((Action.Zoom) action).getZoomType() == Action.Zoom.ZOOM_IN) {
+                view1 = createActionView(context, ViewType.ZOOM_IN);
+                view2 = createActionView(context, ViewType.ZOOM_IN);
+            } else {
+                view1 = createActionView(context, ViewType.ZOOM_OUT);
+                view2 = createActionView(context, ViewType.ZOOM_OUT);
+            }
+        }
+        changeIndex();
+        int fitSize = ACTION_BTN_SIZE / 2;
+        x1 -= fitSize;
+        x2 -= fitSize;
+        y1 -= fitSize;
+        y2 -= fitSize;
+        paramsView1 = getLayoutParam(x1, y1);
+        view1.setOnTouchListener(this);
+        if (view2 != null) {
+            paramsView2 = getLayoutParam(x2, y2);
+            view2.setOnTouchListener(this);
+            paramsDivider = new WindowManager.LayoutParams(
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    ScreenMetrics.TYPE_COMPAT_OVERLAY,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+                            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS |
+                            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE |
+                            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
+                            WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+                    PixelFormat.TRANSLUCENT);
+            paramsDivider.x = 0;
+            paramsDivider.y = 0;
+        }
+    }
+
+    private void changeIndex() {
+        if (view1 != null)
+            ((TextView) view1.findViewById(R.id.tv_action_index)).setText(String.valueOf(index));
+        if (view2 != null)
+            ((TextView) view2.findViewById(R.id.tv_action_index)).setText(String.valueOf(index));
+    }
+
+    @NonNull
+    private WindowManager.LayoutParams getLayoutParam(int x, int y) {
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(
+                ACTION_BTN_SIZE,
+                ACTION_BTN_SIZE,
+                ScreenMetrics.TYPE_COMPAT_OVERLAY,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS |
+                        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+                PixelFormat.TRANSLUCENT);
+        layoutParams.x = x;
+        layoutParams.y = y;
+        layoutParams.gravity = Gravity.TOP | Gravity.START;
+
+        return layoutParams;
+    }
+
+    /**
+     * @param viewType action of view
+     */
+    @NonNull
+    private View createActionView(Context context, @NonNull ViewType viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.floating_action, null);
+        ImageView imgAction = view.findViewById(R.id.iv_action);
+        switch (viewType) {
+            case CLICK:
+            case SWIPE_FROM:
+                imgAction.setImageResource(R.drawable.ic_circle_target);
+                break;
+            case SWIPE_TO:
+                imgAction.setImageResource(android.R.color.transparent);
+                break;
+            case ZOOM_IN:
+                imgAction.setImageResource(R.drawable.ic_circle_zoom_in);
+                break;
+            case ZOOM_OUT:
+                imgAction.setImageResource(R.drawable.ic_circle_zoom_out);
+                break;
+        }
+        return view;
+    }
+
+    private Pair<Integer, Integer> moveInitialPosition;
+    private Pair<Integer, Integer> moveInitialTouchPosition;
+
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public boolean onTouch(View view, @NonNull MotionEvent event) {
+        WindowManager.LayoutParams layoutParams = view == view1 ? paramsView1 : paramsView2;
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                moveInitialPosition = Pair.create(layoutParams.x, layoutParams.y);
+                moveInitialTouchPosition = Pair.create((int) event.getRawX(), (int) event.getRawY());
+                return true;
+            case MotionEvent.ACTION_UP:
+//                    if (initialX == layoutParams.x && initialY == layoutParams.y) {
+//                        // open dialog
+//                    }
+                return true;
+            case MotionEvent.ACTION_MOVE:
+                int x = moveInitialPosition.first + (int) (event.getRawX() - moveInitialTouchPosition.first);
+                int y = moveInitialPosition.second + (int) (event.getRawY() - moveInitialTouchPosition.second);
+                onViewChangeListener.onMove(view, layoutParams, x, y);
+                if (divider != null) {
+                    setPosition(view, layoutParams.x, layoutParams.y, divider.path);
+                    divider.invalidate();
+                } else {
+                    setPosition(view, layoutParams.x, layoutParams.y, null);
+                }
+                return true;
+        }
+        return false;
+    }
+
+    private void setPosition(View view, int x, int y, Path path) {
+        int fitSize = ACTION_BTN_SIZE / 2;
+        x += fitSize;
+        y += fitSize;
+        if (action instanceof Action.Click) {
+            ((Action.Click) action).setX(x);
+            ((Action.Click) action).setY(y);
+        }
+        if (path == null) {
+            return;
+        }
+        path.reset();
+        path.moveTo(x, y);
+        if (action instanceof Action.Swipe) {
+            if (view1 == view) {
+                ((Action.Swipe) action).setFromX(x);
+                ((Action.Swipe) action).setFromY(y);
+                path.lineTo(((Action.Swipe) action).getToX(), ((Action.Swipe) action).getToY());
+            } else {
+                ((Action.Swipe) action).setToX(x);
+                ((Action.Swipe) action).setToY(y);
+                path.lineTo(((Action.Swipe) action).getFromX(), ((Action.Swipe) action).getFromY());
+            }
+        }
+        if (action instanceof Action.Zoom) {
+            if (view1 == view) {
+                ((Action.Zoom) action).setX1(x);
+                ((Action.Zoom) action).setY1(y);
+                path.lineTo(((Action.Zoom) action).getX2(), ((Action.Zoom) action).getY2());
+            } else {
+                ((Action.Zoom) action).setX2(x);
+                ((Action.Zoom) action).setY2(y);
+                path.lineTo(((Action.Zoom) action).getX1(), ((Action.Zoom) action).getY1());
+            }
+        }
+    }
+
+    public interface OnViewChangeListener {
+        void onMove(View view, WindowManager.LayoutParams layoutParams, int x, int y);
+
+        void onChange(View view, WindowManager.LayoutParams layoutParams);
+    }
+
+    private enum ViewType {CLICK, SWIPE_FROM, SWIPE_TO, ZOOM_IN, ZOOM_OUT}
+
+    public static class ActionDivider extends View {
+
+        private final Path path;
+        private static Paint linePaint;
+
+        public ActionDivider(Context context) {
+            super(context);
+            path = new Path();
+            if (linePaint == null) {
+                linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                linePaint.setStrokeWidth(33f);
+                linePaint.setColor(Color.BLACK);
+                linePaint.setAlpha(95);
+                linePaint.setStyle(Paint.Style.STROKE);
+            }
+        }
+
+        public void init(int x1, int y1, int x2, int y2) {
+            path.moveTo(x1, y1);
+            path.lineTo(x2, y2);
+            invalidate();
+        }
+
+        @Override
+        protected void onDraw(Canvas canvas) {
+            super.onDraw(canvas);
+            canvas.drawPath(path, linePaint);
+        }
+
+    }
+}

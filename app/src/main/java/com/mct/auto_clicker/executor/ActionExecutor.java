@@ -33,11 +33,13 @@ public class ActionExecutor {
 
     private final int randomLocation;
 
-    private boolean canExecute;
-
     private GestureExecutionListener mGestureExecutionListener;
 
     private OnExecutionComplete mOnExecutionComplete;
+
+    private List<Action> actionsLeft = null;
+
+    private final Runnable runnable = () -> executeActions(actionsLeft);
 
     public interface GestureExecutionListener {
         void onExecution(GestureDescription gesture);
@@ -67,17 +69,8 @@ public class ActionExecutor {
         mGestureExecutionListener = null;
     }
 
-    public synchronized void setCanExecute(boolean canExecute) {
-        Log.e("ddd", "setCanExecute: "+ canExecute);
-        this.canExecute = canExecute;
-    }
-
     @WorkerThread
     public void executeActions(@NonNull List<Action> actions) {
-        if (!canExecute) {
-            Log.e("ddd", "executeActions: ");
-            return;
-        }
         if (actions.isEmpty()) {
             mainThreadHandler.post(() -> {
                 if (mOnExecutionComplete != null) {
@@ -104,10 +97,15 @@ public class ActionExecutor {
             executeZoom((Action.Zoom) action);
         }
 
-        List<Action> actionsLeft = actions.subList(1, actions.size());
+        actionsLeft = actions.subList(1, actions.size());
 
-        workerThreadHandler.postDelayed(() -> executeActions(actionsLeft), action.getTotalDuration() + randWaitTime);
+        workerThreadHandler.postDelayed(runnable, action.getTotalDuration() + randWaitTime);
 
+    }
+
+    public void stopExecute() {
+        actionsLeft = null;
+        workerThreadHandler.removeCallbacks(runnable);
     }
 
     @WorkerThread

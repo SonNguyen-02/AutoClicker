@@ -1,5 +1,7 @@
 package com.mct.auto_clicker.database.room.dao;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;

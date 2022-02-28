@@ -44,6 +44,9 @@ public class SettingSharedPreference {
     private static final String K_RANDOM_LOCATION = "k_random_location";
     private static final int DEFAULT_RANDOM_LOCATION = 0; //PX
 
+    private static final String K_BUTTON_ACTION_SIZE = "k_action_size";
+    private static final int DEFAULT_BUTTON_ACTION_SIZE = 100;// PX | min 50 max 150
+
     private final SharedPreferences mSharedPreferences;
     private final SharedPreferences.Editor mEditor;
     private static SettingSharedPreference instance;
@@ -147,6 +150,17 @@ public class SettingSharedPreference {
 
     public SettingSharedPreference setRandomLocation(int value) {
         mEditor.putInt(K_RANDOM_LOCATION, value);
+        return this;
+    }
+
+    public int getButtonActionSize() {
+        return mSharedPreferences.getInt(K_BUTTON_ACTION_SIZE, DEFAULT_BUTTON_ACTION_SIZE);
+    }
+
+    public SettingSharedPreference setButtonActionSize(int value) {
+        if (value < 80) value = 80;
+        if (value > 200) value = 200;
+        mEditor.putInt(K_BUTTON_ACTION_SIZE, value);
         return this;
     }
 

@@ -22,8 +22,10 @@ import androidx.annotation.CallSuper;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
+import androidx.core.util.Pair;
 
 import com.mct.auto_clicker.R;
+import com.mct.auto_clicker.presenter.SettingSharedPreference;
 import com.mct.auto_clicker.utils.ScreenMetrics;
 
 public abstract class OverlayMenuController extends OverlayController {
@@ -54,7 +56,7 @@ public abstract class OverlayMenuController extends OverlayController {
     /**
      * Monitors the state of the screen.
      */
-    protected ScreenMetrics screenMetrics;
+    private final ScreenMetrics screenMetrics;
 
     /**
      * The layout parameters of the menu layout.
@@ -160,6 +162,14 @@ public abstract class OverlayMenuController extends OverlayController {
         menuLayout = null;
     }
 
+    protected WindowManager getWindowManager() {
+        return windowManager;
+    }
+
+    protected ScreenMetrics getScreenMetrics() {
+        return screenMetrics;
+    }
+
     /**
      * Set the enabled state of a menu item.
      *
@@ -221,10 +231,8 @@ public abstract class OverlayMenuController extends OverlayController {
         }
     }
 
-    private int initialX;
-    private int initialY;
-    private float initialTouchX;
-    private float initialTouchY;
+    private Pair<Integer, Integer> moveInitialPosition;
+    private Pair<Integer, Integer> moveInitialTouchPosition;
     private boolean stageMenu = true;
     private int yExpand, yCollapse;
 
@@ -238,10 +246,8 @@ public abstract class OverlayMenuController extends OverlayController {
     private boolean onMoveTouched(@NonNull MotionEvent event) {
         switch (event.getAction()) {
             case ACTION_DOWN:
-                initialX = menuLayoutParams.x;
-                initialY = menuLayoutParams.y;
-                initialTouchX = event.getRawX();
-                initialTouchY = event.getRawY();
+                moveInitialPosition = Pair.create(menuLayoutParams.x, menuLayoutParams.y);
+                moveInitialTouchPosition = Pair.create((int) event.getRawX(), (int) event.getRawY());
                 if (stageMenu) {
                     if (yExpand != menuLayout.getHeight()) yExpand = menuLayout.getHeight();
                 } else {
@@ -249,7 +255,7 @@ public abstract class OverlayMenuController extends OverlayController {
                 }
                 return true;
             case MotionEvent.ACTION_UP:
-                if (initialX == menuLayoutParams.x && initialY == menuLayoutParams.y) {
+                if (moveInitialPosition.first == menuLayoutParams.x && moveInitialPosition.second == menuLayoutParams.y) {
                     stageMenu = !stageMenu;
                     onStageMenuChange(stageMenu);
                     resizeMenuLayout();
@@ -257,8 +263,8 @@ public abstract class OverlayMenuController extends OverlayController {
                 return true;
             case MotionEvent.ACTION_MOVE:
                 setMenuLayoutPosition(
-                        initialX + (int) (event.getRawX() - initialTouchX),
-                        initialY + (int) (event.getRawY() - initialTouchY));
+                        moveInitialPosition.first + (int) (event.getRawX() - moveInitialTouchPosition.first),
+                        moveInitialPosition.second + (int) (event.getRawY() - moveInitialTouchPosition.second));
                 windowManager.updateViewLayout(menuLayout, menuLayoutParams);
                 return true;
             default:
@@ -298,6 +304,25 @@ public abstract class OverlayMenuController extends OverlayController {
         }
     }
 
+
+    protected void setLayoutPosition(View view, WindowManager.LayoutParams layoutParams, int x, int y) {
+        Point displaySize = screenMetrics.getScreenSize();
+        if (x < 0) {
+            x = 0;
+        }
+        if (x > displaySize.x - view.getWidth()) {
+            x = displaySize.x - view.getWidth();
+        }
+        if (y < 0) {
+            y = 0;
+        }
+        if (y > displaySize.y - view.getHeight()) {
+            y = displaySize.y - view.getHeight();
+        }
+        layoutParams.x = x;
+        layoutParams.y = y;
+    }
+
     /**
      * Safe setter for the position of the overlay menu ensuring it will not be displayed outside the screen.
      *
@@ -305,21 +330,7 @@ public abstract class OverlayMenuController extends OverlayController {
      * @param y the vertical position.
      */
     private void setMenuLayoutPosition(int x, int y) {
-        Point displaySize = screenMetrics.getScreenSize();
-        if (x < 0) {
-            x = 0;
-        }
-        if (x > displaySize.x - menuLayout.getWidth()) {
-            x = displaySize.x - menuLayout.getWidth();
-        }
-        if (y < 0) {
-            y = 0;
-        }
-        if (y > displaySize.y - menuLayout.getHeight()) {
-            y = displaySize.y - menuLayout.getHeight();
-        }
-        menuLayoutParams.x = x;
-        menuLayoutParams.y = y;
+        setLayoutPosition(menuLayout, menuLayoutParams, x, y);
     }
 
     /**
