@@ -8,6 +8,9 @@
     <color name="primaryDark">#388E3C</color>
     <color name="accent">#448AFF</color>
 
+    <color name="btn_negative">@color/md_grey_600</color>
+    <color name="btn_neutral">#F4511E</color>
+
     <color name="textTitle">#FFFFFF</color>
     <color name="textHint">#88FFFFFF</color>
     <color name="listBackground">#EAEAEA</color>

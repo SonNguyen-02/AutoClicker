@@ -39,7 +39,7 @@ public class ConfigurePermissionPresenter {
         return isOverlayPermissionValid() && isAccessibilityPermissionValid();
     }
 
-    public long getCountConfigures(){
+    public long getCountConfigures() {
         return mRepository.getCountConfigures();
     }
 
@@ -57,6 +57,16 @@ public class ConfigurePermissionPresenter {
             return mRepository.addConfigure(configure);
         }
         return -1L;
+    }
+
+    public long saveConfigure(@NonNull Configure configure) {
+        if (configure.getId() == 0) {
+            return mRepository.addConfigure(configure);
+        } else {
+            // next day need fix
+            mRepository.updateConfigure(configure);
+        }
+        return configure.getId();
     }
 
     public Configure getNewConfigure(String name) {
@@ -96,10 +106,10 @@ public class ConfigurePermissionPresenter {
         return mRepository.getConfigure(configureId);
     }
 
-    public void loadConfigure(Configure configure, AutoClickerService.OnServiceStopListener listener) {
+    public void loadConfigure(Context context, Configure configure, AutoClickerService.OnServiceStopListener listener) {
         if (AutoClickerService.getLocalService() != null) {
             if (!AutoClickerService.getLocalService().isStart()) {
-                AutoClickerService.getLocalService().start(configure, listener);
+                AutoClickerService.getLocalService().start(context, configure, listener);
             } else {
                 AutoClickerService.getLocalService().loadConfigure(configure);
             }

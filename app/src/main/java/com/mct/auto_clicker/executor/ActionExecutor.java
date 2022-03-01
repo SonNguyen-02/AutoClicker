@@ -39,7 +39,7 @@ public class ActionExecutor {
 
     private List<Action> actionsLeft = null;
 
-    private final Runnable runnable = () -> executeActions(actionsLeft);
+    private final Runnable execAction = () -> executeActions(actionsLeft);
 
     public interface GestureExecutionListener {
         void onExecution(GestureDescription gesture);
@@ -63,10 +63,6 @@ public class ActionExecutor {
 
     public void setOnExecutionComplete(OnExecutionComplete mOnExecutionComplete) {
         this.mOnExecutionComplete = mOnExecutionComplete;
-    }
-
-    public void removeListener() {
-        mGestureExecutionListener = null;
     }
 
     @WorkerThread
@@ -99,13 +95,19 @@ public class ActionExecutor {
 
         actionsLeft = actions.subList(1, actions.size());
 
-        workerThreadHandler.postDelayed(runnable, action.getTotalDuration() + randWaitTime);
+        workerThreadHandler.postDelayed(execAction, action.getTotalDuration() + randWaitTime);
 
     }
 
     public void stopExecute() {
         actionsLeft = null;
-        workerThreadHandler.removeCallbacks(runnable);
+        workerThreadHandler.removeCallbacks(execAction);
+        removeListener();
+    }
+
+    public void removeListener() {
+        mGestureExecutionListener = null;
+        mOnExecutionComplete = null;
     }
 
     @WorkerThread
@@ -165,7 +167,7 @@ public class ActionExecutor {
 
     private void execGesture(GestureDescription gestureDescription) {
         mainThreadHandler.post(() -> {
-            if (mGestureExecutionListener != null) {
+            if (actionsLeft != null && mGestureExecutionListener != null) {
                 mGestureExecutionListener.onExecution(gestureDescription);
             }
         });

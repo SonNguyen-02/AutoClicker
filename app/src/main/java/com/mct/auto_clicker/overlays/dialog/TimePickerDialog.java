@@ -14,13 +14,15 @@ public class TimePickerDialog extends OverlayDialogController {
 
     private MyTimePickerDialog.OnTimeSetListener mOnSaveTimeListener;
     private final int hour, minute, seconds;
+    private final boolean isOverlay;
 
-    public TimePickerDialog(@NonNull Context context, MyTimePickerDialog.OnTimeSetListener mOnSaveTimeListener, int hour, int minute, int seconds) {
+    public TimePickerDialog(@NonNull Context context, MyTimePickerDialog.OnTimeSetListener mOnSaveTimeListener, int hour, int minute, int seconds, boolean isOverlay) {
         super(context);
         this.mOnSaveTimeListener = mOnSaveTimeListener;
         this.hour = hour;
         this.minute = minute;
         this.seconds = seconds;
+        this.isOverlay = isOverlay;
     }
 
     @Override
@@ -40,7 +42,7 @@ public class TimePickerDialog extends OverlayDialogController {
 
     @Override
     protected boolean isOverlay() {
-        return false;
+        return isOverlay;
     }
 
     @Override

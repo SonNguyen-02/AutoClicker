@@ -6,6 +6,7 @@ import static com.mct.auto_clicker.database.domain.Configure.RUN_TYPE_TIME;
 
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.GestureDescription;
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -49,14 +50,14 @@ public class AutoClickerService extends AccessibilityService {
             return isStarted;
         }
 
-        public void start(Configure configure, OnServiceStopListener stopListener) {
+        public void start(Context context, Configure configure, OnServiceStopListener stopListener) {
             if (isStarted) {
                 return;
             }
             isStarted = true;
             ActionDetector actionDetector = new ActionDetector(getApplicationContext(),
                     gesture -> dispatchGesture(gesture, null, null));
-            rootOverlayController = new MainMenu(getApplicationContext(), configure, actionDetector);
+            rootOverlayController = new MainMenu(context, configure, actionDetector);
             rootOverlayController.create(() -> {
                 stop();
                 stopListener.onStop();

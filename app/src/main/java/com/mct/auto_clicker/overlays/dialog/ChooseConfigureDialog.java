@@ -22,12 +22,14 @@ public class ChooseConfigureDialog extends OverlayDialogController {
 
     private final ConfigureListSimpleAdapter.OnConfigureChooseListener mListener;
     private final ConfigurePermissionPresenter configurePresenter;
+    private boolean isOverlay;
     private RecyclerView rcvConfigure;
     private TextView tvNoData;
 
-    public ChooseConfigureDialog(@NonNull Context context, ConfigureListSimpleAdapter.OnConfigureChooseListener listener) {
+    public ChooseConfigureDialog(@NonNull Context context, ConfigureListSimpleAdapter.OnConfigureChooseListener listener, boolean isOverlay) {
         super(context);
         this.mListener = listener;
+        this.isOverlay = isOverlay;
         configurePresenter = new ConfigurePermissionPresenter(context);
     }
 
@@ -39,8 +41,8 @@ public class ChooseConfigureDialog extends OverlayDialogController {
                 .setCustomTitle(DialogHelper.getTitleView(context, R.layout.view_dialog_title, R.string.dialog_title_choose_configure))
                 .setView(view)
                 .setNegativeButton(R.string.cancel, null)
-                .setNeutralButton(R.string.create_new, (dialogInterface, i) ->
-                        onConfigureChoose(configurePresenter.getNewConfigure("Configure " + configurePresenter.getCountConfigures()))
+                .setNeutralButton(R.string.dialog_choose_configure_create_new, (dialogInterface, i) ->
+                        mListener.onConfigureChoose(configurePresenter.getNewConfigure("Configure " + configurePresenter.getCountConfigures()))
                 );
     }
 
@@ -54,6 +56,7 @@ public class ChooseConfigureDialog extends OverlayDialogController {
         List<Configure> mListConfigure = configurePresenter.getAllConfigure();
         if (mListConfigure.isEmpty()) {
             tvNoData.setVisibility(View.VISIBLE);
+            rcvConfigure.setVisibility(View.GONE);
         } else {
             ConfigureListSimpleAdapter adapter = new ConfigureListSimpleAdapter(context, mListConfigure, this::onConfigureChoose);
             rcvConfigure.setAdapter(adapter);
@@ -69,6 +72,6 @@ public class ChooseConfigureDialog extends OverlayDialogController {
 
     @Override
     protected boolean isOverlay() {
-        return false;
+        return isOverlay;
     }
 }

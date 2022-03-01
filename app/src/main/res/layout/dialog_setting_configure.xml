@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_white_stroke_grey_bot">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/margin_vertical_large">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/DialogActionAndConfigTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_setting_configure_stop_later" />
+
+            <TextView
+                style="@style/DialogActionAndConfigDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_title_select_loop_stop_condition" />
+
+            <include layout="@layout/include_view_setting_stop_loop" />
+        </LinearLayout>
+
+        <include
+            layout="@layout/include_view_separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/margin_vertical_small"
+            android:layout_marginBottom="@dimen/margin_vertical_small" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/DialogActionAndConfigTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_title_loop_delay_time" />
+
+            <TextView
+                style="@style/DialogActionAndConfigDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_desc_loop_delay_time" />
+
+            <include layout="@layout/include_view_setting_edit_inp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

@@ -298,10 +298,10 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onPermissionsGranted() {
         if (requestedConfigure != null) {
-            permissionPresenter.loadConfigure(requestedConfigure, this::initBtnPlayState);
+            permissionPresenter.loadConfigure(this, requestedConfigure, this::initBtnPlayState);
             initBtnPlayState();
         } else {
-            ChooseConfigureDialog dialog = new ChooseConfigureDialog(this, this::onClicked);
+            ChooseConfigureDialog dialog = new ChooseConfigureDialog(this, this::onClicked, false);
             dialog.create(null);
         }
     }

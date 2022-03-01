@@ -1,34 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/tv_no_data"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:padding="@dimen/margin_vertical_default"
+        android:text="@string/dialog_choose_configure_no_have_configure"
+        android:textAlignment="center"
+        android:textSize="@dimen/text_size_title"
+        android:textStyle="bold"
+        android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/tv_no_data"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/margin_vertical_default"
-            android:text="@string/no_have_configure"
-            android:textAlignment="center"
-            android:textSize="@dimen/text_size_title"
-            android:textStyle="bold"
-            android:visibility="gone"
-            tools:visibility="visible" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcv_configure_list"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@android:color/transparent"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/item_configure_simple" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rcv_configure_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:listitem="@layout/item_configure_simple" />
+    <include layout="@layout/include_view_separator" />
 
-        <include layout="@layout/include_view_separator" />
-
-    </LinearLayout>
-
-</androidx.core.widget.NestedScrollView>
+</LinearLayout>

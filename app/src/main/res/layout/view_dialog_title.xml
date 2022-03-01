@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,11 +10,24 @@
         android:id="@android:id/icon"
         style="@style/DialogTitleIcon"
         android:contentDescription="@string/content_desc_dialog_title_icon"
-        android:src="@drawable/ic_setting" />
+        android:src="@drawable/ic_setting"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@android:id/title"
         style="@style/DialogTitle"
+        android:layout_toStartOf="@android:id/icon1"
+        android:layout_toEndOf="@android:id/icon"
         tools:text="Title" />
 
-</LinearLayout>
+    <ImageView
+        android:id="@android:id/icon1"
+        style="@style/DialogTitleIcon.Icon1"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="@string/content_desc_dialog_title_icon"
+        android:src="@drawable/ic_rename"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</RelativeLayout>

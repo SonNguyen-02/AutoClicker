@@ -1,71 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_white_stroke_grey_bot">
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:padding="@dimen/margin_vertical_large"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <TextView
+            android:id="@+id/tv_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/margin_vertical_large">
+            android:text="@string/dialog_desc_how_long_will_the_action_take"
+            android:textColor="@color/md_grey_700"
+            android:textSize="@dimen/text_size_description" />
 
-            <TextView
-                android:id="@+id/tv_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_horizontal_small"
-                android:text="@string/dialog_desc_how_long_will_the_action_take"
-                android:textColor="@color/md_grey_600"
-                android:textSize="@dimen/text_size_description" />
+        <include layout="@layout/include_view_setting_edit_inp" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/text_input_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv_description"
-                android:layout_marginBottom="@dimen/margin_horizontal_mini"
-                app:suffixText="@string/milliseconds"
-                app:suffixTextColor="@color/black">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edt_edit"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:inputType="number"
-                    android:maxLength="10"
-                    android:text="0"
-                    tools:ignore="HardcodedText" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:id="@+id/tv_minimum"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/text_input_layout"
-                android:layout_alignEnd="@id/text_input_layout"
-                android:layout_marginBottom="@dimen/margin_horizontal_mini"
-                android:text="@string/dialog_edit_minimum"
-                android:textColor="@color/md_grey_900"
-                android:textSize="13sp" />
-
-            <TextView
-                android:id="@+id/tv_maximum"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv_minimum"
-                android:layout_alignEnd="@id/text_input_layout"
-                android:text="@string/dialog_edit_maximum"
-                android:textColor="@color/md_grey_900"
-                android:textSize="13sp" />
-
-        </RelativeLayout>
-
-        <include layout="@layout/include_view_separator" />
     </LinearLayout>
 </ScrollView>

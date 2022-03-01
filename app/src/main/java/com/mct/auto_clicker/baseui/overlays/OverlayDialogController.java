@@ -2,7 +2,6 @@ package com.mct.auto_clicker.baseui.overlays;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -15,6 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
+
+import com.mct.auto_clicker.R;
+import com.mct.auto_clicker.utils.ScreenMetrics;
 
 public abstract class OverlayDialogController extends OverlayController {
 
@@ -76,7 +78,8 @@ public abstract class OverlayDialogController extends OverlayController {
         } else {
             dialog = onCreateDialog().create();
         }
-        dialog.setCancelable(!isOverlay());
+
+        // init dialog listener
         dialog.setOnDismissListener(dialogInterface -> {
             dismiss();
             onDialogDismissed();
@@ -85,19 +88,24 @@ public abstract class OverlayDialogController extends OverlayController {
             if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_BACK && keyEvent.getAction() == KeyEvent.ACTION_UP) {
                 dismiss();
                 return true;
-            } else {
-                return false;
+            }
+            return false;
+        });
+        // init color btn
+        dialog.setOnShowListener(dialogInterface -> {
+            Button buttonNegative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
+            if (buttonNegative != null) {
+                buttonNegative.setTextColor(context.getColor(R.color.btn_negative));
+            }
+            Button buttonNeutral = dialog.getButton(DialogInterface.BUTTON_NEUTRAL);
+            if (buttonNeutral != null) {
+                buttonNeutral.setTextColor(context.getColor(R.color.btn_neutral));
             }
         });
+        // init window type...
         Window window = dialog.getWindow();
         if (isOverlay()) {
-            int type;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-            } else {
-                type = WindowManager.LayoutParams.TYPE_PHONE;
-            }
-            window.setType(type);
+            window.setType(ScreenMetrics.TYPE_COMPAT_OVERLAY);
         }
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         window.getDecorView().setOnTouchListener((view, motionEvent) -> {

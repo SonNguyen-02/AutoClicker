@@ -134,6 +134,7 @@
         <item name="android:layout_height">@dimen/item_height</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textColor">@color/textTitle</item>
+        <item name="android:paddingStart">@dimen/margin_vertical_large</item>
         <item name="android:textSize">@dimen/text_size_dialog_title</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
         <item name="android:singleLine">true</item>
@@ -148,6 +149,11 @@
         <item name="android:tint">@color/textTitle</item>
     </style>
 
+    <style name="DialogTitleIcon.Icon1">
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">@dimen/margin_horizontal_small</item>
+    </style>
+
     <style name="PermissionItemView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -158,6 +164,15 @@
         <item name="android:background">?attr/selectableItemBackground</item>
     </style>
 
+    <style name="DialogActionAndConfigTitle">
+        <item name="android:textColor">@color/md_grey_800</item>
+        <item name="android:textSize">@dimen/text_size_title</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
 
+    <style name="DialogActionAndConfigDescription">
+        <item name="android:textColor">@color/md_grey_600</item>
+        <item name="android:textSize">@dimen/text_size_item_description</item>
+    </style>
 
 </resources>

@@ -126,8 +126,15 @@
                                                         other apps for you.</string>
     <string name="dialog_add_configure_name_hint">Name</string>
 
-    <string name="no_have_configure">No have configure</string>
-    <string name="create_new">Create New</string>
+
+    <string name="dialog_choose_configure_no_have_configure">No have configure</string>
+    <string name="dialog_choose_configure_create_new">Create New</string>
+
+    <string name="dialog_setting_configure_load_configure">Load Configure</string>
+    <string name="dialog_setting_configure_stop_later">Stop later</string>
+
+    <string name="dialog_setting_action_action_duration">Action duration</string>
+
 
     <plurals name="item_configure_detail">
         <item quantity="zero">No action</item>

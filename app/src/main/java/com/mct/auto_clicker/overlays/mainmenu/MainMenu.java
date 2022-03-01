@@ -13,10 +13,10 @@ import androidx.annotation.NonNull;
 
 import com.mct.auto_clicker.R;
 import com.mct.auto_clicker.baseui.overlays.OverlayMenuController;
-import com.mct.auto_clicker.database.Repository;
 import com.mct.auto_clicker.database.domain.Action;
 import com.mct.auto_clicker.database.domain.Configure;
 import com.mct.auto_clicker.executor.ActionDetector;
+import com.mct.auto_clicker.overlays.dialog.SettingConfigureDialog;
 import com.mct.auto_clicker.presenter.SettingSharedPreference;
 
 import java.util.ArrayList;
@@ -36,7 +36,6 @@ public class MainMenu extends OverlayMenuController implements ActionHandle.OnVi
         super(context);
         this.configure = configure;
         this.actionDetector = actionDetector;
-        this.actionDetector.init(configure);
         listActionHandle = new ArrayList<>();
         settingSharedPreference = SettingSharedPreference.getInstance(context);
         ActionHandle.setActionBtnSize(settingSharedPreference.getButtonActionSize());
@@ -55,17 +54,12 @@ public class MainMenu extends OverlayMenuController implements ActionHandle.OnVi
     }
 
     public void loadNewConfigure(@NonNull Configure configure) {
-        if (this.configure.getId() == configure.getId()) {
-            return;
-        }
-
-        listActionHandle.forEach(actionHandle -> removeActionView(actionHandle, false));
-        listActionHandle.clear();
-        this.configure = configure;
         if (actionDetector.isStart()) {
             onConfigureStateChanged(true);
         }
-        actionDetector.init(configure);
+        listActionHandle.forEach(actionHandle -> removeActionView(actionHandle, false));
+        listActionHandle.clear();
+        this.configure = configure;
         initView();
     }
 
@@ -93,15 +87,8 @@ public class MainMenu extends OverlayMenuController implements ActionHandle.OnVi
                 removeLastActionView();
                 break;
             case R.id.btn_setting:
-                Repository mRepository = Repository.getInstance(context);
-                if (configure.getId() == 0) {
-                    long id = mRepository.addConfigure(configure);
-                    configure = mRepository.getConfigure(id);
-                } else {
-                    // next day need fix
-                    mRepository.updateConfigure(configure);
-                }
-                Toast.makeText(context, "Add | Upd configure", Toast.LENGTH_SHORT).show();
+                SettingConfigureDialog dialog = new SettingConfigureDialog(context, configure, this::loadNewConfigure);
+                dialog.create(null);
                 break;
         }
     }
@@ -228,6 +215,7 @@ public class MainMenu extends OverlayMenuController implements ActionHandle.OnVi
                     R.id.btn_setting
             );
         } else {
+            actionDetector.init(configure);
             actionDetector.start();
             actionDetector.setOnStopListener(() -> onConfigureStateChanged(true));
             setMenuItemViewImageResource(R.id.btn_play, R.drawable.ic_pause);
