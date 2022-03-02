@@ -3,7 +3,9 @@ package com.mct.auto_clicker.baseui.overlays;
 import static android.view.MotionEvent.ACTION_DOWN;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
@@ -80,6 +82,8 @@ public abstract class OverlayMenuController extends OverlayController {
      */
     private ViewGroup menuLayout = null;
 
+    private final int menuItemSize;
+
     /**
      * Listener upon the screen orientation changes.
      */
@@ -89,15 +93,16 @@ public abstract class OverlayMenuController extends OverlayController {
     @SuppressLint("ResourceType")
     public OverlayMenuController(Context context) {
         this.context = context;
+        this.menuItemSize = SettingSharedPreference.getInstance(context).getButtonMenuSize();
         screenMetrics = new ScreenMetrics(context);
         menuLayoutParams = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 ScreenMetrics.TYPE_COMPAT_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
-                        WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH |
                         WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS |
-                        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+                        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN |
+                        WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
                 PixelFormat.TRANSLUCENT);
 
         sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
@@ -127,6 +132,9 @@ public abstract class OverlayMenuController extends OverlayController {
         ViewGroup parentLayout = menuLayout.getChildCount() == 1 ? (ViewGroup) menuLayout.getChildAt(0) : menuLayout;
         for (int i = 0; i < parentLayout.getChildCount(); i++) {
             View view = parentLayout.getChildAt(i);
+            view.getLayoutParams().width = menuItemSize;
+            view.getLayoutParams().height = menuItemSize;
+            view.setLayoutParams(view.getLayoutParams());
             if (view.getId() == R.id.btn_move) {
                 view.setOnTouchListener((view1, motionEvent) -> onMoveTouched(motionEvent));
             } else if (view.getId() == R.id.btn_exists) {
@@ -338,7 +346,7 @@ public abstract class OverlayMenuController extends OverlayController {
      * It will save the menu position for the previous orientation and load and apply the correct position
      * for the new orientation.
      */
-    private void onOrientationChanged() {
+    protected void onOrientationChanged() {
         saveMenuPosition(screenMetrics.getOrientation() == Configuration.ORIENTATION_LANDSCAPE ? Configuration.ORIENTATION_PORTRAIT : Configuration.ORIENTATION_LANDSCAPE, true);
         loadMenuPosition(screenMetrics.getOrientation());
         windowManager.updateViewLayout(menuLayout, menuLayoutParams);

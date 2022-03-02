@@ -20,6 +20,7 @@ import androidx.core.util.Pair;
 
 import com.mct.auto_clicker.R;
 import com.mct.auto_clicker.database.domain.Action;
+import com.mct.auto_clicker.overlays.dialog.SettingActionDialog;
 import com.mct.auto_clicker.utils.ScreenMetrics;
 
 public class ActionHandle implements View.OnTouchListener {
@@ -53,10 +54,13 @@ public class ActionHandle implements View.OnTouchListener {
 
     private final OnViewChangeListener onViewChangeListener;
 
-    public ActionHandle(Context context, Action action, int index, OnViewChangeListener onViewChangeListener) {
+    private final OnClickActionListener onClickActionListener;
+
+    public ActionHandle(Context context, Action action, int index, OnViewChangeListener onViewChangeListener, OnClickActionListener onClickActionListener) {
         this.action = action;
         this.index = index;
         this.onViewChangeListener = onViewChangeListener;
+        this.onClickActionListener = onClickActionListener;
         init(context);
     }
 
@@ -67,6 +71,10 @@ public class ActionHandle implements View.OnTouchListener {
      */
     public static void setActionBtnSize(int actionBtnSize) {
         ACTION_BTN_SIZE = actionBtnSize;
+    }
+
+    public int getIndex() {
+        return index;
     }
 
     public void setIndex(int index) {
@@ -106,11 +114,9 @@ public class ActionHandle implements View.OnTouchListener {
         int flags;
         if (enable) {
             flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS |
                     WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
         } else {
             flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS |
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE |
                     WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
         }
@@ -119,6 +125,41 @@ public class ActionHandle implements View.OnTouchListener {
         if (view2 != null) {
             paramsView2.flags = flags;
             onViewChangeListener.onChange(view2, paramsView2);
+        }
+    }
+
+    public void update() {
+        int x1 = 0, x2 = 0, y1 = 0, y2 = 0;
+        if (action instanceof Action.Click) {
+            x1 = ((Action.Click) action).getX();
+            y1 = ((Action.Click) action).getY();
+        }
+        if (action instanceof Action.Swipe) {
+            x1 = ((Action.Swipe) action).getFromX();
+            y1 = ((Action.Swipe) action).getFromY();
+            x2 = ((Action.Swipe) action).getToX();
+            y2 = ((Action.Swipe) action).getToY();
+
+        }
+        if (action instanceof Action.Zoom) {
+            x1 = ((Action.Zoom) action).getX1();
+            y1 = ((Action.Zoom) action).getY1();
+            x2 = ((Action.Zoom) action).getX2();
+            y2 = ((Action.Zoom) action).getY2();
+        }
+        setPosition(x1, y1, x2, y2);
+        int fitSize = ACTION_BTN_SIZE / 2;
+        x1 -= fitSize;
+        x2 -= fitSize;
+        y1 -= fitSize;
+        y2 -= fitSize;
+        updateView(view1, paramsView1, x1, y1);
+        updateView(view2, paramsView2, x2, y2);
+    }
+
+    private void updateView(View view, WindowManager.LayoutParams layoutParams, int x, int y) {
+        if (view != null) {
+            onViewChangeListener.onMove(view, layoutParams, x, y);
         }
     }
 
@@ -162,21 +203,19 @@ public class ActionHandle implements View.OnTouchListener {
         y2 -= fitSize;
         paramsView1 = getLayoutParam(x1, y1);
         view1.setOnTouchListener(this);
+        ((TextView) view1.findViewById(R.id.tv_action_index)).setTextSize(ACTION_BTN_SIZE / 5.5f);
         if (view2 != null) {
             paramsView2 = getLayoutParam(x2, y2);
             view2.setOnTouchListener(this);
+            ((TextView) view2.findViewById(R.id.tv_action_index)).setTextSize(ACTION_BTN_SIZE / 5.5f);
             paramsDivider = new WindowManager.LayoutParams(
                     WindowManager.LayoutParams.MATCH_PARENT,
                     WindowManager.LayoutParams.MATCH_PARENT,
-                    ScreenMetrics.TYPE_COMPAT_OVERLAY,
+                    0, 0, ScreenMetrics.TYPE_COMPAT_OVERLAY,
                     WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
-                            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS |
                             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE |
-                            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL |
                             WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
                     PixelFormat.TRANSLUCENT);
-            paramsDivider.x = 0;
-            paramsDivider.y = 0;
         }
     }
 
@@ -190,15 +229,12 @@ public class ActionHandle implements View.OnTouchListener {
     @NonNull
     private WindowManager.LayoutParams getLayoutParam(int x, int y) {
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(
-                ACTION_BTN_SIZE,
-                ACTION_BTN_SIZE,
+                ACTION_BTN_SIZE, ACTION_BTN_SIZE, x, y,
                 ScreenMetrics.TYPE_COMPAT_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
-                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS |
-                        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
+                        WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN |
+                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON,
                 PixelFormat.TRANSLUCENT);
-        layoutParams.x = x;
-        layoutParams.y = y;
         layoutParams.gravity = Gravity.TOP | Gravity.START;
 
         return layoutParams;
@@ -242,9 +278,10 @@ public class ActionHandle implements View.OnTouchListener {
                 moveInitialTouchPosition = Pair.create((int) event.getRawX(), (int) event.getRawY());
                 return true;
             case MotionEvent.ACTION_UP:
-//                    if (initialX == layoutParams.x && initialY == layoutParams.y) {
-//                        // open dialog
-//                    }
+                if (moveInitialPosition.first == layoutParams.x && moveInitialPosition.second == layoutParams.y) {
+                    // open dialog
+                    onClickActionListener.onClick(this);
+                }
                 return true;
             case MotionEvent.ACTION_MOVE:
                 int x = moveInitialPosition.first + (int) (event.getRawX() - moveInitialTouchPosition.first);
@@ -259,6 +296,15 @@ public class ActionHandle implements View.OnTouchListener {
                 return true;
         }
         return false;
+    }
+
+    private void setPosition(int x1, int y1, int x2, int y2) {
+        if (divider != null) {
+            divider.path.reset();
+            divider.path.moveTo(x1, y1);
+            divider.path.lineTo(x2, y2);
+            divider.invalidate();
+        }
     }
 
     private void setPosition(View view, int x, int y, Path path) {
@@ -302,6 +348,10 @@ public class ActionHandle implements View.OnTouchListener {
         void onMove(View view, WindowManager.LayoutParams layoutParams, int x, int y);
 
         void onChange(View view, WindowManager.LayoutParams layoutParams);
+    }
+
+    public interface OnClickActionListener {
+        void onClick(ActionHandle actionHandle);
     }
 
     private enum ViewType {CLICK, SWIPE_FROM, SWIPE_TO, ZOOM_IN, ZOOM_OUT}

@@ -2,7 +2,6 @@ package com.mct.auto_clicker.activities;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -31,7 +29,6 @@ import com.mct.auto_clicker.overlays.dialog.DialogHelper;
 import com.mct.auto_clicker.presenter.ConfigurePermissionPresenter;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,11 +54,11 @@ public class ConfigureListFragment extends Fragment implements ConfigureListAdap
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_configure_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_configure_list, container, false);
         rcvConfigureList = view.findViewById(R.id.rcv_configure_list);
+
         toolbarChooseItemDelete = view.findViewById(R.id.toolbar_choose_item_delete);
         initToolBar(view);
-        initToolBarChooseItemDelete();
         return view;
     }
 
@@ -84,16 +81,8 @@ public class ConfigureListFragment extends Fragment implements ConfigureListAdap
     }
 
     private void initToolBar(@NonNull View view) {
-        Toolbar toolbar = view.findViewById(R.id.toolbar);
-        ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
-        ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-    }
-
-    private void initToolBarChooseItemDelete() {
-        getToolbarLogoIcon(toolbarChooseItemDelete).setOnClickListener(view -> hideToolBarChooseItemDelete());
+        ((AppCompatActivity) requireActivity()).setSupportActionBar(view.findViewById(R.id.toolbar));
+        toolbarChooseItemDelete.setNavigationOnClickListener(v -> hideToolBarChooseItemDelete());
         toolbarChooseItemDelete.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.menu_delete) {
                 onDeleteConfiguresClicked();
@@ -250,22 +239,4 @@ public class ConfigureListFragment extends Fragment implements ConfigureListAdap
         configureListAdapter.setChoosing(false);
     }
 
-    private static View getToolbarLogoIcon(@NonNull Toolbar toolbar) {
-        //check if contentDescription previously was set
-        boolean hadContentDescription = TextUtils.isEmpty(toolbar.getLogoDescription());
-        String contentDescription = String.valueOf(!hadContentDescription ? toolbar.getLogoDescription() : "logoContentDescription");
-        toolbar.setLogoDescription(contentDescription);
-        ArrayList<View> potentialViews = new ArrayList<View>();
-        //find the view based on it's content description, set programatically or with android:contentDescription
-        toolbar.findViewsWithText(potentialViews, contentDescription, View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
-        //Nav icon is always instantiated at this point because calling setLogoDescription ensures its existence
-        View logoIcon = null;
-        if (potentialViews.size() > 0) {
-            logoIcon = potentialViews.get(0);
-        }
-        //Clear content description if not previously present
-        if (hadContentDescription)
-            toolbar.setLogoDescription(null);
-        return logoIcon;
-    }
 }

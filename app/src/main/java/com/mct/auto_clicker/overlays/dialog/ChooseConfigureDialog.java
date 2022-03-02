@@ -22,7 +22,7 @@ public class ChooseConfigureDialog extends OverlayDialogController {
 
     private final ConfigureListSimpleAdapter.OnConfigureChooseListener mListener;
     private final ConfigurePermissionPresenter configurePresenter;
-    private boolean isOverlay;
+    private final boolean isOverlay;
     private RecyclerView rcvConfigure;
     private TextView tvNoData;
 

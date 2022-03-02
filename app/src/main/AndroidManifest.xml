@@ -15,6 +15,7 @@
         <service
             android:name=".AutoClickerService"
             android:exported="true"
+            android:foregroundServiceType="dataSync"
             android:label="@string/accessibility_service_label"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>

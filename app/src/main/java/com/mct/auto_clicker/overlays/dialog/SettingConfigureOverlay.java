@@ -137,12 +137,11 @@ public abstract class SettingConfigureOverlay extends OverlayDialogController im
 
     protected int getAmount() {
         try {
-            int amount = Integer.parseInt(edtNumberOfLoop.getText().toString());
+            int amount = Integer.parseInt(edtNumberOfLoop.getText().toString().trim());
             if (amount > 1) {
                 return amount;
             }
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
+        } catch (NumberFormatException ignored) {
         }
         return 1;
     }

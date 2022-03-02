@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="32dp"
-    android:layout_height="32dp"
+    android:layout_width="@dimen/overlay_menu_btn_size"
+    android:layout_height="@dimen/overlay_menu_btn_size"
     android:background="@drawable/bg_float_action">
 
     <ImageView

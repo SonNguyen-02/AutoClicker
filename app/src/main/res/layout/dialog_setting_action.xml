@@ -15,7 +15,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_vertical_default"
             android:orientation="vertical">
 
             <TextView
@@ -52,7 +51,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_vertical_default"
+            android:layout_marginTop="@dimen/margin_vertical_default"
             android:orientation="vertical">
 
             <TextView
@@ -90,6 +89,7 @@
             android:id="@+id/cb_anti_detection"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_vertical_default"
             android:text="@string/setting_title_anti_detection"
             android:textSize="@dimen/text_size_description"
             android:visibility="gone"

@@ -9,6 +9,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.display.DisplayManager;
 import android.os.Build;
+import android.util.Log;
 import android.view.Display;
 import android.view.Surface;
 import android.view.WindowManager;
@@ -67,8 +68,8 @@ public class ScreenMetrics {
     public ScreenMetrics(@NonNull Context context) {
         this.context = context;
         display = context.getSystemService(DisplayManager.class).getDisplay(0);
-        orientation  = computeOrientation();
-        screenSize  = computeScreenSize();
+        orientation = computeOrientation();
+        screenSize = computeScreenSize();
     }
 
     public int getOrientation() {

@@ -30,4 +30,6 @@
 
     <dimen name="dialog_condition_max_width">400dp</dimen>
 
+    <item name="alpha_menu_item_disabled" type="dimen">40%</item>
+
 </resources>

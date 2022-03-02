@@ -97,6 +97,7 @@ public class ActionDetector {
         isStart = true;
         countExec = 1;
         timeStart = System.currentTimeMillis();
+        actionExecutor.initRandom();
         actionExecutor.executeActions(mConfigure.getActions());
     }
 

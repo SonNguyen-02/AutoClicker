@@ -29,9 +29,11 @@ public class ActionExecutor {
      */
     private final Handler workerThreadHandler;
 
-    private final int randomActionDelayTime;
+    private int randomActionDelayTime;
 
-    private final int randomLocation;
+    private int randomLocation;
+
+    private final SettingSharedPreference settingSharedPreference;
 
     private GestureExecutionListener mGestureExecutionListener;
 
@@ -53,8 +55,8 @@ public class ActionExecutor {
         screenMetrics = new ScreenMetrics(mContext);
         mainThreadHandler = new Handler(Looper.getMainLooper());
         workerThreadHandler = new Handler(Looper.myLooper());
-        randomActionDelayTime = SettingSharedPreference.getInstance(mContext).getIncreaseRandomActionDelayTime();
-        randomLocation = SettingSharedPreference.getInstance(mContext).getRandomLocation();
+        settingSharedPreference = SettingSharedPreference.getInstance(mContext);
+        initRandom();
     }
 
     public void setGestureExecutionListener(GestureExecutionListener mGestureExecutionListener) {
@@ -63,6 +65,11 @@ public class ActionExecutor {
 
     public void setOnExecutionComplete(OnExecutionComplete mOnExecutionComplete) {
         this.mOnExecutionComplete = mOnExecutionComplete;
+    }
+
+    public void initRandom( ) {
+        randomActionDelayTime = settingSharedPreference.getIncreaseRandomActionDelayTime();
+        randomLocation = settingSharedPreference.getRandomLocation();
     }
 
     @WorkerThread

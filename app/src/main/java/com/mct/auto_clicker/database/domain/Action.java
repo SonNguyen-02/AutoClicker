@@ -1,5 +1,9 @@
 package com.mct.auto_clicker.database.domain;
 
+import android.content.res.Configuration;
+import android.graphics.Point;
+import android.util.Pair;
+
 import androidx.annotation.NonNull;
 
 import com.mct.auto_clicker.database.room.entity.ActionEntity;
@@ -88,6 +92,20 @@ public abstract class Action implements Serializable {
         configureId = 0L;
     }
 
+    public Pair<Integer, Integer> changeOrientation(int orientation, Point screenSize, int x, int y) {
+        int newX, newY;
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            // ngang sang doc
+            newX = screenSize.x - y;
+            newY = x;
+        } else {
+            // doc sang ngang
+            newX = y;
+            newY = screenSize.y - x;
+        }
+        return new Pair<>(newX, newY);
+    }
+
     /**
      * @return the entity equivalent of this action.
      */
@@ -97,6 +115,8 @@ public abstract class Action implements Serializable {
      * @return creates a deep copy of this action.
      */
     public abstract Action deepCopy();
+
+    public abstract void changeOrientationAction(int orientation, Point screenSize);
 
     @NonNull
     @Override
@@ -161,6 +181,13 @@ public abstract class Action implements Serializable {
         @Override
         public Action deepCopy() {
             return new Click(getId(), getConfigureId(), getName(), getTimeDelay(), getActionDuration(), x, y, isAntiDetection);
+        }
+
+        @Override
+        public void changeOrientationAction(int orientation, Point screenSize) {
+            Pair<Integer, Integer> result = changeOrientation(orientation, screenSize, x, y);
+            x = result.first;
+            y = result.second;
         }
 
         @NonNull
@@ -236,6 +263,16 @@ public abstract class Action implements Serializable {
         @Override
         public Action deepCopy() {
             return new Swipe(getId(), getConfigureId(), getName(), getTimeDelay(), getActionDuration(), fromX, fromY, toX, toY);
+        }
+
+        @Override
+        public void changeOrientationAction(int orientation, Point screenSize) {
+            Pair<Integer, Integer> result = changeOrientation(orientation, screenSize, fromX, fromY);
+            fromX = result.first;
+            fromY = result.second;
+            result = changeOrientation(orientation, screenSize, toX, toY);
+            toX = result.first;
+            toY = result.second;
         }
 
         @NonNull
@@ -336,6 +373,16 @@ public abstract class Action implements Serializable {
         @Override
         public Action deepCopy() {
             return new Zoom(getId(), getConfigureId(), getName(), getTimeDelay(), getActionDuration(), zoomType, x1, y1, x2, y2);
+        }
+
+        @Override
+        public void changeOrientationAction(int orientation, Point screenSize) {
+            Pair<Integer, Integer> result = changeOrientation(orientation, screenSize, x1, y1);
+            x1 = result.first;
+            y1 = result.second;
+            result = changeOrientation(orientation, screenSize, x2, y2);
+            x2 = result.first;
+            y2 = result.second;
         }
 
         @NonNull

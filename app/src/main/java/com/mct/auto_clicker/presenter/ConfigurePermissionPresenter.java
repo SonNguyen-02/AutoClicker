@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import com.mct.auto_clicker.AutoClickerService;
 import com.mct.auto_clicker.database.Repository;
 import com.mct.auto_clicker.database.domain.Configure;
+import com.mct.auto_clicker.utils.ScreenMetrics;
 
 import java.util.List;
 
@@ -72,18 +73,19 @@ public class ConfigurePermissionPresenter {
     public Configure getNewConfigure(String name) {
         int type = mSharedPreference.getTypeStopTheLoop();
         int timeDelay = mSharedPreference.getLoopDelay();
+        ScreenMetrics screenMetrics = new ScreenMetrics(mContext);
         Configure configure = null;
         switch (type) {
             case RUN_TYPE_INFINITY:
-                configure = new Configure(0, name, null, timeDelay);
+                configure = new Configure(0, name, null, screenMetrics.getOrientation(), timeDelay);
                 break;
             case RUN_TYPE_AMOUNT:
                 int amount = mSharedPreference.getStopLoopByAmount();
-                configure = new Configure(0, name, null, timeDelay, amount);
+                configure = new Configure(0, name, null, screenMetrics.getOrientation(), timeDelay, amount);
                 break;
             case RUN_TYPE_TIME:
                 long timeStop = mSharedPreference.getStopLoopByTime();
-                configure = new Configure(0, name, null, timeDelay, timeStop);
+                configure = new Configure(0, name, null, screenMetrics.getOrientation(), timeDelay, timeStop);
                 break;
         }
         return configure;
@@ -106,10 +108,10 @@ public class ConfigurePermissionPresenter {
         return mRepository.getConfigure(configureId);
     }
 
-    public void loadConfigure(Context context, Configure configure, AutoClickerService.OnServiceStopListener listener) {
+    public void loadConfigure(Configure configure, AutoClickerService.OnServiceStopListener listener) {
         if (AutoClickerService.getLocalService() != null) {
             if (!AutoClickerService.getLocalService().isStart()) {
-                AutoClickerService.getLocalService().start(context, configure, listener);
+                AutoClickerService.getLocalService().start(mContext, configure, listener);
             } else {
                 AutoClickerService.getLocalService().loadConfigure(configure);
             }

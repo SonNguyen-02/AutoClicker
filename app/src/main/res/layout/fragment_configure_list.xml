@@ -17,6 +17,8 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:menu="@menu/menu_configure_list_fragment"
+            app:navigationContentDescription="@string/back"
+            app:navigationIcon="@drawable/ic_back"
             app:theme="@style/ToolbarTheme"
             app:title="@string/fragment_config_list_title"
             app:titleTextColor="@color/textTitle" />
@@ -27,11 +29,11 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:visibility="gone"
-            app:logo="@drawable/ic_back"
             app:menu="@menu/menu_choose_item_delete"
+            app:navigationContentDescription="@string/back"
+            app:navigationIcon="@drawable/ic_back"
             app:theme="@style/ToolbarTheme"
             app:title="@string/fragment_choose_item_title"
-            app:titleMarginStart="32dp"
             app:titleTextColor="@color/textTitle" />
 
     </RelativeLayout>

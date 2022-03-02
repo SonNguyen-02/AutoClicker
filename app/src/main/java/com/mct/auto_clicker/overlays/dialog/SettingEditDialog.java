@@ -1,5 +1,9 @@
 package com.mct.auto_clicker.overlays.dialog;
 
+import static com.mct.auto_clicker.presenter.SettingSharedPreference.MIN_CLICK_EXEC_TIME;
+import static com.mct.auto_clicker.presenter.SettingSharedPreference.MIN_SWIPE_EXEC_TIME;
+import static com.mct.auto_clicker.presenter.SettingSharedPreference.MIN_ZOOM_EXEC_TIME;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
@@ -97,8 +101,13 @@ public class SettingEditDialog extends OverlayDialogController implements Dialog
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
+        int value;
+        try {
+            value = Integer.parseInt(edtEdit.getText().toString().trim());
+        } catch (NumberFormatException e) {
+            return;
+        }
         SettingSharedPreference sharedPreference = SettingSharedPreference.getInstance(context);
-        int value = Integer.parseInt(edtEdit.getText().toString());
         if (value < mEditType.minimum) {
             value = mEditType.minimum;
         }
@@ -143,15 +152,15 @@ public class SettingEditDialog extends OverlayDialogController implements Dialog
         ACT_CLICK_DURATION(R.drawable.ic_click_duration,
                 R.string.dialog_title_time_click_action_exec,
                 R.string.dialog_desc_how_long_will_the_action_take,
-                1, 60000),
+                MIN_CLICK_EXEC_TIME, 60000),
         ACT_SWIPE_DURATION(R.drawable.ic_swipe_duration,
                 R.string.dialog_title_time_swipe_action_exec,
                 R.string.dialog_desc_how_long_will_the_action_take,
-                200, 60000),
+                MIN_SWIPE_EXEC_TIME, 60000),
         ACT_ZOOM_DURATION(R.drawable.ic_arrow_opposite,
                 R.string.dialog_title_time_zoom_action_exec,
                 R.string.dialog_desc_how_long_will_the_action_take,
-                400, 60000),
+                MIN_ZOOM_EXEC_TIME, 60000),
         ADT_INCREASE_RAND_ACTION_DELAY_TIME(R.drawable.ic_add_time,
                 R.string.dialog_title_increase_random_wait_time,
                 R.string.dialog_desc_increase_random_wait_time,

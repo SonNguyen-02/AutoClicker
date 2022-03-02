@@ -17,7 +17,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +28,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mct.auto_clicker.AutoClickerService;
 import com.mct.auto_clicker.R;
 import com.mct.auto_clicker.baseui.overlays.OverlayDialogController;
 import com.mct.auto_clicker.database.domain.Configure;
@@ -204,6 +208,8 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
             case R.id.rl_remove_ads:
                 break;
             case R.id.rl_general_setting:
+                GeneralSettingFragment fragment = GeneralSettingFragment.newInstance();
+                addFragmentToMainFrame(fragment, GeneralSettingFragment.class.getName());
                 break;
             case R.id.rl_solving_trouble:
                 showPermissionRequest(false);
@@ -227,6 +233,7 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
     private void showPermissionRequest(boolean registerListener) {
         PermissionsDialogFragment fragment;
         fragment = registerListener ? PermissionsDialogFragment.newInstance(this) : PermissionsDialogFragment.newInstance();
+
         fragment.show(getSupportFragmentManager(), PermissionsDialogFragment.class.getName());
     }
 
@@ -278,6 +285,7 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
         if (permissionPresenter.isServiceStart()) {
             permissionPresenter.stopConfigure();
             requestedConfigure = null;
+            initBtnPlayState();
         } else {
             onClicked(null);
         }
@@ -298,7 +306,7 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onPermissionsGranted() {
         if (requestedConfigure != null) {
-            permissionPresenter.loadConfigure(this, requestedConfigure, this::initBtnPlayState);
+            permissionPresenter.loadConfigure(requestedConfigure, this::initBtnPlayState);
             initBtnPlayState();
         } else {
             ChooseConfigureDialog dialog = new ChooseConfigureDialog(this, this::onClicked, false);

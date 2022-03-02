@@ -118,9 +118,7 @@ public class SettingConfigureDialog extends SettingConfigureOverlay {
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
-        Log.e("ddd", "onClick: " + i);
         if (i == DialogInterface.BUTTON_POSITIVE) {
-            configure.setTimeDelay(Long.parseLong(edtLoopDelay.getText().toString()));
             configure.setRunType(getTypeStopLoop());
             if (getTypeStopLoop() == RUN_TYPE_AMOUNT) {
                 configure.setAmountExec(getAmount());
@@ -131,6 +129,11 @@ public class SettingConfigureDialog extends SettingConfigureOverlay {
             ConfigurePermissionPresenter configurePresenter = new ConfigurePermissionPresenter(context);
             long id = configurePresenter.saveConfigure(configure);
             configure.setId(id);
+            try {
+                int timeDelay = Integer.parseInt(edtLoopDelay.getText().toString().trim());
+                configure.setTimeDelay(timeDelay);
+            } catch (NumberFormatException ignored) {
+            }
         }
     }
 

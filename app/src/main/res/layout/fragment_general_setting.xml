@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:navigationContentDescription="@string/back"
+        app:navigationIcon="@drawable/ic_back"
+        app:theme="@style/ToolbarTheme"
+        app:title="@string/fragment_general_setting_title"
+        app:titleTextColor="@color/textTitle" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/margin_vertical_large"
+            android:paddingTop="@dimen/margin_horizontal_default"
+            android:paddingEnd="@dimen/margin_vertical_large"
+            android:paddingBottom="@dimen/margin_horizontal_default">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/DialogActionAndConfigTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/size_of_the_target" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="@dimen/margin_horizontal_default"
+                    android:layout_marginBottom="@dimen/margin_horizontal_default"
+                    android:gravity="center">
+
+                    <include
+                        android:id="@+id/layout_action"
+                        layout="@layout/floating_action"
+                        android:layout_width="@dimen/overlay_menu_btn_size"
+                        android:layout_height="@dimen/overlay_menu_btn_size" />
+                </LinearLayout>
+
+                <SeekBar
+                    android:id="@+id/sb_setting_action"
+                    style="@style/SeekBarSettingGeneral"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <include
+                layout="@layout/include_view_separator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/margin_vertical_large"
+                android:layout_marginBottom="@dimen/margin_vertical_large" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/DialogActionAndConfigTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dimensions_of_the_control_bar" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="@dimen/margin_horizontal_default"
+                    android:layout_marginBottom="@dimen/margin_horizontal_default"
+                    android:gravity="center">
+
+                    <androidx.cardview.widget.CardView style="@style/OverlayCardView">
+
+                        <LinearLayout
+                            android:id="@+id/layout_buttons"
+                            style="@style/OverlayButtonsLayout">
+
+                            <ImageButton
+                                android:id="@+id/btn_play"
+                                style="@style/OverlayButton"
+                                android:contentDescription="@string/content_desc_play_pause_configure"
+                                android:src="@drawable/ic_start" />
+
+                            <ImageButton
+                                android:id="@+id/btn_add_touch"
+                                style="@style/OverlayButton"
+                                android:contentDescription="@string/content_desc_add_touch"
+                                android:src="@drawable/ic_plus" />
+
+                            <ImageButton
+                                android:id="@+id/btn_add_swipe"
+                                style="@style/OverlayButton"
+                                android:contentDescription="@string/content_desc_add_swipe"
+                                android:src="@drawable/ic_swipe" />
+
+                            <ImageButton
+                                android:id="@+id/btn_add_zoom_in"
+                                style="@style/OverlayButton"
+                                android:contentDescription="@string/content_desc_add_zoom_in"
+                                android:src="@drawable/ic_zoom_out" />
+
+                            <ImageButton
+                                android:id="@+id/btn_add_zoom_out"
+                                style="@style/OverlayButton"
+                                android:contentDescription="@string/content_desc_add_zoom_out"
+                                android:src="@drawable/ic_zoom_in" />
+
+                            <ImageButton
+                                android:id="@+id/btn_remove"
+                                style="@style/OverlayButton"
+                                android:contentDescription="@string/content_desc_remove_action"
+                                android:src="@drawable/ic_minus" />
+
+                            <ImageButton
+                                android:id="@+id/btn_setting"
+                                style="@style/OverlayButton"
+                                android:contentDescription="@string/content_desc_setting_configure"
+                                android:src="@drawable/ic_setting" />
+
+                            <ImageButton
+                                android:id="@+id/btn_exists"
+                                style="@style/OverlayButton"
+                                android:contentDescription="@string/content_desc_exists_the_configure"
+                                android:src="@drawable/ic_close"
+                                android:visibility="gone" />
+
+                            <ImageButton
+                                android:id="@+id/btn_move"
+                                style="@style/OverlayButton"
+                                android:contentDescription="@string/content_desc_move_floating_menu"
+                                android:src="@drawable/ic_move" />
+
+                        </LinearLayout>
+
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+
+                <SeekBar
+                    android:id="@+id/sb_setting_menu"
+                    style="@style/SeekBarSettingGeneral"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true" />
+</LinearLayout>

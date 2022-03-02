@@ -21,6 +21,8 @@ public class ConfigureEntity {
     public long id;
     @ColumnInfo(name = "name")
     public String name;
+    @ColumnInfo(name = "orientation")
+    public int orientation;
     @ColumnInfo(name = "timeDelay")
     public long timeDelay;
     @ColumnInfo(name = "runType")
@@ -34,9 +36,10 @@ public class ConfigureEntity {
     }
 
     @Ignore
-    public ConfigureEntity(long id, String name, long timeDelay, int runType, Integer amountExec, Long timeStop) {
+    public ConfigureEntity(long id, String name, int orientation, long timeDelay, int runType, Integer amountExec, Long timeStop) {
         this.id = id;
         this.name = name;
+        this.orientation = orientation;
         this.timeDelay = timeDelay;
         this.runType = runType;
         this.amountExec = amountExec;
@@ -59,7 +62,7 @@ public class ConfigureEntity {
 
         public Configure toConfigure() {
             List<Action> actionsList = actions.stream().map(ActionEntity::toAction).collect(Collectors.toList());
-            return new Configure(configure.id, configure.name, actionsList, configure.timeDelay, configure.runType, configure.amountExec, configure.timeStop);
+            return new Configure(configure.id, configure.name, actionsList, configure.orientation, configure.timeDelay, configure.runType, configure.amountExec, configure.timeStop);
         }
     }
 

@@ -16,6 +16,7 @@ import com.mct.auto_clicker.baseui.overlays.OverlayMenuController;
 import com.mct.auto_clicker.database.domain.Action;
 import com.mct.auto_clicker.database.domain.Configure;
 import com.mct.auto_clicker.executor.ActionDetector;
+import com.mct.auto_clicker.overlays.dialog.SettingActionDialog;
 import com.mct.auto_clicker.overlays.dialog.SettingConfigureDialog;
 import com.mct.auto_clicker.presenter.SettingSharedPreference;
 
@@ -132,6 +133,7 @@ public class MainMenu extends OverlayMenuController implements ActionHandle.OnVi
 
     private void initView() {
         if (configure == null) return;
+        configure.setOrientation(getScreenMetrics().getOrientation(), getScreenMetrics().getScreenSize());
         List<Action> listAction = configure.getActions();
         if (listAction != null && !listAction.isEmpty()) {
             listAction.forEach(action -> addActionView(action, false));
@@ -140,7 +142,7 @@ public class MainMenu extends OverlayMenuController implements ActionHandle.OnVi
 
     private void addActionView(@NonNull Action action, boolean isCreateNew) {
         if (isCreateNew) configure.getActions().add(action);
-        ActionHandle actionHandle = new ActionHandle(context, action, getNumericalOrderAction(), this);
+        ActionHandle actionHandle = new ActionHandle(context, action, getNumericalOrderAction(), this, this::showSettingActionDialog);
         listActionHandle.add(actionHandle);
         if (!(action instanceof Action.Click)) {
             getWindowManager().addView(actionHandle.getDivider(), actionHandle.getParamsDivider());
@@ -149,6 +151,16 @@ public class MainMenu extends OverlayMenuController implements ActionHandle.OnVi
         } else {
             getWindowManager().addView(actionHandle.getView1(), actionHandle.getParamsView1());
         }
+    }
+
+    private void showSettingActionDialog(@NonNull ActionHandle actionHandle) {
+        new SettingActionDialog(context, actionHandle.getAction(), actionHandle.getIndex(), () -> {
+            removeActionView(actionHandle, true);
+            listActionHandle.remove(actionHandle);
+            for (int i = actionHandle.getIndex() - 1; i < listActionHandle.size(); i++) {
+                listActionHandle.get(i).setIndex(i + 1);
+            }
+        }).create(null);
     }
 
     private void removeLastActionView() {
@@ -270,9 +282,17 @@ public class MainMenu extends OverlayMenuController implements ActionHandle.OnVi
     }
 
     @Override
+    protected void onOrientationChanged() {
+        super.onOrientationChanged();
+        configure.setOrientation(getScreenMetrics().getOrientation(), getScreenMetrics().getScreenSize());
+        listActionHandle.forEach(ActionHandle::update);
+    }
+
+    @Override
     public void onDismissed() {
         super.onDismissed();
         listActionHandle.forEach(actionHandle -> removeActionView(actionHandle, false));
+        listActionHandle.clear();
         configure = null;
         if (actionDetector != null) {
             actionDetector.release();

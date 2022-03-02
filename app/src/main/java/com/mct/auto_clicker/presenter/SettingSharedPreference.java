@@ -25,6 +25,12 @@ public class SettingSharedPreference {
     private static final int DEFAULT_LOOP_DELAY = 0;
 
     // default setting for action
+    public static final int MIN_CLICK_EXEC_TIME = 10;
+    public static final int MIN_SWIPE_EXEC_TIME = 200;
+    public static final int MIN_ZOOM_EXEC_TIME = 500;
+
+    public static final int MAX_EXEC_TIME = 60000;
+
     private static final String K_ACTION_DELAY = "k_time_wait_next_action";
     private static final int DEFAULT_ACTION_DELAY = 50;
 
@@ -44,8 +50,16 @@ public class SettingSharedPreference {
     private static final String K_RANDOM_LOCATION = "k_random_location";
     private static final int DEFAULT_RANDOM_LOCATION = 0; //PX
 
+    // general setting
+    public static final int MIN_BUTTON_ACTION_SIZE = 80;
+    public static final int MAX_BUTTON_ACTION_SIZE = 140;
+    private static final int DEFAULT_BUTTON_ACTION_SIZE = 110;// PX | min 80 max 140
     private static final String K_BUTTON_ACTION_SIZE = "k_action_size";
-    private static final int DEFAULT_BUTTON_ACTION_SIZE = 100;// PX | min 50 max 150
+
+    public static final int MIN_BUTTON_MENU_SIZE = 90;
+    public static final int MAX_BUTTON_MENU_SIZE = 120;
+    private static final int DEFAULT_BUTTON_MENU_SIZE = 105;
+    private static final String K_BUTTON_MENU_SIZE = "k_menu_size";
 
     private final SharedPreferences mSharedPreferences;
     private final SharedPreferences.Editor mEditor;
@@ -158,9 +172,20 @@ public class SettingSharedPreference {
     }
 
     public SettingSharedPreference setButtonActionSize(int value) {
-        if (value < 80) value = 80;
-        if (value > 200) value = 200;
+        if (value < MIN_BUTTON_ACTION_SIZE) value = MIN_BUTTON_ACTION_SIZE;
+        if (value > MAX_BUTTON_ACTION_SIZE) value = MAX_BUTTON_ACTION_SIZE;
         mEditor.putInt(K_BUTTON_ACTION_SIZE, value);
+        return this;
+    }
+
+    public int getButtonMenuSize() {
+        return mSharedPreferences.getInt(K_BUTTON_MENU_SIZE, DEFAULT_BUTTON_MENU_SIZE);
+    }
+
+    public SettingSharedPreference setButtonMenuSize(int value) {
+        if (value < MIN_BUTTON_MENU_SIZE) value = MIN_BUTTON_MENU_SIZE;
+        if (value > MAX_BUTTON_MENU_SIZE) value = MAX_BUTTON_MENU_SIZE;
+        mEditor.putInt(K_BUTTON_MENU_SIZE, value);
         return this;
     }
 
