@@ -30,10 +30,12 @@ public class AutoClickerService extends AccessibilityService {
 
     private OverlayController rootOverlayController;
 
+    private OnLocalServiceChangeListener listener;
+
     private Boolean isStarted = false;
 
-    public interface OnServiceStopListener {
-        void onStop();
+    public interface OnLocalServiceChangeListener {
+        void onChange();
     }
 
     @Override
@@ -53,19 +55,27 @@ public class AutoClickerService extends AccessibilityService {
             return isStarted;
         }
 
-        public void start(Context context, Configure configure, OnServiceStopListener stopListener) {
+        public void setOnStopListener(OnLocalServiceChangeListener onLocalServiceChangeListener) {
+            if (listener != null) {
+                listener.onChange();
+                listener = null;
+            }
+            listener = onLocalServiceChangeListener;
+        }
+
+        public void start(Context context, Configure configure) {
             if (isStarted) {
                 return;
             }
             isStarted = true;
+            if (listener != null) {
+                listener.onChange();
+            }
             startForeground(NOTIFICATION_ID, createNotification(configure.getName()));
             ActionDetector actionDetector = new ActionDetector(getApplicationContext(),
                     gesture -> dispatchGesture(gesture, null, null));
             rootOverlayController = new MainMenu(context, configure, actionDetector);
-            rootOverlayController.create(() -> {
-                stop();
-                stopListener.onStop();
-            });
+            rootOverlayController.create(this::stop);
         }
 
         public void loadConfigure(Configure configure) {
@@ -81,6 +91,9 @@ public class AutoClickerService extends AccessibilityService {
             if (rootOverlayController != null) {
                 rootOverlayController.dismiss();
                 rootOverlayController = null;
+            }
+            if (listener != null) {
+                listener.onChange();
             }
         }
     }

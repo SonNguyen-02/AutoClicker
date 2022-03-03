@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_horizontal_default"
+            android:paddingTop="@dimen/margin_vertical_default"
+            android:paddingEnd="@dimen/margin_horizontal_default"
+            android:paddingBottom="@dimen/margin_vertical_default"
+            android:text="@string/dialog_rate_app_desc"
+            android:textColor="@color/md_grey_800"
+            android:textSize="17sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/btn_rate_now"
+                style="@style/ButtonRate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_rate_rate_now" />
+
+            <TextView
+                android:id="@+id/btn_no_thank"
+                style="@style/ButtonRate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_rate_no_thanks" />
+
+            <TextView
+                android:id="@+id/btn_remind_later"
+                style="@style/ButtonRate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_rate_remind_me_later" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

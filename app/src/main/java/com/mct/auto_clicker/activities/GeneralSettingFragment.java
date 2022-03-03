@@ -75,7 +75,10 @@ public class GeneralSettingFragment extends Fragment {
 
     private void setVisible(int visibility, @NonNull @IdRes int... idRes) {
         for (int id : idRes) {
-            layoutButtons.findViewById(id).setVisibility(visibility);
+            View view = layoutButtons.findViewById(id);
+            if(view != null){
+                view.setVisibility(visibility);
+            }
         }
     }
 

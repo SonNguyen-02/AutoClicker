@@ -56,9 +56,9 @@ public class SettingSharedPreference {
     private static final int DEFAULT_BUTTON_ACTION_SIZE = 110;// PX | min 80 max 140
     private static final String K_BUTTON_ACTION_SIZE = "k_action_size";
 
-    public static final int MIN_BUTTON_MENU_SIZE = 90;
-    public static final int MAX_BUTTON_MENU_SIZE = 120;
-    private static final int DEFAULT_BUTTON_MENU_SIZE = 105;
+    public static final int MIN_BUTTON_MENU_SIZE = 100;
+    public static final int MAX_BUTTON_MENU_SIZE = 124;
+    private static final int DEFAULT_BUTTON_MENU_SIZE = 112;
     private static final String K_BUTTON_MENU_SIZE = "k_menu_size";
 
     private final SharedPreferences mSharedPreferences;

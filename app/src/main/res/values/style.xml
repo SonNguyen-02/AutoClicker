@@ -80,7 +80,7 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">18sp</item>
         <item name="android:layout_margin">@dimen/margin_vertical_small</item>
-        <item name="android:background">@drawable/ripple_white_bg_primary</item>
+        <item name="android:background">@drawable/ripple_white_bg_primary_stroke_grey_corn_4</item>
     </style>
 
     <style name="OverlayCardView">
@@ -164,6 +164,16 @@
     <style name="SeekBarSettingGeneral" parent="Widget.AppCompat.SeekBar">
         <item name="android:paddingStart">@dimen/margin_vertical_large</item>
         <item name="android:paddingEnd">@dimen/margin_vertical_large</item>
+    </style>
+
+    <style name="ButtonRate">
+        <item name="android:background">@drawable/ripple_white</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:padding">@dimen/margin_horizontal_default</item>
+        <item name="android:textAlignment">textEnd</item>
+        <item name="android:textColor">@color/accent</item>
+        <item name="android:textSize">@dimen/text_size_item_description</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
 </resources>

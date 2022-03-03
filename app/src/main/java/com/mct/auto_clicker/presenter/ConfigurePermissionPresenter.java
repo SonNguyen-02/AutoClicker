@@ -108,10 +108,22 @@ public class ConfigurePermissionPresenter {
         return mRepository.getConfigure(configureId);
     }
 
-    public void loadConfigure(Configure configure, AutoClickerService.OnServiceStopListener listener) {
+    public void registerStopServiceListener(AutoClickerService.OnLocalServiceChangeListener stopListener) {
+        if (AutoClickerService.getLocalService() != null) {
+            AutoClickerService.getLocalService().setOnStopListener(stopListener);
+        }
+    }
+
+    public void unregisterStopServiceListener() {
+        if (AutoClickerService.getLocalService() != null) {
+            AutoClickerService.getLocalService().setOnStopListener(null);
+        }
+    }
+
+    public void loadConfigure(Configure configure) {
         if (AutoClickerService.getLocalService() != null) {
             if (!AutoClickerService.getLocalService().isStart()) {
-                AutoClickerService.getLocalService().start(mContext, configure, listener);
+                AutoClickerService.getLocalService().start(mContext, configure);
             } else {
                 AutoClickerService.getLocalService().loadConfigure(configure);
             }

@@ -2,6 +2,9 @@
     <string name="app_name">Auto Clicker</string>
     <string name="ver">Version</string>
 
+    <string name="ads_app_id">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="ads_app_unit_id">/6499/example/banner</string>
+
     <string name="notification_channel_name" translatable="false">AutoClicker</string>
     <string name="notification_title">"Loaded: %s"</string>
     <string name="notification_message">Press to change the configure</string>
@@ -9,7 +12,10 @@
     <string name="activity_auto_clicker_title">Auto Clicker</string>
     <string name="fragment_config_list_title">Config list</string>
     <string name="fragment_choose_item_title">{0} item choose</string>
+
     <string name="fragment_general_setting_title">General setting</string>
+    <string name="size_of_the_target">Size of the target</string>
+    <string name="dimensions_of_the_control_bar">Size of the control bar</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -97,6 +103,7 @@
     <string name="dialog_title_rename_configure">Rename configure</string>
     <string name="dialog_title_delete_configure">Delete configure</string>
     <string name="dialog_title_choose_configure">Choose a configure</string>
+    <string name="dialog_title_rate_app">Rate app</string>
 
     <string name="dialog_desc_loop_delay_time">Time delay before executing next loop</string>
     <string name="dialog_desc_time_wait_next_action">Time delay before taking the next action</string>
@@ -141,8 +148,10 @@
 
     <string name="dialog_setting_action_action_duration">Action duration</string>
 
-    <string name="size_of_the_target">Size of the target</string>
-    <string name="dimensions_of_the_control_bar">Size of the control bar</string>
+    <string name="dialog_rate_app_desc">If you enjoy using this app, please take a moment to rate it so we can make better updates in the future.\nThanks for your support!</string>
+    <string name="dialog_rate_rate_now">Rate now</string>
+    <string name="dialog_rate_no_thanks">No, thanks</string>
+    <string name="dialog_rate_remind_me_later">Remind me later</string>
 
     <plurals name="item_configure_detail">
         <item quantity="zero">No action</item>

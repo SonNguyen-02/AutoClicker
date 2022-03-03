@@ -17,10 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,11 +25,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mct.auto_clicker.AutoClickerService;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.mct.auto_clicker.R;
 import com.mct.auto_clicker.baseui.overlays.OverlayDialogController;
 import com.mct.auto_clicker.database.domain.Configure;
 import com.mct.auto_clicker.overlays.dialog.ChooseConfigureDialog;
+import com.mct.auto_clicker.overlays.dialog.RateAppDialog;
 import com.mct.auto_clicker.overlays.dialog.SettingEditDialog;
 import com.mct.auto_clicker.overlays.dialog.SettingStopLoopDialog;
 import com.mct.auto_clicker.presenter.ConfigurePermissionPresenter;
@@ -67,11 +66,13 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
 
         initToolBar();
 
+        initAds();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        permissionPresenter.registerStopServiceListener(this::initBtnPlayState);
         initBtnPlayState();
     }
 
@@ -137,12 +138,20 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
         toggle.syncState();
     }
 
+    private void initAds() {
+//        MobileAds.initialize(getApplicationContext(), initializationStatus -> {
+//        });
+        AdView adView = findViewById(R.id.ad_view);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
+    }
+
     private void initBtnPlayState() {
         if (!permissionPresenter.isServiceStart()) {
-            btnPlay.setBackground(ContextCompat.getDrawable(this, R.drawable.ripple_white_bg_primary));
+            btnPlay.setBackground(ContextCompat.getDrawable(this, R.drawable.ripple_white_bg_primary_stroke_grey_corn_4));
             btnPlay.setText(R.string.start);
         } else {
-            btnPlay.setBackground(ContextCompat.getDrawable(this, R.drawable.ripple_white_bg_orange));
+            btnPlay.setBackground(ContextCompat.getDrawable(this, R.drawable.ripple_white_bg_orange_stroke_grey_corn_4));
             btnPlay.setText(R.string.stop);
         }
     }
@@ -285,9 +294,12 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
         if (permissionPresenter.isServiceStart()) {
             permissionPresenter.stopConfigure();
             requestedConfigure = null;
-            initBtnPlayState();
         } else {
-            onClicked(null);
+            // khi click vao start thi se hien rate dialog neu du dieu kien
+            boolean isLaunchSuccess = AppRater.launch(this);
+            if (!isLaunchSuccess) {
+                onClicked(null);
+            }
         }
     }
 
@@ -306,13 +318,16 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onPermissionsGranted() {
         if (requestedConfigure != null) {
-            permissionPresenter.loadConfigure(requestedConfigure, this::initBtnPlayState);
-            initBtnPlayState();
+            permissionPresenter.loadConfigure(requestedConfigure);
         } else {
             ChooseConfigureDialog dialog = new ChooseConfigureDialog(this, this::onClicked, false);
             dialog.create(null);
         }
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        permissionPresenter.unregisterStopServiceListener();
+    }
 }

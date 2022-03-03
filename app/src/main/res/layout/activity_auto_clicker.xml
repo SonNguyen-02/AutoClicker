@@ -5,6 +5,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context="com.mct.auto_clicker.activities.AutoClickerActivity">
 
     <RelativeLayout
@@ -472,16 +473,6 @@
 
         </ScrollView>
 
-
-        <!--    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"-->
-        <!--        android:id="@+id/adView"-->
-        <!--        android:layout_width="match_parent"-->
-        <!--        android:layout_height="wrap_content"-->
-        <!--        android:layout_alignParentBottom="true"-->
-        <!--        android:padding="2dp"-->
-        <!--        ads:adSize="BANNER"-->
-        <!--        ads:adUnitId="ca-app-pub-3940256099942544/6300978111" />-->
-
         <LinearLayout
             android:id="@+id/ll_bottom_container"
             android:layout_width="match_parent"
@@ -494,15 +485,16 @@
                 style="@style/ButtonControlService"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/margin_horizontal_mini"
                 android:text="@string/start" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:gravity="center"
-                android:text="Ads"
-                android:textSize="18sp" />
-
+            <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/ad_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                ads:adSize="BANNER"
+                ads:adUnitId="@string/ads_app_unit_id" />
 
         </LinearLayout>
 

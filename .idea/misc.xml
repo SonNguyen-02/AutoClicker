@@ -25,16 +25,19 @@
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ripple_light_green_stroke_grey_bot.xml" value="0.3769230769230769" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ripple_white.xml" value="0.36205128205128206" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ripple_white_bg_grey.xml" value="0.3769230769230769" />
+        <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ripple_white_bg_orange_corn_4.xml" value="0.36574074074074076" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ripple_white_bg_primary.xml" value="0.3769230769230769" />
+        <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ripple_white_bg_primary_stroke_grey_corn_4.xml" value="0.36574074074074076" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ripple_white_stroke_black_bot.xml" value="0.37037037037037035" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ripple_white_stroke_gray.xml" value="0.36205128205128206" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ripple_white_stroke_grey_bot.xml" value="0.36205128205128206" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/test.xml" value="0.3769230769230769" />
-        <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/activity_auto_clicker.xml" value="0.33" />
+        <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/activity_auto_clicker.xml" value="0.25" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/activity_main.xml" value="0.337037037037037" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/dialog_choose_configure.xml" value="0.22" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/dialog_edit.xml" value="0.33" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/dialog_permissions.xml" value="0.3277777777777778" />
+        <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/dialog_rate_app.xml" value="0.33" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/dialog_setting_action.xml" value="0.33" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/dialog_setting_action_click.xml" value="0.3333333333333333" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/layout/dialog_setting_configure.xml" value="0.33" />

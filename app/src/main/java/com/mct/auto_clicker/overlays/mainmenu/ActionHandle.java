@@ -71,6 +71,9 @@ public class ActionHandle implements View.OnTouchListener {
      */
     public static void setActionBtnSize(int actionBtnSize) {
         ACTION_BTN_SIZE = actionBtnSize;
+        if (ActionDivider.linePaint != null) {
+            ActionDivider.linePaint.setStrokeWidth(Math.min(ACTION_BTN_SIZE / 2.5f, 45f));
+        }
     }
 
     public int getIndex() {
@@ -366,7 +369,7 @@ public class ActionHandle implements View.OnTouchListener {
             path = new Path();
             if (linePaint == null) {
                 linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                linePaint.setStrokeWidth(33f);
+                linePaint.setStrokeWidth(ACTION_BTN_SIZE / 2.5f);
                 linePaint.setColor(Color.BLACK);
                 linePaint.setAlpha(95);
                 linePaint.setStyle(Paint.Style.STROKE);
