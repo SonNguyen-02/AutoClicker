@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import com.mct.auto_clicker.database.room.entity.ActionEntity;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public abstract class Action implements Serializable {
 
@@ -118,6 +119,19 @@ public abstract class Action implements Serializable {
 
     public abstract void changeOrientationAction(int orientation, Point screenSize);
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Action)) return false;
+        Action action = (Action) o;
+        return id == action.id && configureId == action.configureId && timeDelay == action.timeDelay && actionDuration == action.actionDuration && name.equals(action.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, configureId, name, timeDelay, actionDuration);
+    }
+
     @NonNull
     @Override
     public String toString() {
@@ -188,6 +202,20 @@ public abstract class Action implements Serializable {
             Pair<Integer, Integer> result = changeOrientation(orientation, screenSize, x, y);
             x = result.first;
             y = result.second;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Click)) return false;
+            if (!super.equals(o)) return false;
+            Click click = (Click) o;
+            return x == click.x && y == click.y && isAntiDetection == click.isAntiDetection;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(super.hashCode(), x, y, isAntiDetection);
         }
 
         @NonNull
@@ -273,6 +301,20 @@ public abstract class Action implements Serializable {
             result = changeOrientation(orientation, screenSize, toX, toY);
             toX = result.first;
             toY = result.second;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Swipe)) return false;
+            if (!super.equals(o)) return false;
+            Swipe swipe = (Swipe) o;
+            return fromX == swipe.fromX && fromY == swipe.fromY && toX == swipe.toX && toY == swipe.toY;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(super.hashCode(), fromX, fromY, toX, toY);
         }
 
         @NonNull
@@ -383,6 +425,20 @@ public abstract class Action implements Serializable {
             result = changeOrientation(orientation, screenSize, x2, y2);
             x2 = result.first;
             y2 = result.second;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Zoom)) return false;
+            if (!super.equals(o)) return false;
+            Zoom zoom = (Zoom) o;
+            return zoomType == zoom.zoomType && x1 == zoom.x1 && y1 == zoom.y1 && x2 == zoom.x2 && y2 == zoom.y2;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(super.hashCode(), zoomType, x1, y1, x2, y2);
         }
 
         @NonNull

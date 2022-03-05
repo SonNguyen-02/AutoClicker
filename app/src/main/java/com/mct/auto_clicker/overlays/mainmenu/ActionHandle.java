@@ -72,7 +72,7 @@ public class ActionHandle implements View.OnTouchListener {
     public static void setActionBtnSize(int actionBtnSize) {
         ACTION_BTN_SIZE = actionBtnSize;
         if (ActionDivider.linePaint != null) {
-            ActionDivider.linePaint.setStrokeWidth(Math.min(ACTION_BTN_SIZE / 2.5f, 45f));
+            ActionDivider.linePaint.setStrokeWidth(Math.min(ACTION_BTN_SIZE / 1.5f, 55f));
         }
     }
 
@@ -369,9 +369,9 @@ public class ActionHandle implements View.OnTouchListener {
             path = new Path();
             if (linePaint == null) {
                 linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                linePaint.setStrokeWidth(ACTION_BTN_SIZE / 2.5f);
-                linePaint.setColor(Color.BLACK);
-                linePaint.setAlpha(95);
+                linePaint.setStrokeWidth(Math.min(ACTION_BTN_SIZE / 1.5f, 55f));
+                linePaint.setColor(Color.parseColor("#bbbbbb"));
+                linePaint.setAlpha(99);
                 linePaint.setStyle(Paint.Style.STROKE);
             }
         }

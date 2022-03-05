@@ -3,9 +3,7 @@ package com.mct.auto_clicker.baseui.overlays;
 import static android.view.MotionEvent.ACTION_DOWN;
 
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
@@ -127,7 +125,6 @@ public abstract class OverlayMenuController extends OverlayController {
     protected void onCreate() {
         // First, call implementation methods to check what we should display
         menuLayout = onCreateMenu(context.getSystemService(LayoutInflater.class));
-
         // Set the clicks listener on the menu items
         ViewGroup parentLayout = menuLayout.getChildCount() == 1 ? (ViewGroup) menuLayout.getChildAt(0) : menuLayout;
         for (int i = 0; i < parentLayout.getChildCount(); i++) {
@@ -280,9 +277,15 @@ public abstract class OverlayMenuController extends OverlayController {
         }
     }
 
+    protected boolean onExistsTouched() {
+        return true;
+    }
+
     private boolean onExistsTouched(@NonNull MotionEvent motionEvent) {
         if (motionEvent.getAction() == ACTION_DOWN) {
-            dismiss();
+            if (onExistsTouched()) {
+                dismiss();
+            }
             return true;
         }
         return false;

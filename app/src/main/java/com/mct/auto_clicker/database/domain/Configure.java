@@ -10,6 +10,7 @@ import com.mct.auto_clicker.database.room.entity.ConfigureEntity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Configure implements Serializable {
@@ -162,6 +163,35 @@ public class Configure implements Serializable {
     public Configure deepCopy() {
         List<Action> actionsCopy = actions.stream().map(Action::deepCopy).collect(Collectors.toList());
         return new Configure(id, name, actionsCopy, orientation, timeDelay, runType, amountExec, timeStop);
+    }
+
+    private boolean isActionsEquals(@NonNull List<Action> actions) {
+        if (getActions().size() != actions.size()) return false;
+        for (int i = 0; i < actions.size(); i++) {
+            if (!getActions().get(i).equals(actions.get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Configure)) return false;
+        Configure configure = (Configure) o;
+        return id == configure.id
+                && timeDelay == configure.timeDelay
+                && runType == configure.runType
+                && name.equals(configure.name)
+                && Objects.equals(amountExec, configure.amountExec)
+                && Objects.equals(timeStop, configure.timeStop)
+                && isActionsEquals(configure.getActions());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, timeDelay, runType, amountExec, timeStop);
     }
 
     @NonNull

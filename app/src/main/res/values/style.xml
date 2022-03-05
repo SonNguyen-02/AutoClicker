@@ -102,7 +102,7 @@
     </style>
 
     <style name="OverlayButton">
-        <item name="android:padding">4dp</item>
+        <item name="android:padding">2dp</item>
         <item name="android:layout_width">@dimen/overlay_menu_btn_size</item>
         <item name="android:layout_height">@dimen/overlay_menu_btn_size</item>
         <item name="android:background">@android:color/transparent</item>

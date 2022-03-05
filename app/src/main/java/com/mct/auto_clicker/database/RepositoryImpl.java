@@ -47,6 +47,11 @@ public class RepositoryImpl extends Repository {
     }
 
     @Override
+    public boolean isConfigureNameExists(String name) {
+        return configureDAO.isHasConfigureName(name) > 0;
+    }
+
+    @Override
     public Long addConfigure(@NonNull Configure configure) {
         Long id = configureDAO.add(configure.toEntity());
         if (id == -1) return id;

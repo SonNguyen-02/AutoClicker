@@ -61,10 +61,9 @@ public class ConfigurePermissionPresenter {
     }
 
     public long saveConfigure(@NonNull Configure configure) {
-        if (configure.getId() == 0) {
+        if (configure.getId() == 0 || getConfigure(configure.getId()) == null) {
             return mRepository.addConfigure(configure);
         } else {
-            // next day need fix
             mRepository.updateConfigure(configure);
         }
         return configure.getId();
@@ -106,6 +105,47 @@ public class ConfigurePermissionPresenter {
 
     public Configure getConfigure(long configureId) {
         return mRepository.getConfigure(configureId);
+    }
+
+    public boolean isConfigureChanged(@NonNull Configure configure) {
+        if (configure.getId() == 0) {
+            // config moi va phai co it nhat 1 action
+            return !configure.getActions().isEmpty();
+        }
+        Configure rootConfigure = getConfigure(configure.getId());
+        if (rootConfigure == null) {
+            return !configure.getActions().isEmpty();
+        }
+        return !rootConfigure.equals(configure);
+    }
+
+    private boolean isNameExists(String name) {
+        return mRepository.isConfigureNameExists(name);
+    }
+
+    public String getSuffixConfig(String name, boolean isCopySuffix) {
+        int i = 1;
+        name = clearSuffix(name.trim(), isCopySuffix);
+        name += isCopySuffix ? " - copy" : " 0";
+        while (true) {
+            if (isNameExists(name)) {
+                name = clearSuffix(name, isCopySuffix);
+                name += isCopySuffix ? " - copy(" + i + ")" : " " + i;
+                i++;
+            } else {
+                return name;
+            }
+        }
+    }
+
+    @NonNull
+    private String clearSuffix(String name, boolean isCopySuffix) {
+        if (isCopySuffix) {
+            name = name.replaceAll(" - copy$", "").replaceAll(" - copy\\(\\d+\\)$", "").trim();
+        } else {
+            name = name.replaceAll(" \\d+$", "").trim();
+        }
+        return name;
     }
 
     public void registerStopServiceListener(AutoClickerService.OnLocalServiceChangeListener stopListener) {

@@ -2,7 +2,7 @@ package com.mct.auto_clicker.activities;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -110,8 +110,9 @@ public class ConfigureListFragment extends Fragment implements ConfigureListAdap
                 .setCustomTitle(DialogHelper.getTitleView(requireContext(), R.layout.view_dialog_title, R.string.dialog_title_add_configure, R.drawable.ic_add, R.color.textTitle))
                 .setView(view)
                 .setPositiveButton(R.string.save, (dialogInterface, i) -> {
-                    if (!edtName.getText().toString().isEmpty()) {
-                        long id = configurePresenter.createConfigure(edtName.getText().toString());
+                    if (!TextUtils.isEmpty(edtName.getText())) {
+                        String name = edtName.getText().toString().trim();
+                        long id = configurePresenter.createConfigure(name);
                         if (id != -1) {
                             Configure configure = configurePresenter.getConfigure(id);
                             configureListAdapter.addConfigure(configure);
@@ -140,7 +141,6 @@ public class ConfigureListFragment extends Fragment implements ConfigureListAdap
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        Log.e("ddd", "onOptionsItemSelected: " + item.getItemId());
         switch (item.getItemId()) {
             case R.id.menu_add_configure:
                 onCreateClicked();
@@ -162,7 +162,7 @@ public class ConfigureListFragment extends Fragment implements ConfigureListAdap
 
     @Override
     public void onStart(@NonNull Configure configure, int position) {
-        ((OnConfigureClickedListener) requireActivity()).onClicked(configure.deepCopy());
+        ((OnConfigureClickedListener) requireActivity()).onClicked(configurePresenter.getConfigure(configure.getId()));
     }
 
     @Override
@@ -175,8 +175,9 @@ public class ConfigureListFragment extends Fragment implements ConfigureListAdap
                 .setCustomTitle(DialogHelper.getTitleView(requireContext(), R.layout.view_dialog_title, R.string.dialog_title_rename_configure, R.drawable.ic_rename, R.color.textTitle))
                 .setView(view)
                 .setPositiveButton(R.string.save, (dialogInterface, i) -> {
-                    if (!edtName.getText().toString().isEmpty()) {
-                        configurePresenter.renameConfigure(configure, edtName.getText().toString());
+                    if (!TextUtils.isEmpty(edtName.getText())) {
+                        String name = edtName.getText().toString().trim();
+                        configurePresenter.renameConfigure(configure, name);
                         configureListAdapter.notifyItemChanged(position);
                     }
                 })
@@ -184,17 +185,34 @@ public class ConfigureListFragment extends Fragment implements ConfigureListAdap
                 .create());
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onCopy(@NonNull Configure configure, int position) {
-        Configure copyConfigure = configure.deepCopy();
-        copyConfigure.cleanUpIds();
-        long id = configurePresenter.createConfigure(copyConfigure);
-        if (id != -1) {
-            copyConfigure = configurePresenter.getConfigure(id);
-            configureListAdapter.addConfigure(copyConfigure);
-        } else {
-            Toast.makeText(requireContext(), "Something wrong. Please try again!", Toast.LENGTH_SHORT).show();
-        }
+        View view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_edit, null);
+        EditText edtName = view.findViewById(R.id.tv_name);
+        edtName.setText(configurePresenter.getSuffixConfig(configure.getName(), true));
+        edtName.selectAll();
+        showDialog(new AlertDialog.Builder(requireContext())
+                .setCustomTitle(DialogHelper.getTitleView(requireContext(), R.layout.view_dialog_title, R.string.dialog_title_copy_configure, R.drawable.ic_copy, R.color.textTitle))
+                .setView(view)
+                .setPositiveButton(R.string.save, (dialogInterface, i) -> {
+                    Configure copyConfigure = configure.deepCopy();
+                    copyConfigure.cleanUpIds();
+                    if (!TextUtils.isEmpty(edtName.getText())) {
+                        String name = edtName.getText().toString().trim();
+                        copyConfigure.setName(name);
+                    }
+                    long id = configurePresenter.createConfigure(copyConfigure);
+                    if (id != -1) {
+                        copyConfigure = configurePresenter.getConfigure(id);
+                        configureListAdapter.addConfigure(copyConfigure);
+                    } else {
+                        Toast.makeText(requireContext(), "Something wrong. Please try again!", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .create());
+
     }
 
     @Override

@@ -28,7 +28,7 @@ public class ScreenMetrics {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             TYPE_COMPAT_OVERLAY = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
         else
-            TYPE_COMPAT_OVERLAY = WindowManager.LayoutParams.TYPE_PHONE;
+            TYPE_COMPAT_OVERLAY = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
     }
 
     /**

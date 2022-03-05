@@ -101,7 +101,9 @@
     <string name="dialog_title_permissions">Permissions required</string>
     <string name="dialog_title_add_configure">New configure</string>
     <string name="dialog_title_rename_configure">Rename configure</string>
+    <string name="dialog_title_copy_configure">Copy configure</string>
     <string name="dialog_title_delete_configure">Delete configure</string>
+    <string name="dialog_title_stop_service">Stop service</string>
     <string name="dialog_title_choose_configure">Choose a configure</string>
     <string name="dialog_title_rate_app">Rate app</string>
 
@@ -113,6 +115,7 @@
     <string name="dialog_desc_permissions">The following permissions are required to use AutoClicker.</string>
     <string name="dialog_desc_delete_configure_message">This will delete %1$s. Are you sure ?</string>
     <string name="dialog_desc_delete_configures_message">This will delete %d configures forever.</string>
+    <string name="dialog_desc_discard_content">Discard content and exit?</string>
 
     <string name="dialog_stop_loop_infinite_loop">Infinite loop</string>
     <string name="dialog_stop_loop_number_of_loops">Number of loops:</string>
@@ -158,6 +161,10 @@
         <item quantity="one">%d action</item>
         <item quantity="other">%d actions</item>
     </plurals>
+
+
+    <string name="wait">wait…</string>
+    <string name="title">Sample Activity #%d</string>
 
 
 </resources>

@@ -126,16 +126,15 @@ public class SettingConfigureDialog extends SettingConfigureOverlay {
             if (getTypeStopLoop() == RUN_TYPE_TIME) {
                 configure.setTimeStop(getTimeStop());
             }
-            ConfigurePermissionPresenter configurePresenter = new ConfigurePermissionPresenter(context);
-            long id = configurePresenter.saveConfigure(configure);
-            configure.setId(id);
             try {
                 int timeDelay = Integer.parseInt(edtLoopDelay.getText().toString().trim());
                 configure.setTimeDelay(timeDelay);
             } catch (NumberFormatException ignored) {
             }
+            ConfigurePermissionPresenter configurePresenter = new ConfigurePermissionPresenter(context);
+            long id = configurePresenter.saveConfigure(configure);
+            configure.setId(id);
         }
     }
-
 
 }

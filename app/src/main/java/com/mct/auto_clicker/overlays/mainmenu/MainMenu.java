@@ -7,9 +7,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 
 import com.mct.auto_clicker.R;
 import com.mct.auto_clicker.baseui.overlays.OverlayMenuController;
@@ -18,6 +18,8 @@ import com.mct.auto_clicker.database.domain.Configure;
 import com.mct.auto_clicker.executor.ActionDetector;
 import com.mct.auto_clicker.overlays.dialog.SettingActionDialog;
 import com.mct.auto_clicker.overlays.dialog.SettingConfigureDialog;
+import com.mct.auto_clicker.overlays.dialog.WarningExistsDialog;
+import com.mct.auto_clicker.presenter.ConfigurePermissionPresenter;
 import com.mct.auto_clicker.presenter.SettingSharedPreference;
 
 import java.util.ArrayList;
@@ -286,6 +288,27 @@ public class MainMenu extends OverlayMenuController implements ActionHandle.OnVi
         super.onOrientationChanged();
         configure.setOrientation(getScreenMetrics().getOrientation(), getScreenMetrics().getScreenSize());
         listActionHandle.forEach(ActionHandle::update);
+    }
+
+    @Override
+    protected boolean onExistsTouched() {
+        if (actionDetector.isStart()) {
+            onConfigureStateChanged(true);
+        }
+        ConfigurePermissionPresenter configurePresenter = new ConfigurePermissionPresenter(context);
+        if (configurePresenter.isConfigureChanged(configure)) {
+            new WarningExistsDialog(context, (dialogInterface, i) -> {
+                if (i == AlertDialog.BUTTON_POSITIVE) {
+                    dismiss();
+                }
+                if (i == AlertDialog.BUTTON_NEUTRAL) {
+                    configurePresenter.saveConfigure(configure);
+                    dismiss();
+                }
+            }).create(null);
+            return false;
+        }
+        return true;
     }
 
     @Override

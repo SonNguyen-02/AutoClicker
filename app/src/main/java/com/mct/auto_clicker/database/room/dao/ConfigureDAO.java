@@ -27,6 +27,10 @@ public interface ConfigureDAO {
     @Query("SELECT * FROM configure_table WHERE id=:configureId")
     ConfigureEntity.ConfigureAndAction getConfigureAndAction(Long configureId);
 
+    @Transaction
+    @Query("SELECT COUNT(*) FROM configure_table WHERE name=:name LIMIT 1")
+    int isHasConfigureName(String name);
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     Long add(ConfigureEntity configureEntity);
 

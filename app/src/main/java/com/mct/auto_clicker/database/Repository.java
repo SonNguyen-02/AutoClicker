@@ -25,6 +25,8 @@ public abstract class Repository {
 
     public abstract Configure getConfigure(Long configureId);
 
+    public abstract boolean isConfigureNameExists(String name);
+
     public abstract Long addConfigure(Configure configure);
 
     public abstract void updateConfigure(Configure configure);

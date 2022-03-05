@@ -2,8 +2,6 @@ package com.mct.auto_clicker.activities;
 
 import android.app.ActivityManager;
 import android.app.Dialog;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.graphics.Color;
@@ -11,8 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 

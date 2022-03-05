@@ -42,7 +42,7 @@ public class ChooseConfigureDialog extends OverlayDialogController {
                 .setView(view)
                 .setNegativeButton(R.string.cancel, null)
                 .setNeutralButton(R.string.dialog_choose_configure_create_new, (dialogInterface, i) ->
-                        mListener.onConfigureChoose(configurePresenter.getNewConfigure("Configure " + configurePresenter.getCountConfigures()))
+                        mListener.onConfigureChoose(configurePresenter.getNewConfigure(configurePresenter.getSuffixConfig("Config", false)))
                 );
     }
 
