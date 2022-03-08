@@ -16,6 +16,7 @@ import com.mct.auto_clicker.baseui.overlays.OverlayMenuController;
 import com.mct.auto_clicker.database.domain.Action;
 import com.mct.auto_clicker.database.domain.Configure;
 import com.mct.auto_clicker.executor.ActionDetector;
+import com.mct.auto_clicker.executor.ActionExecutor;
 import com.mct.auto_clicker.overlays.dialog.SettingActionDialog;
 import com.mct.auto_clicker.overlays.dialog.SettingConfigureDialog;
 import com.mct.auto_clicker.overlays.dialog.WarningExistsDialog;
@@ -39,6 +40,7 @@ public class MainMenu extends OverlayMenuController implements ActionHandle.OnVi
         super(context);
         this.configure = configure;
         this.actionDetector = actionDetector;
+        actionDetector.init(new ActionExecutor(context, getScreenMetrics()));
         listActionHandle = new ArrayList<>();
         settingSharedPreference = SettingSharedPreference.getInstance(context);
         ActionHandle.setActionBtnSize(settingSharedPreference.getButtonActionSize());
@@ -110,7 +112,7 @@ public class MainMenu extends OverlayMenuController implements ActionHandle.OnVi
 
     private void addDefaultActionSwipe() {
         Action action = new Action.Swipe(0L, configure.getId(),
-                "Swipe" + System.currentTimeMillis(),
+                "Swipe #" + System.currentTimeMillis(),
                 settingSharedPreference.getActionDelay(),
                 settingSharedPreference.getSwipeExecTime(),
                 getScreenMetrics().getScreenSize().x / 2 - DEFAULT_ACTION_SPACE,
@@ -144,7 +146,7 @@ public class MainMenu extends OverlayMenuController implements ActionHandle.OnVi
 
     private void addActionView(@NonNull Action action, boolean isCreateNew) {
         if (isCreateNew) configure.getActions().add(action);
-        ActionHandle actionHandle = new ActionHandle(context, action, getNumericalOrderAction(), this, this::showSettingActionDialog);
+        ActionHandle actionHandle = new ActionHandle(context, action, getNumericalOrderAction(), this, this::showSettingActionDialog, this::getScreenMetrics);
         listActionHandle.add(actionHandle);
         if (!(action instanceof Action.Click)) {
             getWindowManager().addView(actionHandle.getDivider(), actionHandle.getParamsDivider());

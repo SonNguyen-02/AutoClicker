@@ -72,8 +72,7 @@ public class AutoClickerService extends AccessibilityService {
                 listener.onChange();
             }
             startForeground(NOTIFICATION_ID, createNotification(configure.getName()));
-            ActionDetector actionDetector = new ActionDetector(getApplicationContext(),
-                    gesture -> dispatchGesture(gesture, null, null));
+            ActionDetector actionDetector = new ActionDetector(gesture -> dispatchGesture(gesture, null, null));
             rootOverlayController = new MainMenu(context, configure, actionDetector);
             rootOverlayController.create(this::stop);
         }

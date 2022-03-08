@@ -7,11 +7,10 @@ import android.net.Uri;
 
 import androidx.annotation.NonNull;
 
-import com.mct.auto_clicker.BuildConfig;
+import com.mct.auto_clicker.config.Constant;
 import com.mct.auto_clicker.overlays.dialog.RateAppDialog;
 
 public class AppRater {
-    private final static String APP_PNAME = BuildConfig.APPLICATION_ID;
 
     private final static int DAYS_UNTIL_PROMPT = 3;
     private final static int LAUNCHES_UNTIL_PROMPT = 7;
@@ -65,8 +64,7 @@ public class AppRater {
     }
 
     public static void goToPlayStore(@NonNull Context context) {
-        Intent intent = new Intent(Intent.ACTION_VIEW,
-                Uri.parse("market://details?id=" + APP_PNAME));
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constant.CH_PLAY_URI));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
         context.startActivity(intent);
     }

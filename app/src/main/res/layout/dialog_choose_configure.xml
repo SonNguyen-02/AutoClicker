@@ -20,7 +20,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcv_configure_list"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:scrollbars="vertical"
         tools:listitem="@layout/item_configure_simple" />

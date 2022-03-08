@@ -25,7 +25,8 @@ public class SettingSharedPreference {
     private static final int DEFAULT_LOOP_DELAY = 0;
 
     // default setting for action
-    public static final int MIN_CLICK_EXEC_TIME = 10;
+    // all user like 1 ms but in the running min is 10 :D
+    public static final int MIN_CLICK_EXEC_TIME = 1;
     public static final int MIN_SWIPE_EXEC_TIME = 200;
     public static final int MIN_ZOOM_EXEC_TIME = 500;
 

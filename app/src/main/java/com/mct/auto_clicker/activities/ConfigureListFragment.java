@@ -1,6 +1,7 @@
 package com.mct.auto_clicker.activities;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -9,7 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -92,20 +93,29 @@ public class ConfigureListFragment extends Fragment implements ConfigureListAdap
         });
     }
 
-    private void showDialog(AlertDialog newDialog) {
+    private void showDialog(AlertDialog newDialog, boolean isShowKeyboard) {
         if (dialog != null) {
             dialog.dismiss();
             dialog = null;
         }
         dialog = newDialog;
-        newDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        newDialog.setOnDismissListener(dialogInterface -> dialog = null);
+//        newDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        if (isShowKeyboard) {
+            showKeyboard(requireContext());
+        }
+        newDialog.setOnDismissListener(dialogInterface -> {
+            if (isShowKeyboard) {
+                closeKeyboard(requireContext());
+            }
+            dialog = null;
+        });
         newDialog.show();
     }
 
     private void onCreateClicked() {
         View view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_edit, null);
         EditText edtName = view.findViewById(R.id.tv_name);
+        edtName.requestFocus();
         showDialog(new AlertDialog.Builder(requireContext())
                 .setCustomTitle(DialogHelper.getTitleView(requireContext(), R.layout.view_dialog_title, R.string.dialog_title_add_configure, R.drawable.ic_add, R.color.textTitle))
                 .setView(view)
@@ -120,7 +130,7 @@ public class ConfigureListFragment extends Fragment implements ConfigureListAdap
                     }
                 })
                 .setNegativeButton(R.string.cancel, null)
-                .create());
+                .create(), true);
     }
 
     private void onDeleteConfiguresClicked() {
@@ -134,7 +144,7 @@ public class ConfigureListFragment extends Fragment implements ConfigureListAdap
                     hideToolBarChooseItemDelete();
                 })
                 .setNegativeButton(R.string.cancel, null)
-                .create());
+                .create(), false);
     }
 
 
@@ -170,6 +180,7 @@ public class ConfigureListFragment extends Fragment implements ConfigureListAdap
         View view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_edit, null);
         EditText edtName = view.findViewById(R.id.tv_name);
         edtName.setText(configure.getName());
+        edtName.requestFocus();
         edtName.selectAll();
         showDialog(new AlertDialog.Builder(requireContext())
                 .setCustomTitle(DialogHelper.getTitleView(requireContext(), R.layout.view_dialog_title, R.string.dialog_title_rename_configure, R.drawable.ic_rename, R.color.textTitle))
@@ -182,7 +193,7 @@ public class ConfigureListFragment extends Fragment implements ConfigureListAdap
                     }
                 })
                 .setNegativeButton(R.string.cancel, null)
-                .create());
+                .create(), true);
     }
 
     @SuppressLint("SetTextI18n")
@@ -191,6 +202,7 @@ public class ConfigureListFragment extends Fragment implements ConfigureListAdap
         View view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_edit, null);
         EditText edtName = view.findViewById(R.id.tv_name);
         edtName.setText(configurePresenter.getSuffixConfig(configure.getName(), true));
+        edtName.requestFocus();
         edtName.selectAll();
         showDialog(new AlertDialog.Builder(requireContext())
                 .setCustomTitle(DialogHelper.getTitleView(requireContext(), R.layout.view_dialog_title, R.string.dialog_title_copy_configure, R.drawable.ic_copy, R.color.textTitle))
@@ -211,7 +223,7 @@ public class ConfigureListFragment extends Fragment implements ConfigureListAdap
                     }
                 })
                 .setNegativeButton(R.string.cancel, null)
-                .create());
+                .create(), true);
 
     }
 
@@ -225,7 +237,7 @@ public class ConfigureListFragment extends Fragment implements ConfigureListAdap
                     configureListAdapter.deleteConfigure(position);
                 })
                 .setNegativeButton(R.string.cancel, null)
-                .create());
+                .create(), false);
     }
 
     @Override
@@ -255,6 +267,16 @@ public class ConfigureListFragment extends Fragment implements ConfigureListAdap
     private void hideToolBarChooseItemDelete() {
         toolbarChooseItemDelete.setVisibility(View.GONE);
         configureListAdapter.setChoosing(false);
+    }
+
+    private void showKeyboard(@NonNull Context context) {
+        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    }
+
+    private void closeKeyboard(@NonNull Context context) {
+        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
     }
 
 }

@@ -6,6 +6,7 @@ import static com.mct.auto_clicker.database.domain.Configure.RUN_TYPE_TIME;
 import static com.mct.auto_clicker.overlays.dialog.DialogHelper.getFormatTime;
 
 import android.annotation.SuppressLint;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,9 +37,9 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.material.navigation.NavigationView;
-import com.mct.auto_clicker.BuildConfig;
 import com.mct.auto_clicker.R;
 import com.mct.auto_clicker.baseui.overlays.OverlayDialogController;
+import com.mct.auto_clicker.config.Constant;
 import com.mct.auto_clicker.database.domain.Configure;
 import com.mct.auto_clicker.overlays.dialog.ChooseConfigureDialog;
 import com.mct.auto_clicker.overlays.dialog.SettingEditDialog;
@@ -268,8 +269,7 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
                     Intent shareIntent = new Intent(Intent.ACTION_SEND);
                     shareIntent.setType("text/plain");
                     shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Auto clicker");
-                    String shareMessage = "Let me recommend you this application\n";
-                    shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID;
+                    String shareMessage = "AutoClicker download link\n" + Constant.CH_PLAY_URL;
                     shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
                     startActivity(Intent.createChooser(shareIntent, "Share to"));
                 } catch (Exception e) {
@@ -279,6 +279,9 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
             case R.id.menu_license:
                 return true;
             case R.id.menu_privacy_policy:
+                Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
+                intent.putExtra(SearchManager.QUERY, Constant.PRIVACY_POLICY_URL);
+                startActivity(intent);
                 return true;
         }
         return false;
@@ -403,7 +406,7 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
                             }
 
                             @Override
-                            public void onAdFailedToShowFullScreenContent(AdError adError) {
+                            public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
                                 // Called when fullscreen content failed to show.
                                 Log.d("ddd", "The ad failed to show.");
                             }

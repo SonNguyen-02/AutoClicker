@@ -51,8 +51,8 @@ public class ActionExecutor {
         void onComplete();
     }
 
-    public ActionExecutor(Context mContext) {
-        screenMetrics = new ScreenMetrics(mContext);
+    public ActionExecutor(Context mContext, ScreenMetrics screenMetrics) {
+        this.screenMetrics = screenMetrics;
         mainThreadHandler = new Handler(Looper.getMainLooper());
         workerThreadHandler = new Handler(Looper.myLooper());
         settingSharedPreference = SettingSharedPreference.getInstance(mContext);
@@ -67,7 +67,7 @@ public class ActionExecutor {
         this.mOnExecutionComplete = mOnExecutionComplete;
     }
 
-    public void initRandom( ) {
+    public void initRandom() {
         randomActionDelayTime = settingSharedPreference.getIncreaseRandomActionDelayTime();
         randomLocation = settingSharedPreference.getRandomLocation();
     }
@@ -83,11 +83,12 @@ public class ActionExecutor {
             return;
         }
         Action action = actions.get(0);
-        int randWaitTime = 0;
+        // make sure action duration min is 10
+        int randWaitTime = 10;
         if (action instanceof Action.Click) {
             if (((Action.Click) action).isAntiDetection()) {
                 if (randomActionDelayTime > 0) {
-                    randWaitTime = new Random().nextInt(randomActionDelayTime);
+                    randWaitTime += new Random().nextInt(randomActionDelayTime);
                     Log.e("ddd", "executeActions: " + randWaitTime);
                 }
             }

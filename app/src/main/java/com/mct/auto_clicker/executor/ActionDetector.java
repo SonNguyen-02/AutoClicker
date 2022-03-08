@@ -29,9 +29,12 @@ public class ActionDetector {
         void onExecAction(GestureDescription gesture);
     }
 
-    public ActionDetector(Context context, ExecuteCallback callback) {
-        actionExecutor = new ActionExecutor(context);
+    public ActionDetector(ExecuteCallback callback) {
         this.callback = callback;
+    }
+
+    public void init(ActionExecutor actionExecutor) {
+        this.actionExecutor = actionExecutor;
     }
 
     public void init(Configure configure) {

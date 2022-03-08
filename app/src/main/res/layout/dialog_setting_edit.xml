@@ -6,14 +6,17 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:padding="@dimen/margin_vertical_large"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/margin_vertical_large">
 
         <TextView
             android:id="@+id/tv_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_vertical_large"
+            android:paddingTop="@dimen/margin_vertical_large"
+            android:paddingEnd="@dimen/margin_vertical_large"
             android:text="@string/dialog_desc_how_long_will_the_action_take"
             android:textColor="@color/md_grey_700"
             android:textSize="@dimen/text_size_description" />
