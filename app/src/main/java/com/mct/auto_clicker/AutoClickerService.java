@@ -17,10 +17,12 @@ import androidx.core.app.NotificationCompat;
 import com.mct.auto_clicker.activities.AutoClickerActivity;
 import com.mct.auto_clicker.baseui.overlays.OverlayController;
 import com.mct.auto_clicker.database.domain.Configure;
-import com.mct.auto_clicker.executor.ActionDetector;
+import com.mct.auto_clicker.overlays.mainmenu.executor.ActionManager;
 import com.mct.auto_clicker.overlays.mainmenu.MainMenu;
 
 public class AutoClickerService extends AccessibilityService {
+
+    private static final String TAG = "AutoClickerService";
 
     private static final int NOTIFICATION_ID = 15;
 
@@ -41,8 +43,17 @@ public class AutoClickerService extends AccessibilityService {
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
-        Log.e("ddd", "onServiceConnected: ");
+        Log.d(TAG, "onServiceConnected");
         LOCAL_SERVICE_INSTANCE = new LocalService();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d(TAG, "onStartCommand");
+        if (LOCAL_SERVICE_INSTANCE == null) {
+            LOCAL_SERVICE_INSTANCE = new LocalService();
+        }
+        return START_STICKY;
     }
 
     public static LocalService getLocalService() {
@@ -72,8 +83,8 @@ public class AutoClickerService extends AccessibilityService {
                 listener.onChange();
             }
             startForeground(NOTIFICATION_ID, createNotification(configure.getName()));
-            ActionDetector actionDetector = new ActionDetector(gesture -> dispatchGesture(gesture, null, null));
-            rootOverlayController = new MainMenu(context, configure, actionDetector);
+            ActionManager actionManager = new ActionManager(gesture -> dispatchGesture(gesture, null, null));
+            rootOverlayController = new MainMenu(context, configure, actionManager);
             rootOverlayController.create(this::stop);
         }
 
@@ -99,7 +110,7 @@ public class AutoClickerService extends AccessibilityService {
 
     @Override
     public boolean onUnbind(Intent intent) {
-        Log.e("ddd", "onUnbind");
+        Log.d(TAG, "onUnbind");
         isStarted = false;
         if (LOCAL_SERVICE_INSTANCE != null) {
             LOCAL_SERVICE_INSTANCE.stop();

@@ -9,7 +9,7 @@ import com.mct.auto_clicker.database.domain.Configure;
 
 public class SettingSharedPreference {
 
-    private static final String SHARED_NAME = "AUTO_CLICKER.SHARED.SETTING";
+    private static final String PREFERENCE_NAME = "AUTO_CLICKER.SHARED.SETTING";
 
     // default setting for configure
     private static final String K_TYPE_STOP_THE_LOOP = "k_type_stop_the_loop";
@@ -51,23 +51,12 @@ public class SettingSharedPreference {
     private static final String K_RANDOM_LOCATION = "k_random_location";
     private static final int DEFAULT_RANDOM_LOCATION = 0; //PX
 
-    // general setting
-    public static final int MIN_BUTTON_ACTION_SIZE = 72;
-    public static final int MAX_BUTTON_ACTION_SIZE = 128;
-    private static final int DEFAULT_BUTTON_ACTION_SIZE = 100;
-    private static final String K_BUTTON_ACTION_SIZE = "k_action_size";
-
-    public static final int MIN_BUTTON_MENU_SIZE = 90;
-    public static final int MAX_BUTTON_MENU_SIZE = 120;
-    private static final int DEFAULT_BUTTON_MENU_SIZE = 105;
-    private static final String K_BUTTON_MENU_SIZE = "k_menu_size";
-
     private final SharedPreferences mSharedPreferences;
     private final SharedPreferences.Editor mEditor;
     private static SettingSharedPreference instance;
 
     private SettingSharedPreference(@NonNull Context mContext) {
-        mSharedPreferences = mContext.getSharedPreferences(SHARED_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = mContext.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
     }
 
@@ -165,28 +154,6 @@ public class SettingSharedPreference {
 
     public SettingSharedPreference setRandomLocation(int value) {
         mEditor.putInt(K_RANDOM_LOCATION, value);
-        return this;
-    }
-
-    public int getButtonActionSize() {
-        return mSharedPreferences.getInt(K_BUTTON_ACTION_SIZE, DEFAULT_BUTTON_ACTION_SIZE);
-    }
-
-    public SettingSharedPreference setButtonActionSize(int value) {
-        if (value < MIN_BUTTON_ACTION_SIZE) value = MIN_BUTTON_ACTION_SIZE;
-        if (value > MAX_BUTTON_ACTION_SIZE) value = MAX_BUTTON_ACTION_SIZE;
-        mEditor.putInt(K_BUTTON_ACTION_SIZE, value);
-        return this;
-    }
-
-    public int getButtonMenuSize() {
-        return mSharedPreferences.getInt(K_BUTTON_MENU_SIZE, DEFAULT_BUTTON_MENU_SIZE);
-    }
-
-    public SettingSharedPreference setButtonMenuSize(int value) {
-        if (value < MIN_BUTTON_MENU_SIZE) value = MIN_BUTTON_MENU_SIZE;
-        if (value > MAX_BUTTON_MENU_SIZE) value = MAX_BUTTON_MENU_SIZE;
-        mEditor.putInt(K_BUTTON_MENU_SIZE, value);
         return this;
     }
 

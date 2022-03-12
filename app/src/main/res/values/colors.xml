@@ -27,8 +27,8 @@
 
     <color name="separator_divider">#AEAEAE</color>
 
-    <color name="overlayMenuBackground">#77000000</color>
-    <color name="overlayMenuButtons">#FFFFFF</color>
+    <color name="overlayMenuBackground">#ffffff</color>
+    <color name="overlayMenuButtons">#167E73</color>
     <color name="overlayViewPrimary">#FFFFFF</color>
     <color name="overlayViewAccentPrimary">@color/primary</color>
     <color name="overlayViewAccentSecondary">@color/accent</color>

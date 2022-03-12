@@ -3,67 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/OverlayCardView">
 
-    <LinearLayout
-        android:id="@+id/layout_buttons"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcv_menu"
         style="@style/OverlayButtonsLayout"
-        android:orientation="vertical">
-
-        <ImageButton
-            android:id="@+id/btn_play"
-            style="@style/OverlayButton"
-            android:contentDescription="@string/content_desc_play_pause_configure"
-            android:src="@drawable/ic_start" />
-
-        <ImageButton
-            android:id="@+id/btn_add_touch"
-            style="@style/OverlayButton"
-            android:contentDescription="@string/content_desc_add_touch"
-            android:src="@drawable/ic_plus" />
-
-        <ImageButton
-            android:id="@+id/btn_add_swipe"
-            style="@style/OverlayButton"
-            android:contentDescription="@string/content_desc_add_swipe"
-            android:src="@drawable/ic_swipe" />
-
-        <ImageButton
-            android:id="@+id/btn_add_zoom_in"
-            style="@style/OverlayButton"
-            android:contentDescription="@string/content_desc_add_zoom_in"
-            android:src="@drawable/ic_zoom_out" />
-
-        <ImageButton
-            android:id="@+id/btn_add_zoom_out"
-            style="@style/OverlayButton"
-            android:contentDescription="@string/content_desc_add_zoom_out"
-            android:src="@drawable/ic_zoom_in" />
-
-        <ImageButton
-            android:id="@+id/btn_remove"
-            style="@style/OverlayButton"
-            android:contentDescription="@string/content_desc_remove_action"
-            android:src="@drawable/ic_minus" />
-
-        <ImageButton
-            android:id="@+id/btn_setting"
-            style="@style/OverlayButton"
-            android:contentDescription="@string/content_desc_setting_configure"
-            android:src="@drawable/ic_setting" />
-
-        <ImageButton
-            android:id="@+id/btn_exists"
-            style="@style/OverlayButton"
-            android:contentDescription="@string/content_desc_exists_the_configure"
-            android:src="@drawable/ic_close"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <ImageButton
-            android:id="@+id/btn_move"
-            style="@style/OverlayButton"
-            android:contentDescription="@string/content_desc_move_floating_menu"
-            android:src="@drawable/ic_move" />
-
-    </LinearLayout>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/item_menu_item" />
 
 </androidx.cardview.widget.CardView>

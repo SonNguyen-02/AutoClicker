@@ -8,6 +8,7 @@ import static com.mct.auto_clicker.overlays.dialog.DialogHelper.getFormatTime;
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -37,10 +38,13 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.material.navigation.NavigationView;
+import com.mct.auto_clicker.AutoClickerService;
 import com.mct.auto_clicker.R;
 import com.mct.auto_clicker.baseui.overlays.OverlayDialogController;
 import com.mct.auto_clicker.config.Constant;
 import com.mct.auto_clicker.database.domain.Configure;
+import com.mct.auto_clicker.fragment.ConfigureListFragment;
+import com.mct.auto_clicker.fragment.GeneralSettingFragment;
 import com.mct.auto_clicker.overlays.dialog.ChooseConfigureDialog;
 import com.mct.auto_clicker.overlays.dialog.SettingEditDialog;
 import com.mct.auto_clicker.overlays.dialog.SettingStopLoopDialog;
@@ -61,7 +65,6 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
             tvActionDelay, tvClickDuration, tvSwipeDuration, tvZoomDuration,
             tvRandomTimeWait, tvRandomLocation;
     private Button btnPlay;
-    private int layerCount = 0;
     private boolean isBackPress;
 
     private Configure requestedConfigure;
@@ -70,13 +73,14 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auto_clicker);
+
+        if (ConfigurePermissionPresenter.isAccessibilityServiceEnabled(this, AutoClickerService.class)) {
+            startService(new Intent(this, AutoClickerService.class));
+        }
+
         sharedPref = SettingSharedPreference.getInstance(this);
         permissionPresenter = new ConfigurePermissionPresenter(this);
-
         initUi();
-
-        initToolBar();
-
         initAds();
 //        loadAd();
     }
@@ -114,6 +118,7 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mNavigationView = findViewById(R.id.navigation_view);
         initData();
+        initToolBar();
     }
 
     private void initData() {
@@ -230,8 +235,7 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
             case R.id.rl_remove_ads:
                 break;
             case R.id.rl_general_setting:
-                GeneralSettingFragment fragment = GeneralSettingFragment.newInstance();
-                addFragmentToMainFrame(fragment, GeneralSettingFragment.class.getName());
+                goToGeneralSetting();
                 break;
             case R.id.rl_solving_trouble:
                 showPermissionRequest(false);
@@ -251,8 +255,7 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
                 addFragmentToMainFrame(fragmentConfig, ConfigureListFragment.class.getName());
                 return true;
             case R.id.menu_setting:
-                GeneralSettingFragment fragmentSetting = GeneralSettingFragment.newInstance();
-                addFragmentToMainFrame(fragmentSetting, GeneralSettingFragment.class.getName());
+                goToGeneralSetting();
                 return true;
             case R.id.menu_solving_trouble:
                 showPermissionRequest(false);
@@ -287,6 +290,12 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
         return false;
     }
 
+    private void goToGeneralSetting() {
+        lockScreenOrientation(true);
+        GeneralSettingFragment fragment = GeneralSettingFragment.newInstance();
+        addFragmentToMainFrame(fragment, GeneralSettingFragment.class.getName());
+    }
+
     private void showPermissionRequest(boolean registerListener) {
         PermissionsDialogFragment fragment;
         fragment = registerListener ? PermissionsDialogFragment.newInstance(this) : PermissionsDialogFragment.newInstance();
@@ -299,10 +308,9 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void addFragmentToMainFrame(Fragment fragment, String name) {
-        if (layerCount == 0) {
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }
-        layerCount++;
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.anim_right_in, R.anim.anim_right_out, R.anim.anim_left_in, R.anim.anim_left_out);
         transaction.add(R.id.rl_frame, fragment);
@@ -311,10 +319,20 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
     }
 
     public void removeFragmentFromMainFrame() {
-        layerCount--;
-        getSupportFragmentManager().popBackStack();
-        if (layerCount == 0) {
+        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        }
+        lockScreenOrientation(false);
+        getSupportFragmentManager().popBackStack();
+    }
+
+    @SuppressLint("SourceLockedOrientationActivity")
+    private void lockScreenOrientation(boolean lock) {
+        if (lock) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
         }
     }
 
@@ -322,8 +340,9 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
+            isBackPress = false;
         } else {
-            if (layerCount == 0) {
+            if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
                 if (isBackPress) {
 //                    super.onBackPressed();
                     Intent home = new Intent(Intent.ACTION_MAIN);
@@ -348,11 +367,11 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
         } else {
             // khi click vao start thi se hien rate dialog neu du dieu kien
             boolean isLaunchSuccess = AppRater.launch(this);
-//            if (mInterstitialAd != null) {
-//                mInterstitialAd.show(this);
-//            } else {
-//                Log.d("ddd", "The interstitial ad wasn't ready yet.");
-//            }
+            if (mInterstitialAd != null) {
+                mInterstitialAd.show(this);
+            } else {
+                Log.d("ddd", "The interstitial ad wasn't ready yet.");
+            }
             if (!isLaunchSuccess) {
                 onClicked(null);
             }

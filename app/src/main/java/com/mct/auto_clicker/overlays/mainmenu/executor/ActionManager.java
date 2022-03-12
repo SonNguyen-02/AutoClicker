@@ -1,18 +1,17 @@
-package com.mct.auto_clicker.executor;
+package com.mct.auto_clicker.overlays.mainmenu.executor;
 
 import static com.mct.auto_clicker.database.domain.Configure.RUN_TYPE_AMOUNT;
 import static com.mct.auto_clicker.database.domain.Configure.RUN_TYPE_INFINITY;
 import static com.mct.auto_clicker.database.domain.Configure.RUN_TYPE_TIME;
 
 import android.accessibilityservice.GestureDescription;
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
 import com.mct.auto_clicker.database.domain.Configure;
 import com.mct.auto_clicker.overlays.mainmenu.MainMenu;
 
-public class ActionDetector {
+public class ActionManager {
 
     private Configure mConfigure;
     private long timeStart;
@@ -29,7 +28,7 @@ public class ActionDetector {
         void onExecAction(GestureDescription gesture);
     }
 
-    public ActionDetector(ExecuteCallback callback) {
+    public ActionManager(ExecuteCallback callback) {
         this.callback = callback;
     }
 

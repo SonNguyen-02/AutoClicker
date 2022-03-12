@@ -1,6 +1,5 @@
 package com.mct.auto_clicker.overlays.mainmenu;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -10,40 +9,57 @@ import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mct.auto_clicker.R;
+import com.mct.auto_clicker.adapter.MenuItemAdapter;
 import com.mct.auto_clicker.baseui.overlays.OverlayMenuController;
 import com.mct.auto_clicker.database.domain.Action;
 import com.mct.auto_clicker.database.domain.Configure;
-import com.mct.auto_clicker.executor.ActionDetector;
-import com.mct.auto_clicker.executor.ActionExecutor;
 import com.mct.auto_clicker.overlays.dialog.SettingActionDialog;
 import com.mct.auto_clicker.overlays.dialog.SettingConfigureDialog;
 import com.mct.auto_clicker.overlays.dialog.WarningExistsDialog;
+import com.mct.auto_clicker.overlays.mainmenu.executor.ActionDivider;
+import com.mct.auto_clicker.overlays.mainmenu.executor.ActionManager;
+import com.mct.auto_clicker.overlays.mainmenu.executor.ActionExecutor;
+import com.mct.auto_clicker.overlays.mainmenu.executor.ActionHandle;
+import com.mct.auto_clicker.overlays.mainmenu.menu.MenuItemType;
+import com.mct.auto_clicker.overlays.mainmenu.menu.MenuPreference;
 import com.mct.auto_clicker.presenter.ConfigurePermissionPresenter;
 import com.mct.auto_clicker.presenter.SettingSharedPreference;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainMenu extends OverlayMenuController implements ActionHandle.OnViewChangeListener {
+public class MainMenu extends OverlayMenuController implements ActionHandle.OnViewChangeListener, MenuItemAdapter.MenuItemListener {
 
-    private static final int DEFAULT_ACTION_SPACE = 200;
+    private static final int DEFAULT_ACTION_SPACE = 250;
     private Configure configure;
-    private ActionDetector actionDetector;
+    private ActionManager actionManager;
 
     private final SettingSharedPreference settingSharedPreference;
 
     private final List<ActionHandle> listActionHandle;
 
-    public MainMenu(Context context, Configure configure, @NonNull ActionDetector actionDetector) {
+    private boolean isShowing = true;
+
+    private MenuItemAdapter menuItemAdapter;
+
+    public MainMenu(Context context, Configure configure, @NonNull ActionManager actionManager) {
         super(context);
         this.configure = configure;
-        this.actionDetector = actionDetector;
-        actionDetector.init(new ActionExecutor(context, getScreenMetrics()));
+        this.actionManager = actionManager;
+        actionManager.init(new ActionExecutor(context, getScreenMetrics()));
         listActionHandle = new ArrayList<>();
         settingSharedPreference = SettingSharedPreference.getInstance(context);
-        ActionHandle.setActionBtnSize(settingSharedPreference.getButtonActionSize());
+
+        int buttonActionSize = MenuPreference.getInstance(context).getButtonActionSize();
+        ActionHandle.setActionBtnSize(buttonActionSize);
+        ActionDivider.setStrokeWidth(buttonActionSize);
+        int alpha = MenuPreference.getInstance(context).getButtonActionAlpha();
+        ActionHandle.setAlpha(alpha / 100f);
+        ActionDivider.setAlpha(alpha);
     }
 
     @NonNull
@@ -55,11 +71,12 @@ public class MainMenu extends OverlayMenuController implements ActionHandle.OnVi
     @Override
     public void onStart() {
         super.onStart();
+        initMenu();
         initView();
     }
 
     public void loadNewConfigure(@NonNull Configure configure) {
-        if (actionDetector.isStart()) {
+        if (actionManager.isStart()) {
             onConfigureStateChanged(true);
         }
         listActionHandle.forEach(actionHandle -> removeActionView(actionHandle, false));
@@ -68,32 +85,43 @@ public class MainMenu extends OverlayMenuController implements ActionHandle.OnVi
         initView();
     }
 
-    @SuppressLint("NonConstantResourceId")
     @Override
-    protected void onMenuItemClicked(@NonNull View view) {
-        switch (view.getId()) {
-            case R.id.btn_play:
-                onConfigureStateChanged(false);
-                view.setOnTouchListener(this::onPlayTouched);
-                break;
-            case R.id.btn_add_touch:
+    protected void onMenuItemClicked(@NonNull MenuItemType item) {
+        switch (item) {
+            case MENU_ITEM_ADD_TOUCH:
                 addDefaultActionTouch();
                 break;
-            case R.id.btn_add_swipe:
+            case MENU_ITEM_ADD_SWIPE:
                 addDefaultActionSwipe();
                 break;
-            case R.id.btn_add_zoom_out:
-                addDefaultActionZoom(Action.Zoom.ZOOM_OUT);
-                break;
-            case R.id.btn_add_zoom_in:
+            case MENU_ITEM_ADD_ZOOM_IN:
                 addDefaultActionZoom(Action.Zoom.ZOOM_IN);
                 break;
-            case R.id.btn_remove:
+            case MENU_ITEM_ADD_ZOOM_OUT:
+                addDefaultActionZoom(Action.Zoom.ZOOM_OUT);
+                break;
+            case MENU_ITEM_REMOVE:
                 removeLastActionView();
                 break;
-            case R.id.btn_setting:
+            case MENU_ITEM_SETTING:
                 SettingConfigureDialog dialog = new SettingConfigureDialog(context, configure, this::loadNewConfigure);
                 dialog.create(null);
+                break;
+            case MENU_ITEM_OPEN_RECENT:
+                break;
+            case MENU_ITEM_GO_HOME:
+                break;
+            case MENU_ITEM_GO_BACK:
+                break;
+            case MENU_ITEM_OPEN_NOTIFICATIONS:
+                break;
+            case MENU_ITEM_SHOW_HIDDEN:
+                isShowing = !isShowing;
+                menuItemAdapter.setShowing(isShowing);
+                setActionsVisible(isShowing ? View.VISIBLE : View.GONE);
+                break;
+            case MENU_ITEM_EXISTS:
+                onExistsClick();
                 break;
         }
     }
@@ -135,6 +163,85 @@ public class MainMenu extends OverlayMenuController implements ActionHandle.OnVi
         addActionView(action, true);
     }
 
+    private void removeLastActionView() {
+        if (!listActionHandle.isEmpty()) {
+            removeActionView(listActionHandle.remove(listActionHandle.size() - 1), true);
+        }
+    }
+
+    private void removeActionView(ActionHandle actionHandle, boolean removeRootAction) {
+        if (actionHandle != null) {
+            if (removeRootAction) {
+                configure.getActions().remove(actionHandle.getAction());
+            }
+            if (actionHandle.getView1() != null) {
+                getWindowManager().removeView(actionHandle.getView1());
+            }
+            if (actionHandle.getView2() != null) {
+                getWindowManager().removeView(actionHandle.getView2());
+                getWindowManager().removeView(actionHandle.getDivider());
+            }
+        }
+    }
+
+    private void setActionsVisible(int visibility) {
+        listActionHandle.forEach(actionHandle -> {
+            if (actionHandle.getView1() != null)
+                actionHandle.getView1().setVisibility(visibility);
+            if (actionHandle.getView2() != null) {
+                actionHandle.getView2().setVisibility(visibility);
+                actionHandle.getDivider().setVisibility(visibility);
+            }
+        });
+    }
+
+    private void onExistsClick() {
+        if (actionManager.isStart()) {
+            onConfigureStateChanged(true);
+        }
+        ConfigurePermissionPresenter configurePresenter = new ConfigurePermissionPresenter(context);
+        if (configurePresenter.isConfigureChanged(configure)) {
+            new WarningExistsDialog(context, (dialogInterface, i) -> {
+                if (i == AlertDialog.BUTTON_POSITIVE) {
+                    dismiss();
+                }
+                if (i == AlertDialog.BUTTON_NEUTRAL) {
+                    configurePresenter.saveConfigure(configure);
+                    dismiss();
+                }
+            }).create(null);
+            return;
+        }
+        dismiss();
+    }
+
+    @Override
+    protected void onStageMenuChange(boolean stageMenu) {
+        super.onStageMenuChange(stageMenu);
+        menuItemAdapter.initState(stageMenu, actionManager.isStart(), isShowing);
+    }
+
+    private void initMenu() {
+        float alpha = MenuPreference.getInstance(context).getButtonMenuAlpha() / 100f;
+        getMenuLayout().setAlpha(alpha);
+        RecyclerView rcvMenu = getMenuLayout().findViewById(R.id.rcv_menu);
+        menuItemAdapter = new MenuItemAdapter(context, this);
+        rcvMenu.setAdapter(menuItemAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context,
+                MenuPreference.getInstance(context).getMenuOrientation(), false) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+
+            @Override
+            public boolean canScrollHorizontally() {
+                return false;
+            }
+        };
+        rcvMenu.setLayoutManager(layoutManager);
+    }
+
     private void initView() {
         if (configure == null) return;
         configure.setOrientation(getScreenMetrics().getOrientation(), getScreenMetrics().getScreenSize());
@@ -158,6 +265,9 @@ public class MainMenu extends OverlayMenuController implements ActionHandle.OnVi
     }
 
     private void showSettingActionDialog(@NonNull ActionHandle actionHandle) {
+        if (actionManager.isStart()) {
+            return;
+        }
         new SettingActionDialog(context, actionHandle.getAction(), actionHandle.getIndex(), () -> {
             removeActionView(actionHandle, true);
             listActionHandle.remove(actionHandle);
@@ -167,38 +277,16 @@ public class MainMenu extends OverlayMenuController implements ActionHandle.OnVi
         }).create(null);
     }
 
-    private void removeLastActionView() {
-        if (!listActionHandle.isEmpty()) {
-            removeActionView(listActionHandle.remove(listActionHandle.size() - 1), true);
-        }
-    }
-
-    private void removeActionView(ActionHandle actionHandle, boolean removeRootAction) {
-        if (actionHandle != null) {
-            if (removeRootAction) {
-                configure.getActions().remove(actionHandle.getAction());
-            }
-            if (actionHandle.getView1() != null) {
-                getWindowManager().removeView(actionHandle.getView1());
-            }
-            if (actionHandle.getView2() != null) {
-                getWindowManager().removeView(actionHandle.getView2());
-                getWindowManager().removeView(actionHandle.getDivider());
-            }
-        }
-    }
-
-
     private int getNumericalOrderAction() {
         return listActionHandle.size() + 1;
     }
 
     private boolean checkAction = false;
 
-    private boolean onPlayTouched(View view, @NonNull MotionEvent event) {
+    private boolean onPlayTouched(@NonNull MotionEvent event) {
         if (listActionHandle.isEmpty()) return false;
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            if (actionDetector.isStart()) {
+            if (actionManager.isStart()) {
                 checkAction = true;
                 onConfigureStateChanged(true);
             } else {
@@ -208,7 +296,7 @@ public class MainMenu extends OverlayMenuController implements ActionHandle.OnVi
         }
 
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            if (!checkAction && !actionDetector.isStart()) {
+            if (!checkAction && !actionManager.isStart()) {
                 onConfigureStateChanged(false);
             }
             return true;
@@ -220,69 +308,13 @@ public class MainMenu extends OverlayMenuController implements ActionHandle.OnVi
         if (listActionHandle.isEmpty()) return;
         listActionHandle.forEach(actionHandle -> actionHandle.setEnable(isStart));
         if (isStart) {
-            actionDetector.stop();
-            setMenuItemViewImageResource(R.id.btn_play, R.drawable.ic_start);
-            setMenuItemViewEnabled(true,
-                    R.id.btn_add_touch,
-                    R.id.btn_add_swipe,
-                    R.id.btn_add_zoom_out,
-                    R.id.btn_add_zoom_in,
-                    R.id.btn_remove,
-                    R.id.btn_setting
-            );
+            actionManager.stop();
         } else {
-            actionDetector.init(configure);
-            actionDetector.start();
-            actionDetector.setOnStopListener(() -> onConfigureStateChanged(true));
-            setMenuItemViewImageResource(R.id.btn_play, R.drawable.ic_pause);
-            setMenuItemViewEnabled(false,
-                    R.id.btn_add_touch,
-                    R.id.btn_add_swipe,
-                    R.id.btn_add_zoom_out,
-                    R.id.btn_add_zoom_in,
-                    R.id.btn_remove,
-                    R.id.btn_setting
-            );
+            actionManager.init(configure);
+            actionManager.start();
+            actionManager.setOnStopListener(() -> onConfigureStateChanged(true));
         }
-    }
-
-    @Override
-    protected void onStageMenuChange(boolean stageMenu) {
-        super.onStageMenuChange(stageMenu);
-        if (stageMenu) {
-            setActionsVisible(View.VISIBLE);
-            setMenuItemViewVisible(View.GONE, R.id.btn_exists);
-            setMenuItemViewVisible(View.VISIBLE,
-                    R.id.btn_add_touch,
-                    R.id.btn_add_swipe,
-                    R.id.btn_add_zoom_out,
-                    R.id.btn_add_zoom_in,
-                    R.id.btn_remove,
-                    R.id.btn_setting
-            );
-        } else {
-            setActionsVisible(View.GONE);
-            setMenuItemViewVisible(View.VISIBLE, R.id.btn_exists);
-            setMenuItemViewVisible(View.GONE,
-                    R.id.btn_add_touch,
-                    R.id.btn_add_swipe,
-                    R.id.btn_add_zoom_out,
-                    R.id.btn_add_zoom_in,
-                    R.id.btn_remove,
-                    R.id.btn_setting
-            );
-        }
-    }
-
-    private void setActionsVisible(int visibility) {
-        listActionHandle.forEach(actionHandle -> {
-            if (actionHandle.getView1() != null)
-                actionHandle.getView1().setVisibility(visibility);
-            if (actionHandle.getView2() != null) {
-                actionHandle.getView2().setVisibility(visibility);
-                actionHandle.getDivider().setVisibility(visibility);
-            }
-        });
+        menuItemAdapter.setStart(actionManager.isStart());
     }
 
     @Override
@@ -293,36 +325,16 @@ public class MainMenu extends OverlayMenuController implements ActionHandle.OnVi
     }
 
     @Override
-    protected boolean onExistsTouched() {
-        if (actionDetector.isStart()) {
-            onConfigureStateChanged(true);
+    public boolean onTouchItem(View view, @NonNull MotionEvent event, @NonNull MenuItemType item, int pos) {
+        if (item == MenuItemType.MENU_ITEM_PLAY_PAUSE) {
+            return onPlayTouched(event);
         }
-        ConfigurePermissionPresenter configurePresenter = new ConfigurePermissionPresenter(context);
-        if (configurePresenter.isConfigureChanged(configure)) {
-            new WarningExistsDialog(context, (dialogInterface, i) -> {
-                if (i == AlertDialog.BUTTON_POSITIVE) {
-                    dismiss();
-                }
-                if (i == AlertDialog.BUTTON_NEUTRAL) {
-                    configurePresenter.saveConfigure(configure);
-                    dismiss();
-                }
-            }).create(null);
-            return false;
-        }
-        return true;
+        return onItemTouched(event, item);
     }
 
     @Override
-    public void onDismissed() {
-        super.onDismissed();
-        listActionHandle.forEach(actionHandle -> removeActionView(actionHandle, false));
-        listActionHandle.clear();
-        configure = null;
-        if (actionDetector != null) {
-            actionDetector.release();
-            actionDetector = null;
-        }
+    public void onItemStateChange(View view, boolean enable) {
+        setMenuItemViewEnabled(view, enable);
     }
 
     @Override
@@ -334,6 +346,18 @@ public class MainMenu extends OverlayMenuController implements ActionHandle.OnVi
     @Override
     public void onChange(View view, WindowManager.LayoutParams layoutParams) {
         getWindowManager().updateViewLayout(view, layoutParams);
+    }
+
+    @Override
+    public void onDismissed() {
+        super.onDismissed();
+        listActionHandle.forEach(actionHandle -> removeActionView(actionHandle, false));
+        listActionHandle.clear();
+        configure = null;
+        if (actionManager != null) {
+            actionManager.release();
+            actionManager = null;
+        }
     }
 
     public interface OnStopListener {

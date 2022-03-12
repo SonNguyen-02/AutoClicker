@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,16 +15,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ImageView;
 
 import androidx.annotation.CallSuper;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 
 import com.mct.auto_clicker.R;
-import com.mct.auto_clicker.presenter.SettingSharedPreference;
+import com.mct.auto_clicker.overlays.mainmenu.menu.MenuItemType;
 import com.mct.auto_clicker.utils.ScreenMetrics;
 
 public abstract class OverlayMenuController extends OverlayController {
@@ -80,18 +76,14 @@ public abstract class OverlayMenuController extends OverlayController {
      */
     private ViewGroup menuLayout = null;
 
-    private final int menuItemSize;
-
     /**
      * Listener upon the screen orientation changes.
      */
     private final ScreenMetrics.OrientationListener orientationListener;
 
-
     @SuppressLint("ResourceType")
     public OverlayMenuController(Context context) {
         this.context = context;
-        this.menuItemSize = SettingSharedPreference.getInstance(context).getButtonMenuSize();
         screenMetrics = new ScreenMetrics(context);
         menuLayoutParams = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -104,7 +96,7 @@ public abstract class OverlayMenuController extends OverlayController {
                 PixelFormat.TRANSLUCENT);
 
         sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
-        windowManager = context.getSystemService(WindowManager.class);
+        windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         disabledItemAlpha = context.getResources().getFraction(R.dimen.alpha_menu_item_disabled, 1, 1);
         orientationListener = this::onOrientationChanged;
     }
@@ -125,28 +117,11 @@ public abstract class OverlayMenuController extends OverlayController {
     protected void onCreate() {
         // First, call implementation methods to check what we should display
         menuLayout = onCreateMenu(context.getSystemService(LayoutInflater.class));
-        // Set the clicks listener on the menu items
-        ViewGroup parentLayout = menuLayout.getChildCount() == 1 ? (ViewGroup) menuLayout.getChildAt(0) : menuLayout;
-        for (int i = 0; i < parentLayout.getChildCount(); i++) {
-            View view = parentLayout.getChildAt(i);
-            view.getLayoutParams().width = menuItemSize;
-            view.getLayoutParams().height = menuItemSize;
-            view.setLayoutParams(view.getLayoutParams());
-            if (view.getId() == R.id.btn_move) {
-                view.setOnTouchListener((view1, motionEvent) -> onMoveTouched(motionEvent));
-            } else if (view.getId() == R.id.btn_exists) {
-                view.setOnTouchListener((view1, motionEvent) -> onExistsTouched(motionEvent));
-            } else {
-                view.setOnClickListener(this::onMenuItemClicked);
-            }
-        }
         // Restore the last menu position, if any.
         menuLayoutParams.gravity = Gravity.TOP | Gravity.START;
         loadMenuPosition(screenMetrics.getOrientation());
     }
 
-    protected void onMenuItemClicked(View view) {
-    }
 
     @CallSuper
     public void onStart() {
@@ -164,7 +139,10 @@ public abstract class OverlayMenuController extends OverlayController {
     public void onDismissed() {
         // Save last user position
         saveMenuPosition(screenMetrics.getOrientation(), false);
-        menuLayout = null;
+    }
+
+    public ViewGroup getMenuLayout() {
+        return menuLayout;
     }
 
     protected WindowManager getWindowManager() {
@@ -178,62 +156,14 @@ public abstract class OverlayMenuController extends OverlayController {
     /**
      * Set the enabled state of a menu item.
      *
+     * @param view    the view identifier of the menu item to change the state of.
      * @param enabled true to enable the view, false to disable it.
-     * @param viewId  the view identifier of the menu item to change the state of.
      */
-    protected void setMenuItemViewEnabled(boolean enabled, @IdRes int... viewId) {
-        if (menuLayout != null) {
-            for (int i : viewId) {
-                View view = menuLayout.findViewById(i);
-                if (view != null) {
-                    view.setEnabled(enabled);
-                    view.setClickable(enabled);
-                    view.setFocusable(enabled);
-                    view.setAlpha(enabled ? 1.0f : disabledItemAlpha);
-                }
-            }
-        }
-    }
-
-    /**
-     * Set the visible state of a menu item.
-     *
-     * @param visibility set visibility to view.
-     * @param viewId     the view identifier of the menu item to change the state of.
-     */
-    protected void setMenuItemViewVisible(int visibility, @IdRes int... viewId) {
-        if (menuLayout != null) {
-            for (int i : viewId) {
-                View view = menuLayout.findViewById(i);
-                if (view != null) {
-                    view.setVisibility(visibility);
-                }
-            }
-        }
-    }
-
-    /**
-     * Set the drawable resource of a menu item.
-     *
-     * @param viewId  the view identifier of the menu item to change the drawable of.
-     * @param imageId the identifier of the new drawable.
-     */
-    protected void setMenuItemViewImageResource(@IdRes int viewId, @DrawableRes int imageId) {
-        if (menuLayout != null) {
-            ((ImageView) menuLayout.findViewById(viewId)).setImageResource(imageId);
-        }
-    }
-
-    /**
-     * Set the drawable of a menu item.
-     *
-     * @param viewId   the view identifier of the menu item to change the drawable of.
-     * @param drawable the new drawable.
-     */
-    protected void setMenuItemViewDrawable(@IdRes int viewId, Drawable drawable) {
-        if (menuLayout != null) {
-            ((ImageView) menuLayout.findViewById(viewId)).setImageDrawable(drawable);
-        }
+    protected void setMenuItemViewEnabled(@NonNull View view, boolean enabled) {
+        view.setEnabled(enabled);
+        view.setClickable(enabled);
+        view.setFocusable(enabled);
+        view.setAlpha(enabled ? 1.0f : disabledItemAlpha);
     }
 
     private Pair<Integer, Integer> moveInitialPosition;
@@ -242,13 +172,13 @@ public abstract class OverlayMenuController extends OverlayController {
     private int yExpand, yCollapse;
 
     /**
-     * Called when the user touch the [R.id.btn_move] menu item.
-     * Handle the long press and move on this button in order to drag and drop the overlay menu on the screen.
+     * Called when the user touch the menu item except for[MENU_ITEM_PLAY_PAUSE].
+     * Handle the press and move on this button in order to drag and drop the overlay menu on the screen.
      *
      * @param event the touch event occurring on the menu item.
      * @return true if the event is handled, false if not.
      */
-    private boolean onMoveTouched(@NonNull MotionEvent event) {
+    protected boolean onItemTouched(@NonNull MotionEvent event, MenuItemType item) {
         switch (event.getAction()) {
             case ACTION_DOWN:
                 moveInitialPosition = Pair.create(menuLayoutParams.x, menuLayoutParams.y);
@@ -261,9 +191,13 @@ public abstract class OverlayMenuController extends OverlayController {
                 return true;
             case MotionEvent.ACTION_UP:
                 if (moveInitialPosition.first == menuLayoutParams.x && moveInitialPosition.second == menuLayoutParams.y) {
-                    stageMenu = !stageMenu;
-                    onStageMenuChange(stageMenu);
-                    resizeMenuLayout();
+                    if (item == MenuItemType.MENU_ITEM_EXPAND_COLLAPSE) {
+                        stageMenu = !stageMenu;
+                        onStageMenuChange(stageMenu);
+                        resizeMenuLayout();
+                    } else {
+                        onMenuItemClicked(item);
+                    }
                 }
                 return true;
             case MotionEvent.ACTION_MOVE:
@@ -277,18 +211,7 @@ public abstract class OverlayMenuController extends OverlayController {
         }
     }
 
-    protected boolean onExistsTouched() {
-        return true;
-    }
-
-    private boolean onExistsTouched(@NonNull MotionEvent motionEvent) {
-        if (motionEvent.getAction() == ACTION_DOWN) {
-            if (onExistsTouched()) {
-                dismiss();
-            }
-            return true;
-        }
-        return false;
+    protected void onMenuItemClicked(MenuItemType item) {
     }
 
     /**

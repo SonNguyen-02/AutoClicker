@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/icon_height"
+    android:background="@drawable/bg_white_stroke_grey_bot"
+    android:paddingStart="0dp"
+    android:paddingEnd="@dimen/margin_horizontal_mini">
+
+    <ImageView
+        android:id="@+id/img_icon"
+        android:layout_width="@dimen/icon_height"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_start"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/tv_icon_description"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toStartOf="@android:id/list_container"
+        android:layout_toEndOf="@+id/img_icon"
+        android:gravity="center_vertical"
+        android:text="@string/content_desc_play_pause_configure"
+        android:textColor="@color/md_grey_900"
+        android:textSize="@dimen/text_size_setting_content_description" />
+
+    <LinearLayout
+        android:id="@android:id/list_container"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true">
+
+        <ImageView
+            android:id="@+id/img_add_remove"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="@dimen/icon_height"
+            android:layout_height="match_parent"
+            android:padding="6dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_circle_plus"
+            app:tint="@color/primaryDark"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/img_move"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="@dimen/icon_height"
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            android:src="@drawable/ic_menu"
+            tools:ignore="ContentDescription" />
+
+    </LinearLayout>
+
+</RelativeLayout>

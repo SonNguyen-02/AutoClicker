@@ -1,4 +1,4 @@
-package com.mct.auto_clicker.executor;
+package com.mct.auto_clicker.overlays.mainmenu.executor;
 
 import android.accessibilityservice.GestureDescription;
 import android.content.Context;

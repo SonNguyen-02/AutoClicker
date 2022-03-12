@@ -1,4 +1,4 @@
-package com.mct.auto_clicker.activities;
+package com.mct.auto_clicker.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mct.auto_clicker.R;
+import com.mct.auto_clicker.activities.AutoClickerActivity;
 import com.mct.auto_clicker.adapter.ConfigureListAdapter;
 import com.mct.auto_clicker.database.domain.Configure;
 import com.mct.auto_clicker.overlays.dialog.DialogHelper;

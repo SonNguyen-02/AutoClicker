@@ -4,8 +4,10 @@ import static com.mct.auto_clicker.database.domain.Configure.RUN_TYPE_AMOUNT;
 import static com.mct.auto_clicker.database.domain.Configure.RUN_TYPE_INFINITY;
 import static com.mct.auto_clicker.database.domain.Configure.RUN_TYPE_TIME;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.provider.Settings;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
@@ -181,5 +183,26 @@ public class ConfigurePermissionPresenter {
         if (AutoClickerService.getLocalService() != null) {
             AutoClickerService.getLocalService().stop();
         }
+    }
+
+    public static boolean isAccessibilityServiceEnabled(Context context, Class<?> accessibilityService) {
+        ComponentName expectedComponentName = new ComponentName(context, accessibilityService);
+
+        String enabledServicesSetting = Settings.Secure.getString(context.getContentResolver(),  Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
+        if (enabledServicesSetting == null)
+            return false;
+
+        TextUtils.SimpleStringSplitter colonSplitter = new TextUtils.SimpleStringSplitter(':');
+        colonSplitter.setString(enabledServicesSetting);
+
+        while (colonSplitter.hasNext()) {
+            String componentNameString = colonSplitter.next();
+            ComponentName enabledService = ComponentName.unflattenFromString(componentNameString);
+
+            if (enabledService != null && enabledService.equals(expectedComponentName))
+                return true;
+        }
+
+        return false;
     }
 }

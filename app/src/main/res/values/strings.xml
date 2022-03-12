@@ -25,15 +25,22 @@
         created into the other applications once the conditions have been detected.\n\nNo data will be collected from
         this application.</string>
 
-    <string name="content_desc_play_pause_configure">Play or pause the configure</string>
-    <string name="content_desc_add_touch">Add the touch action to the configure</string>
-    <string name="content_desc_add_swipe">Add the swipe action to the configure</string>
-    <string name="content_desc_add_zoom_out">Add the zoom out action to the configure</string>
-    <string name="content_desc_add_zoom_in">Add the zoom in action to the configure</string>
-    <string name="content_desc_remove_action">Remove the last action in the configure</string>
-    <string name="content_desc_setting_configure">Setting the configure</string>
-    <string name="content_desc_exists_the_configure">Exists the configure</string>
-    <string name="content_desc_move_floating_menu">Move the floating menu</string>
+    <string name="content_desc_play_pause_configure">Play or pause</string>
+    <string name="content_desc_add_touch">Add touch</string>
+    <string name="content_desc_add_swipe">Add swipe</string>
+    <string name="content_desc_add_zoom_out">Add zoom out</string>
+    <string name="content_desc_add_zoom_in">Add zoom in</string>
+    <string name="content_desc_remove_action">Remove last action</string>
+    <string name="content_desc_setting_configure">Setting configure</string>
+    <string name="content_desc_exists_the_configure">Exists configure</string>
+    <string name="content_desc_open_recent">Open recent app</string>
+    <string name="content_desc_go_home">Go to home screen</string>
+    <string name="content_desc_go_back">Go back</string>
+    <string name="content_desc_open_notification">Open notification</string>
+    <string name="content_desc_show_hidden">Show or hide actions</string>
+
+    <string name="content_desc_collapse_expand_floating_menu">Collapse or expand menu</string>
+
     <string name="content_desc_dialog_title_icon">The dialog title icon.</string>
     <string name="content_desc_overlay_state">Overlay permission state</string>
     <string name="content_desc_accessibility_state">Accessibility service permission state</string>
@@ -162,7 +169,18 @@
         <item quantity="other">%d actions</item>
     </plurals>
 
+    <string name="bottom_nav_setting_target">Target</string>
+    <string name="bottom_nav_setting_menu">Float menu</string>
 
+    <string name="size">Size</string>
+    <string name="brightness">Brightness</string>
+    <string name="custom_color">Custom Color</string>
+    <string name="orientation">Orientation</string>
+    <string name="current_control">Current control</string>
+    <string name="more_control">More control</string>
+    <string name="menu_limit">The number of control has limit.\nPlease remove a control item</string>
+
+    <!-- test-->
     <string name="wait">wait…</string>
     <string name="title">Sample Activity #%d</string>
 

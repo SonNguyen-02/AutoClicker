@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+     <declare-styleable name="ColorSeekBar">
+        <attr format="reference" name="colorSeeds"/>
+        <attr format="dimension" name="cornerRadius"/>
+        <attr format="dimension" name="barHeight"/>
+        <attr format="dimension" name="thumbBorder"/>
+        <attr format="color" name="thumbBorderColor"/>
+    </declare-styleable>
+</resources>

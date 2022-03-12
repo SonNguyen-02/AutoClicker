@@ -1,12 +1,9 @@
-package com.mct.auto_clicker.overlays.mainmenu;
+package com.mct.auto_clicker.overlays.mainmenu.executor;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.PixelFormat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -50,6 +47,7 @@ public class ActionHandle implements View.OnTouchListener {
     private int index;
 
     private static int ACTION_BTN_SIZE;
+    private static float ALPHA;
 
     private final OnViewChangeListener onViewChangeListener;
 
@@ -73,9 +71,10 @@ public class ActionHandle implements View.OnTouchListener {
      */
     public static void setActionBtnSize(int actionBtnSize) {
         ACTION_BTN_SIZE = actionBtnSize;
-        if (ActionDivider.linePaint != null) {
-            ActionDivider.linePaint.setStrokeWidth(Math.min(ACTION_BTN_SIZE / 1.5f, 55f));
-        }
+    }
+
+    public static void setAlpha(float alpha) {
+        ALPHA = alpha;
     }
 
     public int getIndex() {
@@ -164,7 +163,7 @@ public class ActionHandle implements View.OnTouchListener {
             x2 = swipeAction.getToX();
             y2 = swipeAction.getToY();
             divider = new ActionDivider(context);
-            divider.init(x1, y1, x2, y2);
+            divider.set(x1, y1, x2, y2);
             view1 = createActionView(context, ViewType.SWIPE_FROM);
             view2 = createActionView(context, ViewType.SWIPE_TO);
         }
@@ -175,7 +174,7 @@ public class ActionHandle implements View.OnTouchListener {
             x2 = zoomAction.getX2();
             y2 = zoomAction.getY2();
             divider = new ActionDivider(context);
-            divider.init(x1, y1, x2, y2);
+            divider.set(x1, y1, x2, y2);
             if (zoomAction.getZoomType() == Action.Zoom.ZOOM_IN) {
                 view1 = createActionView(context, ViewType.ZOOM_IN);
                 view2 = createActionView(context, ViewType.ZOOM_IN);
@@ -191,10 +190,12 @@ public class ActionHandle implements View.OnTouchListener {
         y1 -= fitSize;
         y2 -= fitSize;
         paramsView1 = getLayoutParam(x1, y1);
+        view1.setAlpha(ALPHA);
         view1.setOnTouchListener(this);
         ((TextView) view1.findViewById(R.id.tv_action_index)).setTextSize(ACTION_BTN_SIZE / 5.5f);
         if (view2 != null) {
             paramsView2 = getLayoutParam(x2, y2);
+            view2.setAlpha(ALPHA);
             view2.setOnTouchListener(this);
             ((TextView) view2.findViewById(R.id.tv_action_index)).setTextSize(ACTION_BTN_SIZE / 5.5f);
             paramsDivider = getLayoutParamDivider();
@@ -209,22 +210,18 @@ public class ActionHandle implements View.OnTouchListener {
     }
 
     public void setEnable(boolean enable) {
-        int flags;
-        if (enable) {
-            flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS |
-                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
-        } else {
-            flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE |
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS |
-                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
-        }
-        paramsView1.flags = flags;
-        onViewChangeListener.onChange(view1, paramsView1);
-        if (view2 != null) {
-            paramsView2.flags = flags;
-            onViewChangeListener.onChange(view2, paramsView2);
+        setEnable(view1, paramsView1, enable);
+        setEnable(view2, paramsView2, enable);
+    }
+
+    private void setEnable(View view, WindowManager.LayoutParams layoutParams, boolean enable) {
+        if (view != null) {
+            if (enable) {
+                layoutParams.flags &= ~WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
+            } else {
+                layoutParams.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
+            }
+            onViewChangeListener.onChange(view, layoutParams);
         }
     }
 
@@ -308,12 +305,7 @@ public class ActionHandle implements View.OnTouchListener {
                 int x = moveInitialPosition.first + (int) (event.getRawX() - moveInitialTouchPosition.first);
                 int y = moveInitialPosition.second + (int) (event.getRawY() - moveInitialTouchPosition.second);
                 onViewChangeListener.onMove(view, layoutParams, x, y);
-                if (divider != null) {
-                    setPosition(view, layoutParams.x, layoutParams.y, divider.path);
-                    divider.invalidate();
-                } else {
-                    setPosition(view, layoutParams.x, layoutParams.y, null);
-                }
+                setPosition(view, layoutParams.x, layoutParams.y);
                 return true;
         }
         return false;
@@ -326,14 +318,11 @@ public class ActionHandle implements View.OnTouchListener {
                 paramsDivider.height = mRequestScreenMetrics.getScreenMetrics().getScreenSize().y;
                 onViewChangeListener.onChange(divider, paramsDivider);
             }
-            divider.path.reset();
-            divider.path.moveTo(x1, y1);
-            divider.path.lineTo(x2, y2);
-            divider.invalidate();
+            divider.set(x1, y1, x2, y2);
         }
     }
 
-    private void setPosition(View view, int x, int y, Path path) {
+    private void setPosition(View view, int x, int y) {
         int fitSize = ACTION_BTN_SIZE / 2;
         x += fitSize;
         y += fitSize;
@@ -341,7 +330,7 @@ public class ActionHandle implements View.OnTouchListener {
             ((Action.Click) action).setX(x);
             ((Action.Click) action).setY(y);
         }
-        if (path == null) {
+        if (divider == null) {
             return;
         }
         int x2 = 0, y2 = 0;
@@ -373,9 +362,7 @@ public class ActionHandle implements View.OnTouchListener {
                 y2 = zoomAction.getY1();
             }
         }
-        path.reset();
-        path.moveTo(x, y);
-        path.lineTo(x2, y2);
+        divider.set(x, y, x2, y2);
     }
 
     public interface OnViewChangeListener {
@@ -394,34 +381,4 @@ public class ActionHandle implements View.OnTouchListener {
 
     private enum ViewType {CLICK, SWIPE_FROM, SWIPE_TO, ZOOM_IN, ZOOM_OUT}
 
-    public static class ActionDivider extends View {
-
-        private final Path path;
-        private static Paint linePaint;
-
-        public ActionDivider(Context context) {
-            super(context);
-            path = new Path();
-            if (linePaint == null) {
-                linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                linePaint.setStrokeWidth(Math.min(ACTION_BTN_SIZE / 1.5f, 55f));
-                linePaint.setColor(Color.parseColor("#bbbbbb"));
-                linePaint.setAlpha(99);
-                linePaint.setStyle(Paint.Style.STROKE);
-            }
-        }
-
-        public void init(int x1, int y1, int x2, int y2) {
-            path.moveTo(x1, y1);
-            path.lineTo(x2, y2);
-            invalidate();
-        }
-
-        @Override
-        protected void onDraw(Canvas canvas) {
-            super.onDraw(canvas);
-            canvas.drawPath(path, linePaint);
-        }
-
-    }
 }
