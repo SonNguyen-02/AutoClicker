@@ -44,7 +44,7 @@ public class ActionExecutor {
     private final Runnable execAction = () -> executeActions(actionsLeft);
 
     public interface GestureExecutionListener {
-        void onExecution(GestureDescription gesture);
+        void onExecution(GestureDescription gesture, int actionCode);
     }
 
     public interface OnExecutionComplete {
@@ -99,6 +99,9 @@ public class ActionExecutor {
         }
         if (action instanceof Action.Zoom) {
             executeZoom((Action.Zoom) action);
+        }
+        if (action instanceof Action.GlobalAction) {
+            execGlobalAction(((Action.GlobalAction) action).getGlobalType().getActionCode());
         }
 
         actionsLeft = actions.subList(1, actions.size());
@@ -176,7 +179,15 @@ public class ActionExecutor {
     private void execGesture(GestureDescription gestureDescription) {
         mainThreadHandler.post(() -> {
             if (actionsLeft != null && mGestureExecutionListener != null) {
-                mGestureExecutionListener.onExecution(gestureDescription);
+                mGestureExecutionListener.onExecution(gestureDescription, -1);
+            }
+        });
+    }
+
+    private void execGlobalAction(int actionCode) {
+        mainThreadHandler.post(() -> {
+            if (actionsLeft != null && mGestureExecutionListener != null) {
+                mGestureExecutionListener.onExecution(null, actionCode);
             }
         });
     }

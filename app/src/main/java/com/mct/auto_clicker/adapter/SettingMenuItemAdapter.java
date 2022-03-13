@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.mct.auto_clicker.R;
 import com.mct.auto_clicker.overlays.mainmenu.menu.MenuItemType;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -44,6 +43,7 @@ public class SettingMenuItemAdapter extends RecyclerView.Adapter<SettingMenuItem
         this.dragListener = dragListener;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void addMenuItem(MenuItemType item, boolean sort) {
         mListMenuItem.add(item);
         if (sort) {

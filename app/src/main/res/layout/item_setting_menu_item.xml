@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/icon_height"
+    android:layout_height="48dp"
     android:background="@drawable/bg_white_stroke_grey_bot"
     android:paddingStart="0dp"
     android:paddingEnd="@dimen/margin_horizontal_mini">
@@ -15,7 +15,9 @@
         android:padding="8dp"
         android:scaleType="centerInside"
         android:src="@drawable/ic_start"
-        tools:ignore="ContentDescription" />
+        android:tint="@color/accent"
+        android:tintMode="src_in"
+        tools:ignore="ContentDescription,UseAppTint" />
 
     <TextView
         android:id="@+id/tv_icon_description"

@@ -1,6 +1,7 @@
 package com.mct.auto_clicker;
 
 import android.accessibilityservice.AccessibilityService;
+import android.accessibilityservice.GestureDescription;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -20,7 +21,7 @@ import com.mct.auto_clicker.database.domain.Configure;
 import com.mct.auto_clicker.overlays.mainmenu.executor.ActionManager;
 import com.mct.auto_clicker.overlays.mainmenu.MainMenu;
 
-public class AutoClickerService extends AccessibilityService {
+public class AutoClickerService extends AccessibilityService implements ActionManager.ExecuteCallback {
 
     private static final String TAG = "AutoClickerService";
 
@@ -83,7 +84,7 @@ public class AutoClickerService extends AccessibilityService {
                 listener.onChange();
             }
             startForeground(NOTIFICATION_ID, createNotification(configure.getName()));
-            ActionManager actionManager = new ActionManager(gesture -> dispatchGesture(gesture, null, null));
+            ActionManager actionManager = new ActionManager(AutoClickerService.this);
             rootOverlayController = new MainMenu(context, configure, actionManager);
             rootOverlayController.create(this::stop);
         }
@@ -142,4 +143,15 @@ public class AutoClickerService extends AccessibilityService {
     @Override
     public void onInterrupt() {
     }
+
+    @Override
+    public void onExecAction(GestureDescription gesture, int actionCode) {
+        if (gesture != null) {
+            dispatchGesture(gesture, null, null);
+        }
+        if (actionCode != -1) {
+            performGlobalAction(actionCode);
+        }
+    }
+
 }

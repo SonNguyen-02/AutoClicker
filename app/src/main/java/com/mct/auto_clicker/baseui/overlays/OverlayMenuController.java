@@ -76,6 +76,8 @@ public abstract class OverlayMenuController extends OverlayController {
      */
     private ViewGroup menuLayout = null;
 
+    protected final int PADDING_SCREEN = 8;
+
     /**
      * Listener upon the screen orientation changes.
      */
@@ -226,35 +228,22 @@ public abstract class OverlayMenuController extends OverlayController {
     private void resizeMenuLayout() {
         Point displaySize = screenMetrics.getScreenSize();
         if (stageMenu) {
-            if (yExpand + menuLayoutParams.y > displaySize.y) {
-                menuLayoutParams.y = displaySize.y - yExpand;
+            if (yExpand + menuLayoutParams.y > displaySize.y - PADDING_SCREEN) {
+                menuLayoutParams.y = displaySize.y - yExpand - PADDING_SCREEN;
                 windowManager.updateViewLayout(menuLayout, menuLayoutParams);
             }
         } else {
-            if (yCollapse + menuLayoutParams.y > displaySize.y) {
-                menuLayoutParams.y = displaySize.y - yCollapse;
+            if (yCollapse + menuLayoutParams.y > displaySize.y - PADDING_SCREEN) {
+                menuLayoutParams.y = displaySize.y - yCollapse - PADDING_SCREEN;
                 windowManager.updateViewLayout(menuLayout, menuLayoutParams);
             }
         }
     }
 
-
-    protected void setLayoutPosition(View view, WindowManager.LayoutParams layoutParams, int x, int y) {
+    protected void setLayoutPosition(View view, @NonNull WindowManager.LayoutParams layoutParams, int x, int y) {
         Point displaySize = screenMetrics.getScreenSize();
-        if (x < 0) {
-            x = 0;
-        }
-        if (x > displaySize.x - view.getWidth()) {
-            x = displaySize.x - view.getWidth();
-        }
-        if (y < 0) {
-            y = 0;
-        }
-        if (y > displaySize.y - view.getHeight()) {
-            y = displaySize.y - view.getHeight();
-        }
-        layoutParams.x = x;
-        layoutParams.y = y;
+        layoutParams.x = x < 0 ? PADDING_SCREEN : Math.min(x, displaySize.x - view.getWidth() - PADDING_SCREEN);
+        layoutParams.y = y < 0 ? PADDING_SCREEN : Math.min(y, displaySize.y - view.getHeight() - PADDING_SCREEN);
     }
 
     /**

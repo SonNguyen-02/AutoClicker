@@ -25,7 +25,7 @@ public class ActionManager {
     private MainMenu.OnStopListener onStopListener;
 
     public interface ExecuteCallback {
-        void onExecAction(GestureDescription gesture);
+        void onExecAction(GestureDescription gesture, int actionCode);
     }
 
     public ActionManager(ExecuteCallback callback) {
@@ -44,9 +44,9 @@ public class ActionManager {
                 actionExecutor.setOnExecutionComplete(this::startConfigure);
                 break;
             case RUN_TYPE_TIME:
-                actionExecutor.setGestureExecutionListener(gesture -> {
+                actionExecutor.setGestureExecutionListener((gesture, actionCode) -> {
                     if (System.currentTimeMillis() - timeStart <= mConfigure.getTimeStop()) {
-                        callback.onExecAction(gesture);
+                        callback.onExecAction(gesture, actionCode);
                     } else {
                         stopConfigure();
                     }

@@ -1,5 +1,7 @@
 package com.mct.auto_clicker.overlays.mainmenu;
 
+import static com.mct.auto_clicker.presenter.SettingSharedPreference.ACTION_GLOBAL_DELAY;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -21,9 +23,9 @@ import com.mct.auto_clicker.overlays.dialog.SettingActionDialog;
 import com.mct.auto_clicker.overlays.dialog.SettingConfigureDialog;
 import com.mct.auto_clicker.overlays.dialog.WarningExistsDialog;
 import com.mct.auto_clicker.overlays.mainmenu.executor.ActionDivider;
-import com.mct.auto_clicker.overlays.mainmenu.executor.ActionManager;
 import com.mct.auto_clicker.overlays.mainmenu.executor.ActionExecutor;
 import com.mct.auto_clicker.overlays.mainmenu.executor.ActionHandle;
+import com.mct.auto_clicker.overlays.mainmenu.executor.ActionManager;
 import com.mct.auto_clicker.overlays.mainmenu.menu.MenuItemType;
 import com.mct.auto_clicker.overlays.mainmenu.menu.MenuPreference;
 import com.mct.auto_clicker.presenter.ConfigurePermissionPresenter;
@@ -108,12 +110,16 @@ public class MainMenu extends OverlayMenuController implements ActionHandle.OnVi
                 dialog.create(null);
                 break;
             case MENU_ITEM_OPEN_RECENT:
+                addDefaultActionGlobal(Action.GlobalAction.GlobalType.OPEN_RECENT);
                 break;
             case MENU_ITEM_GO_HOME:
+                addDefaultActionGlobal(Action.GlobalAction.GlobalType.GO_HOME);
                 break;
             case MENU_ITEM_GO_BACK:
+                addDefaultActionGlobal(Action.GlobalAction.GlobalType.GO_BACK);
                 break;
             case MENU_ITEM_OPEN_NOTIFICATIONS:
+                addDefaultActionGlobal(Action.GlobalAction.GlobalType.OPEN_NOTIFICATIONS);
                 break;
             case MENU_ITEM_SHOW_HIDDEN:
                 isShowing = !isShowing;
@@ -129,7 +135,6 @@ public class MainMenu extends OverlayMenuController implements ActionHandle.OnVi
 
     private void addDefaultActionTouch() {
         Action action = new Action.Click(0L, configure.getId(),
-                "Click #" + System.currentTimeMillis(),
                 settingSharedPreference.getActionDelay(),
                 settingSharedPreference.getClickExecTime(),
                 getScreenMetrics().getScreenSize().x / 2,
@@ -140,7 +145,6 @@ public class MainMenu extends OverlayMenuController implements ActionHandle.OnVi
 
     private void addDefaultActionSwipe() {
         Action action = new Action.Swipe(0L, configure.getId(),
-                "Swipe #" + System.currentTimeMillis(),
                 settingSharedPreference.getActionDelay(),
                 settingSharedPreference.getSwipeExecTime(),
                 getScreenMetrics().getScreenSize().x / 2 - DEFAULT_ACTION_SPACE,
@@ -152,7 +156,6 @@ public class MainMenu extends OverlayMenuController implements ActionHandle.OnVi
 
     private void addDefaultActionZoom(int zoomType) {
         Action action = new Action.Zoom(0L, configure.getId(),
-                "Zoom #" + System.currentTimeMillis(),
                 settingSharedPreference.getActionDelay(),
                 settingSharedPreference.getZoomExecTime(),
                 zoomType,
@@ -160,6 +163,15 @@ public class MainMenu extends OverlayMenuController implements ActionHandle.OnVi
                 getScreenMetrics().getScreenSize().y / 2 - DEFAULT_ACTION_SPACE,
                 getScreenMetrics().getScreenSize().x / 2,
                 getScreenMetrics().getScreenSize().y / 2 + DEFAULT_ACTION_SPACE);
+        addActionView(action, true);
+    }
+
+    private void addDefaultActionGlobal(Action.GlobalAction.GlobalType globalType) {
+        int fitSize = MenuPreference.getInstance(context).getButtonActionSize() / 2;
+        Action action = new Action.GlobalAction(0L, configure.getId(), ACTION_GLOBAL_DELAY,
+                getScreenMetrics().getScreenSize().x / 2 - fitSize,
+                getScreenMetrics().getScreenSize().y - fitSize - PADDING_SCREEN,
+                globalType);
         addActionView(action, true);
     }
 
@@ -255,7 +267,7 @@ public class MainMenu extends OverlayMenuController implements ActionHandle.OnVi
         if (isCreateNew) configure.getActions().add(action);
         ActionHandle actionHandle = new ActionHandle(context, action, getNumericalOrderAction(), this, this::showSettingActionDialog, this::getScreenMetrics);
         listActionHandle.add(actionHandle);
-        if (!(action instanceof Action.Click)) {
+        if (!(action instanceof Action.Click) && !(action instanceof Action.GlobalAction)) {
             getWindowManager().addView(actionHandle.getDivider(), actionHandle.getParamsDivider());
             getWindowManager().addView(actionHandle.getView1(), actionHandle.getParamsView1());
             getWindowManager().addView(actionHandle.getView2(), actionHandle.getParamsView2());

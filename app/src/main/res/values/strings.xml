@@ -9,6 +9,8 @@
     <string name="notification_title">"Loaded: %s"</string>
     <string name="notification_message">Press to change the configure</string>
 
+    <string name="back_press">Back again to exists.</string>
+
     <string name="activity_auto_clicker_title">Auto Clicker</string>
     <string name="fragment_config_list_title">Config list</string>
     <string name="fragment_choose_item_title">{0} item choose</string>

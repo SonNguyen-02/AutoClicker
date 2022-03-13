@@ -10,6 +10,8 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -82,7 +84,7 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
         permissionPresenter = new ConfigurePermissionPresenter(this);
         initUi();
         initAds();
-//        loadAd();
+        loadAd();
     }
 
     @Override
@@ -294,6 +296,14 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
         lockScreenOrientation(true);
         GeneralSettingFragment fragment = GeneralSettingFragment.newInstance();
         addFragmentToMainFrame(fragment, GeneralSettingFragment.class.getName());
+        if (permissionPresenter.isServiceStart()) {
+            permissionPresenter.stopConfigure();
+            fragment.setOnExistsSetting(() -> {
+                if (requestedConfigure != null) {
+                    permissionPresenter.loadConfigure(requestedConfigure);
+                }
+            });
+        }
     }
 
     private void showPermissionRequest(boolean registerListener) {
@@ -323,7 +333,7 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
             mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         }
         lockScreenOrientation(false);
-        getSupportFragmentManager().popBackStack();
+        getSupportFragmentManager().popBackStackImmediate();
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -344,13 +354,14 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
         } else {
             if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
                 if (isBackPress) {
-//                    super.onBackPressed();
                     Intent home = new Intent(Intent.ACTION_MAIN);
+                    home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     home.addCategory(Intent.CATEGORY_HOME);
                     startActivity(home);
                     isBackPress = false;
+                    finish();
                 } else {
-                    Toast.makeText(this, "Nhấn back thêm lần nữa để thoát.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.back_press, Toast.LENGTH_SHORT).show();
                     isBackPress = true;
                 }
             } else {
@@ -361,17 +372,19 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void onPlayClicked() {
+        if (permissionPresenter.arePermissionsGranted()) {
+            if (mInterstitialAd != null) {
+                mInterstitialAd.show(this);
+            } else {
+                Log.d("ddd", "The interstitial ad wasn't ready yet.");
+            }
+        }
         if (permissionPresenter.isServiceStart()) {
             permissionPresenter.stopConfigure();
             requestedConfigure = null;
         } else {
             // khi click vao start thi se hien rate dialog neu du dieu kien
             boolean isLaunchSuccess = AppRater.launch(this);
-            if (mInterstitialAd != null) {
-                mInterstitialAd.show(this);
-            } else {
-                Log.d("ddd", "The interstitial ad wasn't ready yet.");
-            }
             if (!isLaunchSuccess) {
                 onClicked(null);
             }
@@ -404,8 +417,13 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
     protected void onDestroy() {
         super.onDestroy();
         permissionPresenter.unregisterStopServiceListener();
+        if (handler != null) {
+            handler.removeCallbacks(loadAd);
+        }
     }
 
+    private Handler handler;
+    private final Runnable loadAd = this::loadAd;
     private InterstitialAd mInterstitialAd;
 
     private void loadAd() {
@@ -436,6 +454,9 @@ public class AutoClickerActivity extends AppCompatActivity implements View.OnCli
                                 // Make sure to set your reference to null so you don't
                                 // show it a second time.
                                 mInterstitialAd = null;
+                                // wait 5 min and load new ads
+                                handler = new Handler(Looper.getMainLooper());
+                                handler.postDelayed(loadAd, 5 * 60 * 1000);
                                 Log.d("ddd", "The ad was shown.");
                             }
                         });

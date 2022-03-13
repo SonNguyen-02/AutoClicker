@@ -58,6 +58,9 @@ public class SettingActionDialog extends OverlayDialogController {
             cbAntiDetection.setVisibility(View.VISIBLE);
             cbAntiDetection.setChecked(((Action.Click) action).isAntiDetection());
         }
+        if (action instanceof Action.GlobalAction) {
+            view.findViewById(R.id.ll_duration_setting).setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -79,6 +82,9 @@ public class SettingActionDialog extends OverlayDialogController {
             if (timeDelay < 0) timeDelay = 0;
             action.setTimeDelay(timeDelay);
 
+            if (action instanceof Action.GlobalAction) {
+                return;
+            }
             int MIN_DEFAULT_DURATION = action instanceof Action.Click ? MIN_CLICK_EXEC_TIME :
                     action instanceof Action.Swipe ? MIN_SWIPE_EXEC_TIME : MIN_ZOOM_EXEC_TIME;
             int duration = Integer.parseInt(edtActionDuration.getText().toString().trim());

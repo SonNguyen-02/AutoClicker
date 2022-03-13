@@ -16,6 +16,7 @@
 
     <dimen name="overlay_menu_radius">10dp</dimen>
     <dimen name="overlay_menu_btn_size" tools:ignore="PxUsage">100px</dimen>
+    <dimen name="overlay_menu_btn_global_width" tools:ignore="PxUsage">200px</dimen>
 
     <dimen name="margin_horizontal_large">24dp</dimen>
     <dimen name="margin_horizontal_default">16dp</dimen>

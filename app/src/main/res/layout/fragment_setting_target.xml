@@ -58,7 +58,6 @@
                             tools:ignore="UselessParent">
 
                             <ImageView
-                                android:id="@+id/iv_action"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:contentDescription="@string/content_desc_float_action"

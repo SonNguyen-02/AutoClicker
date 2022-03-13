@@ -1,5 +1,6 @@
 package com.mct.auto_clicker.database.domain;
 
+import android.accessibilityservice.AccessibilityService;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.util.Pair;
@@ -15,7 +16,6 @@ public abstract class Action implements Serializable {
 
     private long id;
     private long configureId;
-    private String name;
     private long timeDelay;
     private long actionDuration;
 
@@ -24,15 +24,13 @@ public abstract class Action implements Serializable {
      *
      * @param id             the unique identifier for the action. Use 0 for creating a new action. Default value is 0.
      * @param configureId    the identifier of the event for this action.
-     * @param name           the name of the action.
      * @param timeDelay      the time delay apter run action in milliseconds
      * @param actionDuration the duration run action in milliseconds.
      */
 
-    public Action(long id, long configureId, String name, long timeDelay, long actionDuration) {
+    public Action(long id, long configureId, long timeDelay, long actionDuration) {
         this.id = id;
         this.configureId = configureId;
-        this.name = name;
         this.timeDelay = timeDelay;
         this.actionDuration = actionDuration;
     }
@@ -51,15 +49,6 @@ public abstract class Action implements Serializable {
 
     public void setConfigureId(long configureId) {
         this.configureId = configureId;
-    }
-
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public long getTimeDelay() {
@@ -93,7 +82,7 @@ public abstract class Action implements Serializable {
         configureId = 0L;
     }
 
-    public Pair<Integer, Integer> changeOrientation(int orientation, Point screenSize, int x, int y) {
+    protected Pair<Integer, Integer> changeOrientation(int orientation, Point screenSize, int x, int y) {
         int newX, newY;
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             // ngang sang doc
@@ -124,18 +113,18 @@ public abstract class Action implements Serializable {
         if (this == o) return true;
         if (!(o instanceof Action)) return false;
         Action action = (Action) o;
-        return id == action.id && configureId == action.configureId && timeDelay == action.timeDelay && actionDuration == action.actionDuration && name.equals(action.name);
+        return id == action.id && configureId == action.configureId && timeDelay == action.timeDelay && actionDuration == action.actionDuration;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, configureId, name, timeDelay, actionDuration);
+        return Objects.hash(id, configureId, timeDelay, actionDuration);
     }
 
     @NonNull
     @Override
     public String toString() {
-        return "Action{" + "id=" + id + ", configureId=" + configureId + ", name='" + name + '\'' + ", timeDelay=" + timeDelay + ", actionDuration=" + actionDuration + '}';
+        return "Action{" + "id=" + id + ", configureId=" + configureId + ", timeDelay=" + timeDelay + ", actionDuration=" + actionDuration + '}';
     }
 
     public static class Click extends Action {
@@ -149,15 +138,14 @@ public abstract class Action implements Serializable {
          *
          * @param id              the unique identifier for the action. Use 0 for creating a new action. Default value is 0.
          * @param configureId     the identifier of the event for this action.
-         * @param name            the name of the action.
          * @param timeDelay       the time delay before run action in milliseconds
          * @param clickDuration   the duration between the click down and up in milliseconds.
          * @param x               the x position of the click.
          * @param y               the y position of the click.
          * @param isAntiDetection the y position of the click.
          */
-        public Click(long id, long configureId, String name, long timeDelay, long clickDuration, int x, int y, boolean isAntiDetection) {
-            super(id, configureId, name, timeDelay, clickDuration);
+        public Click(long id, long configureId, long timeDelay, long clickDuration, int x, int y, boolean isAntiDetection) {
+            super(id, configureId, timeDelay, clickDuration);
             this.x = x;
             this.y = y;
             this.isAntiDetection = isAntiDetection;
@@ -189,12 +177,12 @@ public abstract class Action implements Serializable {
 
         @Override
         public ActionEntity toEntity() {
-            return new ActionEntity(getId(), getConfigureId(), getName(), getTimeDelay(), getActionDuration(), ActionEntity.ActionType.CLICK, x, y, isAntiDetection);
+            return new ActionEntity(getId(), getConfigureId(), getTimeDelay(), getActionDuration(), ActionEntity.ActionType.CLICK, x, y, isAntiDetection);
         }
 
         @Override
         public Action deepCopy() {
-            return new Click(getId(), getConfigureId(), getName(), getTimeDelay(), getActionDuration(), x, y, isAntiDetection);
+            return new Click(getId(), getConfigureId(), getTimeDelay(), getActionDuration(), x, y, isAntiDetection);
         }
 
         @Override
@@ -230,11 +218,10 @@ public abstract class Action implements Serializable {
         private int fromX, fromY, toX, toY;
 
         /**
-         * Swipe action.
+         * <b>Swipe action.</b>
          *
          * @param id            the unique identifier for the action. Use 0 for creating a new action. Default value is 0.
          * @param configureId   the identifier of the event for this action.
-         * @param name          the name of the action.
          * @param timeDelay     the time delay before run action
          * @param swipeDuration the duration between the swipe start and end in milliseconds.
          * @param fromX         the x position of the swipe start.
@@ -243,8 +230,8 @@ public abstract class Action implements Serializable {
          * @param toY           the y position of the swipe end.
          */
 
-        public Swipe(long id, long configureId, String name, long timeDelay, long swipeDuration, int fromX, int fromY, int toX, int toY) {
-            super(id, configureId, name, timeDelay, swipeDuration);
+        public Swipe(long id, long configureId, long timeDelay, long swipeDuration, int fromX, int fromY, int toX, int toY) {
+            super(id, configureId, timeDelay, swipeDuration);
             this.fromX = fromX;
             this.fromY = fromY;
             this.toX = toX;
@@ -285,12 +272,12 @@ public abstract class Action implements Serializable {
 
         @Override
         public ActionEntity toEntity() {
-            return new ActionEntity(getId(), getConfigureId(), getName(), getTimeDelay(), getActionDuration(), ActionEntity.ActionType.SWIPE, fromX, fromY, toX, toY);
+            return new ActionEntity(getId(), getConfigureId(), getTimeDelay(), getActionDuration(), ActionEntity.ActionType.SWIPE, fromX, fromY, toX, toY);
         }
 
         @Override
         public Action deepCopy() {
-            return new Swipe(getId(), getConfigureId(), getName(), getTimeDelay(), getActionDuration(), fromX, fromY, toX, toY);
+            return new Swipe(getId(), getConfigureId(), getTimeDelay(), getActionDuration(), fromX, fromY, toX, toY);
         }
 
         @Override
@@ -329,14 +316,14 @@ public abstract class Action implements Serializable {
         public static final int ZOOM_IN = 0;
         public static final int ZOOM_OUT = 1;
 
-        private int zoomType, x1, y1, x2, y2;
+        private final int zoomType;
+        private int x1, y1, x2, y2;
 
         /**
-         * Swipe action.
+         * <b>Zoom action</b>
          *
          * @param id           the unique identifier for the action. Use 0 for creating a new action. Default value is 0.
          * @param configureId  the identifier of the event for this action.
-         * @param name         the name of the action.
          * @param timeDelay    the time delay before run action
          * @param zoomDuration the duration between the swipe start and end in milliseconds.
          * @param zoomType     the type of zoom action.
@@ -345,8 +332,8 @@ public abstract class Action implements Serializable {
          * @param x2           the x2 position of the zoom point 2.
          * @param y2           the y2 position of the zoom point 2.
          */
-        public Zoom(long id, long configureId, String name, long timeDelay, long zoomDuration, int zoomType, int x1, int y1, int x2, int y2) {
-            super(id, configureId, name, timeDelay, zoomDuration);
+        public Zoom(long id, long configureId, long timeDelay, long zoomDuration, int zoomType, int x1, int y1, int x2, int y2) {
+            super(id, configureId, timeDelay, zoomDuration);
             this.zoomType = zoomType;
             this.x1 = x1;
             this.y1 = y1;
@@ -356,10 +343,6 @@ public abstract class Action implements Serializable {
 
         public int getZoomType() {
             return zoomType;
-        }
-
-        public void setZoomType(int zoomType) {
-            this.zoomType = zoomType;
         }
 
         public int getX1() {
@@ -409,12 +392,12 @@ public abstract class Action implements Serializable {
 
         @Override
         public ActionEntity toEntity() {
-            return new ActionEntity(getId(), getConfigureId(), getName(), getTimeDelay(), getActionDuration(), zoomType == ZOOM_IN ? ActionEntity.ActionType.ZOOM_IN : ActionEntity.ActionType.ZOOM_OUT, x1, y1, x2, y2);
+            return new ActionEntity(getId(), getConfigureId(), getTimeDelay(), getActionDuration(), zoomType == ZOOM_IN ? ActionEntity.ActionType.ZOOM_IN : ActionEntity.ActionType.ZOOM_OUT, x1, y1, x2, y2);
         }
 
         @Override
         public Action deepCopy() {
-            return new Zoom(getId(), getConfigureId(), getName(), getTimeDelay(), getActionDuration(), zoomType, x1, y1, x2, y2);
+            return new Zoom(getId(), getConfigureId(), getTimeDelay(), getActionDuration(), zoomType, x1, y1, x2, y2);
         }
 
         @Override
@@ -445,6 +428,120 @@ public abstract class Action implements Serializable {
         @Override
         public String toString() {
             return super.toString() + "Zoom{" + "zoomType=" + zoomType + ", x1=" + x1 + ", y1=" + y1 + ", x2=" + x2 + ", y2=" + y2 + "} ";
+        }
+    }
+
+    public static class GlobalAction extends Action {
+
+        private int x;
+        private int y;
+        private GlobalType globalType;
+
+        /**
+         * <b>Global action</b>
+         *
+         * @param id          the unique identifier for the action. Use 0 for creating a new action. Default value is 0.
+         * @param configureId the identifier of the event for this action.
+         * @param timeDelay   the time delay before run action in milliseconds
+         * @param x           the x position of the global action.
+         * @param y           the y position of the global action.
+         * @param globalType  the type of global action.
+         */
+
+        public GlobalAction(long id, long configureId, long timeDelay, int x, int y, @NonNull GlobalType globalType) {
+            super(id, configureId, timeDelay, 0);
+            this.x = x;
+            this.y = y;
+            this.globalType = globalType;
+        }
+
+        public int getX() {
+            return x;
+        }
+
+        public void setX(int x) {
+            this.x = x;
+        }
+
+        public int getY() {
+            return y;
+        }
+
+        public void setY(int y) {
+            this.y = y;
+        }
+
+        public GlobalType getGlobalType() {
+            return globalType;
+        }
+
+        public void setGlobalType(GlobalType globalType) {
+            this.globalType = globalType;
+        }
+
+        @Override
+        public ActionEntity toEntity() {
+            return new ActionEntity(getId(), getConfigureId(), getTimeDelay(), getActionDuration(), ActionEntity.ActionType.GLOBAL_ACTION, x, y, globalType.getActionCode());
+        }
+
+        @Override
+        public Action deepCopy() {
+            return new GlobalAction(getId(), getConfigureId(), getTimeDelay(), x, y, globalType);
+        }
+
+        @Override
+        public void changeOrientationAction(int orientation, Point screenSize) {
+            Pair<Integer, Integer> result = changeOrientation(orientation, screenSize, x, y);
+            x = result.first;
+            y = result.second;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof GlobalAction)) return false;
+            if (!super.equals(o)) return false;
+            GlobalAction that = (GlobalAction) o;
+            return x == that.x && y == that.y && globalType == that.globalType;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(super.hashCode(), x, y, globalType);
+        }
+
+        @NonNull
+        @Override
+        public String toString() {
+            return super.toString() + "GlobalAction{" + "x=" + x + ", y=" + y + ", typeAction=" + globalType + "}";
+        }
+
+        public enum GlobalType {
+
+            OPEN_RECENT(AccessibilityService.GLOBAL_ACTION_RECENTS),
+            GO_HOME(AccessibilityService.GLOBAL_ACTION_HOME),
+            GO_BACK(AccessibilityService.GLOBAL_ACTION_BACK),
+            OPEN_NOTIFICATIONS(AccessibilityService.GLOBAL_ACTION_NOTIFICATIONS);
+
+            private final int actionCode;
+
+            GlobalType(int actionCode) {
+                this.actionCode = actionCode;
+            }
+
+            public int getActionCode() {
+                return actionCode;
+            }
+
+            public static GlobalType valueOf(int actionCode) {
+                for (GlobalType type : values()) {
+                    if (type.actionCode == actionCode) {
+                        return type;
+                    }
+                }
+                return GO_HOME;
+            }
+
         }
     }
 

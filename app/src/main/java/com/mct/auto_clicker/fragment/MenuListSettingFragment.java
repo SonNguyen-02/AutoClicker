@@ -3,6 +3,7 @@ package com.mct.auto_clicker.fragment;
 import static com.mct.auto_clicker.overlays.mainmenu.menu.MenuItemType.getListItemDisable;
 import static com.mct.auto_clicker.overlays.mainmenu.menu.MenuPreference.MAX_ITEM_SHOW;
 
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,9 +30,12 @@ public class MenuListSettingFragment extends Fragment implements SettingMenuItem
 
     private View mView;
     private RecyclerView rcvMenuEnable, rcvMenuDisable;
-    private final MenuSettingFragment.MenuItemAdapterRequired mMenuItemAdapterRequired;
+    private MenuSettingFragment.MenuItemAdapterRequired mMenuItemAdapterRequired;
     private SettingMenuItemAdapter menuEnableAdapter, menuDisableAdapter;
     private long lastTimeClick;
+
+    public MenuListSettingFragment() {
+    }
 
     public MenuListSettingFragment(MenuSettingFragment.MenuItemAdapterRequired mMenuItemAdapterRequired) {
         this.mMenuItemAdapterRequired = mMenuItemAdapterRequired;
@@ -72,7 +77,9 @@ public class MenuListSettingFragment extends Fragment implements SettingMenuItem
                 int positionTarget = target.getAdapterPosition();
                 Collections.swap(getListMenuItem(), positionDrag, positionTarget);
                 menuEnableAdapter.notifyItemMoved(positionDrag, positionTarget);
-                mMenuItemAdapterRequired.getMenuItemAdapter().notifyItemMoved(positionDrag, positionTarget);
+                if (mMenuItemAdapterRequired != null) {
+                    mMenuItemAdapterRequired.getMenuItemAdapter().notifyItemMoved(positionDrag, positionTarget);
+                }
                 saveCurrentControlMenu();
                 return false;
             }
@@ -85,6 +92,21 @@ public class MenuListSettingFragment extends Fragment implements SettingMenuItem
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            }
+
+            private boolean isDrawing;
+
+            @Override
+            public void onChildDrawOver(@NonNull Canvas c, @NonNull RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                if (!isDrawing && isCurrentlyActive) {
+                    isDrawing = true;
+                    viewHolder.itemView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.md_light_green_200));
+                }
+                if (isDrawing && !isCurrentlyActive) {
+                    isDrawing = false;
+                    viewHolder.itemView.setBackgroundResource(R.drawable.bg_white_stroke_grey_bot);
+                }
+                super.onChildDrawOver(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
         });
         // set drag for interface
@@ -113,20 +135,22 @@ public class MenuListSettingFragment extends Fragment implements SettingMenuItem
         lastTimeClick = System.currentTimeMillis();
         if (isEnable) {
             menuEnableAdapter.removeMenuItem(position);
-            mMenuItemAdapterRequired.getMenuItemAdapter().notifyItemRemoved(position);
+            if (mMenuItemAdapterRequired != null) {
+                mMenuItemAdapterRequired.getMenuItemAdapter().notifyItemRemoved(position);
+            }
             menuDisableAdapter.addMenuItem(item, true);
-            saveCurrentControlMenu();
         } else {
             if (getListMenuItem().size() >= MAX_ITEM_SHOW) {
                 Toast.makeText(requireContext(), R.string.menu_limit, Toast.LENGTH_SHORT).show();
                 return;
             }
             menuEnableAdapter.addMenuItem(item, false);
-            mMenuItemAdapterRequired.getMenuItemAdapter().notifyItemInserted(getListMenuItem().size() - 1);
+            if (mMenuItemAdapterRequired != null) {
+                mMenuItemAdapterRequired.getMenuItemAdapter().notifyItemInserted(getListMenuItem().size() - 1);
+            }
             menuDisableAdapter.removeMenuItem(position);
-            saveCurrentControlMenu();
         }
-
+        saveCurrentControlMenu();
     }
 
     private void saveCurrentControlMenu() {
@@ -134,6 +158,9 @@ public class MenuListSettingFragment extends Fragment implements SettingMenuItem
     }
 
     private List<MenuItemType> getListMenuItem() {
+        if (mMenuItemAdapterRequired == null) {
+            return MenuItemType.getDefaultExpandItem();
+        }
         return mMenuItemAdapterRequired.getMenuItemAdapter().getListMenuItem();
     }
 

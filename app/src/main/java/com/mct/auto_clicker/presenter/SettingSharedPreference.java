@@ -32,6 +32,7 @@ public class SettingSharedPreference {
 
     public static final int MAX_EXEC_TIME = 60000;
 
+    public static final int ACTION_GLOBAL_DELAY = 1000;
     private static final String K_ACTION_DELAY = "k_time_wait_next_action";
     private static final int DEFAULT_ACTION_DELAY = 50;
 

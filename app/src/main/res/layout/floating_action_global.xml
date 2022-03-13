@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/overlay_menu_btn_global_width"
+    android:layout_height="@dimen/overlay_menu_btn_size"
+    android:gravity="center"
+    android:background="@drawable/bg_float_action_global">
+
+    <ImageView
+        android:id="@+id/iv_action"
+        android:layout_width="@dimen/overlay_menu_btn_size"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/content_desc_float_action"
+        android:padding="4dp"
+        android:src="@drawable/ic_home"
+        android:tint="@color/float_action_border"
+        tools:ignore="UseAppTint" />
+
+    <TextView
+        android:id="@+id/tv_action_index"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:layout_toEndOf="@id/iv_action"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center_vertical"
+        android:text="1"
+        android:textColor="#DA000000"
+        android:textSize="16sp"
+        tools:ignore="HardcodedText" />
+
+</RelativeLayout>

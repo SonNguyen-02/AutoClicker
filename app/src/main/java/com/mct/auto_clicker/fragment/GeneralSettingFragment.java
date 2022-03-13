@@ -21,6 +21,7 @@ public class GeneralSettingFragment extends Fragment {
     private View mView;
     private ViewPager2 mViewPager;
     private BottomNavigationView mBottomNavigationView;
+    private OnExistsSetting mOnExistsSetting;
 
     @NonNull
     public static GeneralSettingFragment newInstance() {
@@ -37,6 +38,10 @@ public class GeneralSettingFragment extends Fragment {
         initData();
 
         return mView;
+    }
+
+    public void setOnExistsSetting(OnExistsSetting mOnExistsSetting) {
+        this.mOnExistsSetting = mOnExistsSetting;
     }
 
     private void initUi() {
@@ -78,6 +83,18 @@ public class GeneralSettingFragment extends Fragment {
                 super.onPageSelected(position);
             }
         });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mOnExistsSetting != null) {
+            mOnExistsSetting.onExists();
+        }
+    }
+
+    public interface OnExistsSetting {
+        void onExists();
     }
 
 }

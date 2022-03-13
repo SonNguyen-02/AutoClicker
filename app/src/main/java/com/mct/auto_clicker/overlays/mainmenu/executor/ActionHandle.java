@@ -3,7 +3,6 @@ package com.mct.auto_clicker.overlays.mainmenu.executor;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PixelFormat;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -133,6 +132,10 @@ public class ActionHandle implements View.OnTouchListener {
             x2 = ((Action.Zoom) action).getX2();
             y2 = ((Action.Zoom) action).getY2();
         }
+        if (action instanceof Action.GlobalAction) {
+            x1 = ((Action.GlobalAction) action).getX();
+            y1 = ((Action.GlobalAction) action).getY();
+        }
         setPosition(x1, y1, x2, y2);
         int fitSize = ACTION_BTN_SIZE / 2;
         x1 -= fitSize;
@@ -183,13 +186,40 @@ public class ActionHandle implements View.OnTouchListener {
                 view2 = createActionView(context, ViewType.ZOOM_OUT);
             }
         }
+        if (action instanceof Action.GlobalAction) {
+            x1 = ((Action.GlobalAction) action).getX();
+            y1 = ((Action.GlobalAction) action).getY();
+            ViewType viewType;
+            switch (((Action.GlobalAction) action).getGlobalType()) {
+                case OPEN_RECENT:
+                    viewType = ViewType.GLOBAL_ACTION_OPEN_RECENT;
+                    break;
+                case GO_HOME:
+                default:
+                    viewType = ViewType.GLOBAL_ACTION_GO_HOME;
+                    break;
+                case GO_BACK:
+                    viewType = ViewType.GLOBAL_ACTION_GO_BACK;
+                    break;
+                case OPEN_NOTIFICATIONS:
+                    viewType = ViewType.GLOBAL_ACTION_OPEN_NOTIFICATIONS;
+                    break;
+            }
+            view1 = createActionView(context, viewType);
+        }
         changeIndex();
         int fitSize = ACTION_BTN_SIZE / 2;
         x1 -= fitSize;
         x2 -= fitSize;
         y1 -= fitSize;
         y2 -= fitSize;
-        paramsView1 = getLayoutParam(x1, y1);
+
+        if (action instanceof Action.GlobalAction) {
+            paramsView1 = getLayoutParam(ACTION_BTN_SIZE * 2, ACTION_BTN_SIZE, x1, y1);
+        } else {
+            paramsView1 = getLayoutParam(x1, y1);
+        }
+
         view1.setAlpha(ALPHA);
         view1.setOnTouchListener(this);
         ((TextView) view1.findViewById(R.id.tv_action_index)).setTextSize(ACTION_BTN_SIZE / 5.5f);
@@ -227,8 +257,13 @@ public class ActionHandle implements View.OnTouchListener {
 
     @NonNull
     private WindowManager.LayoutParams getLayoutParam(int x, int y) {
+        return getLayoutParam(ACTION_BTN_SIZE, ACTION_BTN_SIZE, x, y);
+    }
+
+    @NonNull
+    private WindowManager.LayoutParams getLayoutParam(int width, int height, int x, int y) {
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(
-                ACTION_BTN_SIZE, ACTION_BTN_SIZE, x, y,
+                width, height, x, y,
                 ScreenMetrics.TYPE_COMPAT_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
                         WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS |
@@ -263,8 +298,13 @@ public class ActionHandle implements View.OnTouchListener {
      */
     @NonNull
     private View createActionView(Context context, @NonNull ViewType viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.floating_action, null);
+        int layout = action instanceof Action.GlobalAction ? R.layout.floating_action_global : R.layout.floating_action;
+        View view = LayoutInflater.from(context).inflate(layout, null);
         ImageView imgAction = view.findViewById(R.id.iv_action);
+        if(action instanceof Action.GlobalAction){
+            imgAction.getLayoutParams().width = ACTION_BTN_SIZE;
+            imgAction.setLayoutParams(imgAction.getLayoutParams());
+        }
         switch (viewType) {
             case CLICK:
             case SWIPE_FROM:
@@ -278,6 +318,18 @@ public class ActionHandle implements View.OnTouchListener {
                 break;
             case ZOOM_OUT:
                 imgAction.setImageResource(R.drawable.ic_circle_zoom_out);
+                break;
+            case GLOBAL_ACTION_OPEN_RECENT:
+                imgAction.setImageResource(R.drawable.ic_recent);
+                break;
+            case GLOBAL_ACTION_GO_HOME:
+                imgAction.setImageResource(R.drawable.ic_home);
+                break;
+            case GLOBAL_ACTION_GO_BACK:
+                imgAction.setImageResource(R.drawable.ic_go_back);
+                break;
+            case GLOBAL_ACTION_OPEN_NOTIFICATIONS:
+                imgAction.setImageResource(R.drawable.ic_notification);
                 break;
         }
         return view;
@@ -330,6 +382,10 @@ public class ActionHandle implements View.OnTouchListener {
             ((Action.Click) action).setX(x);
             ((Action.Click) action).setY(y);
         }
+        if (action instanceof Action.GlobalAction) {
+            ((Action.GlobalAction) action).setX(x);
+            ((Action.GlobalAction) action).setY(y);
+        }
         if (divider == null) {
             return;
         }
@@ -379,6 +435,16 @@ public class ActionHandle implements View.OnTouchListener {
         ScreenMetrics getScreenMetrics();
     }
 
-    private enum ViewType {CLICK, SWIPE_FROM, SWIPE_TO, ZOOM_IN, ZOOM_OUT}
+    private enum ViewType {
+        CLICK,
+        SWIPE_FROM,
+        SWIPE_TO,
+        ZOOM_IN,
+        ZOOM_OUT,
+        GLOBAL_ACTION_OPEN_RECENT,
+        GLOBAL_ACTION_GO_HOME,
+        GLOBAL_ACTION_GO_BACK,
+        GLOBAL_ACTION_OPEN_NOTIFICATIONS,
+    }
 
 }

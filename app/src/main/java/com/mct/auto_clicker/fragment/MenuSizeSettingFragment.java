@@ -73,7 +73,9 @@ public class MenuSizeSettingFragment extends Fragment {
         sbColor.setPosition(mMenuPreference.getMenuSbPosition(), mMenuPreference.getMenuColor());
         sbColor.setOnColorChangeListener((position, color) -> {
             mMenuPreference.setMenuSbPosition(position).setMenuColor(color).commit();
-            mMenuItemAdapterRequired.getMenuItemAdapter().setColor(color);
+            if (mMenuItemAdapterRequired != null) {
+                mMenuItemAdapterRequired.getMenuItemAdapter().setColor(color);
+            }
         });
 
         int currentOrientation = mMenuPreference.getMenuOrientation();
@@ -98,7 +100,9 @@ public class MenuSizeSettingFragment extends Fragment {
                     }
                 } else {
                     int value = seekBar.getProgress() / SEEK_BAR_SMOOTH + MenuPreference.MIN_ALPHA;
-                    mOnSettingChange.onAlphaChange(value);
+                    if (mOnSettingChange != null) {
+                        mOnSettingChange.onAlphaChange(value);
+                    }
                 }
             }
 

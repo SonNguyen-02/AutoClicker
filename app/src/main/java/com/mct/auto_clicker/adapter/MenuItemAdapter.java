@@ -24,7 +24,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MenuIt
     private final MenuPreference mMenuPreference;
 
     private int menuItemSize;
-    private boolean isStart;
+    private boolean isExpand, isStart;
     private int orientation;
     private int color;
     private List<MenuItemType> mListMenuItem;
@@ -45,6 +45,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MenuIt
     public MenuItemAdapter(Context mContext, List<MenuItemType> mListMenuItem) {
         this(mContext);
         this.mListMenuItem = mListMenuItem;
+        this.isExpand = true;
     }
 
     public List<MenuItemType> getListMenuItem() {
@@ -59,6 +60,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MenuIt
     }
 
     public void initState(boolean isExpand, boolean isStart, boolean isShowing) {
+        this.isExpand = isExpand;
         this.isStart = isStart;
         if (isExpand) {
             mListMenuItem = mMenuPreference.getListMenuItem();
@@ -66,9 +68,6 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MenuIt
             mListMenuItem = MenuItemType.getDefaultCollapseItem();
         }
         mListMenuItem.forEach(item -> {
-            if (item == MenuItemType.MENU_ITEM_EXPAND_COLLAPSE) {
-                item.setIcon(isExpand ? R.drawable.ic_collapse : R.drawable.ic_expand);
-            }
             if (item == MenuItemType.MENU_ITEM_PLAY_PAUSE) {
                 item.setIcon(isStart ? R.drawable.ic_pause : R.drawable.ic_start);
             }
@@ -111,6 +110,7 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MenuIt
         notifyData();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void notifyData() {
         notifyDataSetChanged();
     }
@@ -131,6 +131,15 @@ public class MenuItemAdapter extends RecyclerView.Adapter<MenuItemAdapter.MenuIt
         }
         holder.imageBtn.setImageResource(item.getIcon());
         holder.imageBtn.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+        if (item == MenuItemType.MENU_ITEM_EXPAND_COLLAPSE) {
+            if (orientation == RecyclerView.HORIZONTAL) {
+                holder.imageBtn.setRotation(isExpand ? 270 : 90);
+            } else {
+                holder.imageBtn.setRotation(isExpand ? 0 : 180);
+            }
+        } else {
+            holder.imageBtn.setRotation(0);
+        }
         if (orientation == RecyclerView.HORIZONTAL) {
             holder.imageBtn.getLayoutParams().width = menuItemSize - 8;
             holder.imageBtn.getLayoutParams().height = menuItemSize;
