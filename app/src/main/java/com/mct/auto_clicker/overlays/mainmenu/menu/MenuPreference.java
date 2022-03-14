@@ -170,4 +170,8 @@ public class MenuPreference {
         mEditor.commit();
     }
 
+    public void clear() {
+        mEditor.clear().commit();
+    }
+
 }

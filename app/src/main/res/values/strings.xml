@@ -97,6 +97,10 @@
     <string name="menu_feedback">Feedback</string>
     <string name="menu_license">License</string>
     <string name="menu_privacy_policy">Privacy policy</string>
+    <string name="menu_reset_setting">Reset setting</string>
+    <string name="menu_add_new_configure">Add new configure</string>
+    <string name="menu_delete">Delete</string>
+    <string name="menu_list_configure">List configure</string>
 
     <string name="dialog_title_select_loop_stop_condition">Select loop stop condition</string>
     <string name="dialog_title_loop_delay_time">Loop delay time</string>
@@ -115,6 +119,7 @@
     <string name="dialog_title_stop_service">Stop service</string>
     <string name="dialog_title_choose_configure">Choose a configure</string>
     <string name="dialog_title_rate_app">Rate app</string>
+    <string name="dialog_title_reset_setting">Reset setting</string>
 
     <string name="dialog_desc_loop_delay_time">Time delay before executing next loop</string>
     <string name="dialog_desc_time_wait_next_action">Time delay before taking the next action</string>
@@ -125,6 +130,7 @@
     <string name="dialog_desc_delete_configure_message">This will delete %1$s. Are you sure ?</string>
     <string name="dialog_desc_delete_configures_message">This will delete %d configures forever.</string>
     <string name="dialog_desc_discard_content">Discard content and exit?</string>
+    <string name="dialog_desc_reset_setting_warning">Do you want reset all setting?</string>
 
     <string name="dialog_stop_loop_infinite_loop">Infinite loop</string>
     <string name="dialog_stop_loop_number_of_loops">Number of loops:</string>
@@ -185,6 +191,7 @@
     <!-- test-->
     <string name="wait">wait…</string>
     <string name="title">Sample Activity #%d</string>
+
 
 
 </resources>

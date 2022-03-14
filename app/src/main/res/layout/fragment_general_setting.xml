@@ -17,6 +17,7 @@
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentTop="true"
         android:background="?attr/colorPrimary"
+        app:menu="@menu/menu_reset_setting"
         app:navigationContentDescription="@string/back"
         app:navigationIcon="@drawable/ic_back"
         app:theme="@style/ToolbarTheme"

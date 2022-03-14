@@ -4,6 +4,6 @@
     <item
         android:id="@+id/menu_add_configure"
         android:icon="@drawable/ic_add"
-        android:title=""
+        android:title="@string/menu_add_new_configure"
         app:showAsAction="always" />
 </menu>

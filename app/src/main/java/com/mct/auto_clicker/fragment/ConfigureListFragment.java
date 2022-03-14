@@ -59,7 +59,6 @@ public class ConfigureListFragment extends Fragment implements ConfigureListAdap
         View view = inflater.inflate(R.layout.fragment_configure_list, container, false);
         rcvConfigureList = view.findViewById(R.id.rcv_configure_list);
 
-        toolbarChooseItemDelete = view.findViewById(R.id.toolbar_choose_item_delete);
         initToolBar(view);
         return view;
     }
@@ -84,6 +83,7 @@ public class ConfigureListFragment extends Fragment implements ConfigureListAdap
 
     private void initToolBar(@NonNull View view) {
         ((AppCompatActivity) requireActivity()).setSupportActionBar(view.findViewById(R.id.toolbar));
+        toolbarChooseItemDelete = view.findViewById(R.id.toolbar_choose_item_delete);
         toolbarChooseItemDelete.setNavigationOnClickListener(v -> hideToolBarChooseItemDelete());
         toolbarChooseItemDelete.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.menu_delete) {

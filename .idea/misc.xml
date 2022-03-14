@@ -22,6 +22,7 @@
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ic_confirm.xml" value="0.37037037037037035" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ic_pause.xml" value="0.3769230769230769" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ic_play_arrow.xml" value="0.3769230769230769" />
+        <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ic_reset.xml" value="0.3769230769230769" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ic_save.xml" value="0.3769230769230769" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ic_share.xml" value="0.3769230769230769" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/drawable/ic_trash.xml" value="0.37037037037037035" />
@@ -79,6 +80,7 @@
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/menu/menu_choose_item_delete.xml" value="0.3435185185185185" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/menu/menu_configure_list_fragment.xml" value="0.325" />
         <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/menu/menu_left_navigation.xml" value="0.32314814814814813" />
+        <entry key="..\:/All_File_Learn/Java/Android/AutoClicker/app/src/main/res/menu/menu_reset_setting.xml" value="0.3527777777777778" />
       </map>
     </option>
   </component>
